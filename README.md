@@ -1,12 +1,13 @@
-# README #
+# README
  
- ### 本周计划 ###
+## 本周计划
  
- 1. 创建关系模式以及数据库表
- 2. 用户注册/登入、主页
+1. 创建关系模式以及数据库表
+2. 用户注册/登入、主页
 
- ### 说明 ###
- ** 站点目录结构示例： **
+## 说明
+** 站点目录结构示例： **
+~~~
 .
 ├── manage.py   项目管理工具
 ├── mysite   项目设置
@@ -42,24 +43,24 @@
     ├── views.py   类似MVC中的控制层或Java Servlet
     └── views.pyc
 
-
+~~~
  
- ### 参考 ###
- ** 官方文档速查 **
- * Part1 [创建关系模式/更新数据库/ORM API](https://docs.djangoproject.com/en/1.7/intro/tutorial01/)
- * Part2 [创建应用/自定义后台](https://docs.djangoproject.com/en/1.7/intro/tutorial02/)
- * Part3 [URL模型/响应请求/模板系统](https://docs.djangoproject.com/en/1.7/intro/tutorial03/)
- * Part4 [处理表单](https://docs.djangoproject.com/en/1.7/intro/tutorial04/)
- * Part5 [单元测试](https://docs.djangoproject.com/en/1.7/intro/tutorial05/)
- * Part6 [静态文件](https://docs.djangoproject.com/en/1.7/intro/tutorial06/)
- * [创建关系模式](https://docs.djangoproject.com/en/1.7/ref/models/relations/)
- * [数据库查询](https://docs.djangoproject.com/en/1.7/topics/db/queries/)
+## 参考 ###
+** 官方文档速查 **
+* Part1 [创建关系模式/更新数据库/ORM API](https://docs.djangoproject.com/en/1.7/intro/tutorial01/)
+* Part2 [创建应用/自定义后台](https://docs.djangoproject.com/en/1.7/intro/tutorial02/)
+* Part3 [URL模型/响应请求/模板系统](https://docs.djangoproject.com/en/1.7/intro/tutorial03/)
+* Part4 [处理表单](https://docs.djangoproject.com/en/1.7/intro/tutorial04/)
+* Part5 [单元测试](https://docs.djangoproject.com/en/1.7/intro/tutorial05/)
+* Part6 [静态文件](https://docs.djangoproject.com/en/1.7/intro/tutorial06/)
+* [创建关系模式](https://docs.djangoproject.com/en/1.7/ref/models/relations/)
+* [数据库查询](https://docs.djangoproject.com/en/1.7/topics/db/queries/)
 
- ** 站点管理 **
- * [Django管理常用命令](http://www.oschina.net/question/234345_54799)
+** 站点管理 **
+* [Django管理常用命令](http://www.oschina.net/question/234345_54799)
 
- ** 站点部署 **
- * [How to use Django with uWSGI](https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/uwsgi/)
- * [Setting up Django and your web server with uWSGI and nginx](http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html)
- * [Django uwsgi Nginx组合建站](http://blog.chinaunix.net/uid-11390629-id-3610722.html)
+** 站点部署 **
+* [How to use Django with uWSGI](https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/uwsgi/)
+* [Setting up Django and your web server with uWSGI and nginx](http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html)
+* [Django uwsgi Nginx组合建站](http://blog.chinaunix.net/uid-11390629-id-3610722.html)
 
