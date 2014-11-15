@@ -70,3 +70,7 @@
 - [Setting up Django and your web server with uWSGI and nginx](http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html)
 - [Django uwsgi Nginx组合建站](http://blog.chinaunix.net/uid-11390629-id-3610722.html)
 
+** Git 如何使用 **
+- [git分支的常见的管理](http://libin52008.blog.163.com/blog/static/1053271872013313105039787/)
+- [Git 分支管理和冲突解决](http://www.cnblogs.com/mengdd/p/3585038.html)
+
