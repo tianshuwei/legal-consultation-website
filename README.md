@@ -151,14 +151,24 @@ __settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部
 
 + [Django管理常用命令](http://www.oschina.net/question/234345_54799)
 
-** 站点部署 **
-
-- [How to use Django with uWSGI](https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/uwsgi/)
-- [Setting up Django and your web server with uWSGI and nginx](http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html)
-- [Django uwsgi Nginx组合建站](http://blog.chinaunix.net/uid-11390629-id-3610722.html)
-
 ** Git 如何使用 **
 
 - [git分支的常见的管理](http://libin52008.blog.163.com/blog/static/1053271872013313105039787/)
 - [Git 分支管理和冲突解决](http://www.cnblogs.com/mengdd/p/3585038.html)
+
+** Django 用户权限模块 **
+
+- [总结Django中的用户权限模块](http://maplye.iteye.com/blog/448960)
+- [Using the Django authentication system](https://docs.djangoproject.com/en/1.7/topics/auth/default/) **\***
+
+** Django ORM参考 **
+
+- [ManyToManyField](https://docs.djangoproject.com/en/1.7/ref/models/fields/#manytomanyfield) **\***
+- [理解django的多对多ManyToManyField](http://luozhaoyu.iteye.com/blog/1510635)
+
+** 站点部署 **
+
+- [How to use Django with uWSGI](https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/uwsgi/) **\***
+- [Setting up Django and your web server with uWSGI and nginx](http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html)
+- [Django uwsgi Nginx组合建站](http://blog.chinaunix.net/uid-11390629-id-3610722.html)
 
