@@ -44,6 +44,8 @@
 >     ├── views.py   类似MVC中的控制层或Java Servlet
 >     └── views.pyc
 
+__settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部署环境密切相关，没有同步的意义。如果需要参考数据库配置，参考同目录下settings-sample.py。__
+
 
 ** 服务器端口分配 **
 
