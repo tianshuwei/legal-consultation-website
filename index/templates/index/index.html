@@ -1,0 +1,13 @@
+<h1>Index</h1>
+<a>Login</a>
+
+<h2>Products</h2>
+{% if latest_products_list %}
+<ul>
+{% for product in latest_products_list %}
+	<li><a href="/products/{{ product.id }}/">{{ product.name }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No products are available.</p>
+{% endif %}

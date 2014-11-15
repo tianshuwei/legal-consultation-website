@@ -104,13 +104,13 @@ __settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部
 > 
 > 
 > 
-> mysql> grant all privileges on org\_tanki.* to org\_timothy@'%' identified by 'org\_timothy';
+> mysql> grant all privileges on org\_timothy.* to org\_timothy@'%' identified by 'org\_timothy';
 > 
 > Query OK, 0 rows affected (0.00 sec)
 > 
 > 
 > 
-> mysql> grant all privileges on org\_tanki.* to org\_timothy@'localhost' identified by 'org\_timothy';
+> mysql> grant all privileges on org\_timothy.* to org\_timothy@'localhost' identified by 'org\_timothy';
 > 
 > Query OK, 0 rows affected (0.00 sec)
 > 
