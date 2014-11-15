@@ -9,73 +9,44 @@
 
 ** 站点目录结构示例： **
 
-> .
-> ├── manage.py   项目管理工具
-> 
-> ├── mysite   项目设置
-> 
-> │   ├── \_\_init\_\_.py
-> 
-> │   ├── \_\_init\_\_.pyc
-> 
-> │   ├── settings.py  全局设置
-> 
-> │   ├── settings.pyc
-> 
-> │   ├── urls.py   整站URL模型
-> 
-> │   ├── urls.pyc
-> 
-> │   ├── wsgi.py
-> 
-> │   └── wsgi.pyc
-> 
-> └── polls  项目中的一个应用
-> 
->     ├── admin.py   后台设置
-> 
->     ├── admin.pyc
-> 
->     ├── \_\_init\_\_.py
-> 
->     ├── \_\_init\_\_.pyc
-> 
->     ├── migrations   更新数据库的工具
-> 
->     │   ├── 0001_initial.py
-> 
->     │   ├── 0001_initial.pyc
-> 
->     │   ├── __init__.py
-> 
->     │   └── __init__.pyc
-> 
->     ├── models.py    应用的关系模式
-> 
->     ├── models.pyc
-> 
->     ├── templates   模板
-> 
->     │   └── polls   应用模板的命名空间
-> 
->     │       ├── detail.html   应用中的模板
-> 
->     │       ├── index.html
-> 
->     │       └── results.html
-> 
->     ├── tests.py   单元测试
-> 
->     ├── tests.pyc
-> 
->     ├── urls.py   应用的URL模型
-> 
->     ├── urls.pyc
-> 
->     ├── views.py   类似MVC中的控制层或Java Servlet
-> 
->     └── views.pyc
-> 
+~~~
+"""
+.
+├── manage.py   项目管理工具
+├── mysite   项目设置
+│   ├── __init__.py
+│   ├── __init__.pyc
+│   ├── settings.py  全局设置
+│   ├── settings.pyc
+│   ├── urls.py   整站URL模型
+│   ├── urls.pyc
+│   ├── wsgi.py
+│   └── wsgi.pyc
+└── polls  项目中的一个应用
+    ├── admin.py   后台设置
+        ├── admin.pyc
+        ├── __init__.py
+        ├── __init__.pyc
+        ├── migrations   更新数据库的工具
+        │   ├── 0001_initial.py
+        │   ├── 0001_initial.pyc
+        │   ├── __init__.py
+        │   └── __init__.pyc
+        ├── models.py    应用的关系模式
+        ├── models.pyc
+        ├── templates   模板
+        │   └── polls   应用模板的命名空间
+        │       ├── detail.html   应用中的模板
+        │       ├── index.html
+        │       └── results.html
+        ├── tests.py   单元测试
+        ├── tests.pyc
+        ├── urls.py   应用的URL模型
+        ├── urls.pyc
+        ├── views.py   类似MVC中的控制层或Java Servlet
+        └── views.pyc
+"""
+~~~
 
 __settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部署环境密切相关，没有同步的意义。如果需要参考数据库配置，参考同目录下settings-sample.py。__
 
@@ -187,6 +158,7 @@ __settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部
 - [Django uwsgi Nginx组合建站](http://blog.chinaunix.net/uid-11390629-id-3610722.html)
 
 ** Git 如何使用 **
+
 - [git分支的常见的管理](http://libin52008.blog.163.com/blog/static/1053271872013313105039787/)
 - [Git 分支管理和冲突解决](http://www.cnblogs.com/mengdd/p/3585038.html)
 
