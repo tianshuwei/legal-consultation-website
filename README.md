@@ -2,10 +2,9 @@
  
 ## 本周计划
 
-1. 实现关系模式中的多对多关系
-2. 规划网站的页面设计
-3. 完善关系模式
-
+1. Django数据库表相关实验
+2. products模块列表/详细页，用户评论
+3. 用户对律师的的咨询提问、评价
 
 ## 计划历史
 
@@ -14,6 +13,26 @@
 1. 创建关系模式以及数据库表
 2. 用户注册/登入、主页
 
+** 第二周 **
+
+1. 实现关系模式中的多对多关系
+2. 规划网站的页面设计
+3. 完善关系模式
+
+## 站点关系模式（非主属性可能不全）
+
+> User(ID,username,password) （Django内置用户模块）
+> Client(ID,user,balance,points)
+> Lawyer(ID,user,balance,blacklist,score,blog) 
+> Product(ID,name,publish_date,description,price)
+> Remark(ID,c_id,l_id,grade,date)
+> Question(ID,c_id,l_id,title,text,date)
+> Question_text(ID,user_id,user_flag,text,date)
+> Comment(ID,c_id,p_id,comment,date)
+> Order(ID,c_id,l_id,p_id,state,start_date)
+> BlogCategory(ID,user,name)
+> BlogArticle(ID,title,publish_date,category,tags,text)
+> BlogComment(ID,user,publish_date,article,text)
 
 ## 说明
 
@@ -164,7 +183,7 @@ settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部�
 - Part5 [单元测试](https://docs.djangoproject.com/en/1.7/intro/tutorial05/)
 - Part6 [静态文件](https://docs.djangoproject.com/en/1.7/intro/tutorial06/)
 - [创建关系模式](https://docs.djangoproject.com/en/1.7/ref/models/relations/)
-- [Django的多对多关系](https://docs.djangoproject.com/en/1.7/ref/models/fields/#manytomanyfield)
+- [Django的多对多关系/数据库数据类型](https://docs.djangoproject.com/en/1.7/ref/models/fields/#manytomanyfield)
 - [数据库查询](https://docs.djangoproject.com/en/1.7/topics/db/queries/)
 - [渲染表单](https://docs.djangoproject.com/en/1.7/topics/forms/)
 - [Django认证系统](https://docs.djangoproject.com/en/1.7/topics/auth/default/)
@@ -193,4 +212,3 @@ settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部�
 - [How to use Django with uWSGI](https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/uwsgi/)
 - [Setting up Django and your web server with uWSGI and nginx](http://uwsgi-docs.readthedocs.org/en/latest/tutorials/Django_and_nginx.html)
 - [Django uwsgi Nginx组合建站](http://blog.chinaunix.net/uid-11390629-id-3610722.html)
-
