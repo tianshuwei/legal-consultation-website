@@ -22,17 +22,29 @@
 ## 站点关系模式（非主属性可能不全）
 
 > User(ID,username,password) （Django内置用户模块）
+> 
 > Client(ID,user,balance,points)
+> 
 > Lawyer(ID,user,balance,blacklist,score,blog) 
+> 
 > Product(ID,name,publish_date,description,price)
+> 
 > Remark(ID,c_id,l_id,grade,date)
+> 
 > Question(ID,c_id,l_id,title,text,date)
+> 
 > Question_text(ID,user_id,user_flag,text,date)
+> 
 > Comment(ID,c_id,p_id,comment,date)
+> 
 > Order(ID,c_id,l_id,p_id,state,start_date)
+> 
 > BlogCategory(ID,user,name)
+> 
 > BlogArticle(ID,title,publish_date,category,tags,text)
+> 
 > BlogComment(ID,user,publish_date,article,text)
+> 
 
 ## 说明
 
