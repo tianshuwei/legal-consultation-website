@@ -14,7 +14,7 @@ class Client(models.Model):
 	user = models.OneToOneField(User)
 	balance = models.DecimalField(max_digits=16, decimal_places=3,default=0)
 	points = models.IntegerField(default=0)
-	comments = models.ManyToManyField("products.Product", through="Comment", through_fields=("client","product"), related_name="c_p_comments")
+	comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
 
 	def __unicode__(self):
 		return self.user.username
@@ -59,22 +59,3 @@ class Question_text(models.Model):
 	def __unicode__(self):
 		return self.text[:20]
 		
-class Comment(models.Model):
-	client = models.ForeignKey(Client)
-	product = models.ForeignKey("products.Product")
-	comment = models.TextField()
-	publish_date = models.DateTimeField('date published',auto_now=True)
-
-	def __unicode__(self):
-		return self.comment[:20]
-
-class Order(models.Model):
-	client = models.ForeignKey(Client)
-	product = models.ForeignKey("products.Product")
-	lawyer = models.ForeignKey(Lawyer)
-	state = models.IntegerField(default=0)
-	text = models.TextField()
-	publish_date = models.DateTimeField('date published',auto_now=True)
-
-	def __unicode__(self):
-		return self.text[:20]
