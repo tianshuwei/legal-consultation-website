@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     url(r'^index/', include('index.urls',namespace='index')),
     url(r'^accounts/', include('accounts.urls',namespace='accounts')),
     url(r'^products/',include('products.urls',namespace='products')),
+    url(r'^smartcontract/',include('smartcontract.urls',namespace='smartcontract')),
 )
