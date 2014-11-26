@@ -6,6 +6,13 @@
 2. products模块列表/详细页，用户评论
 3. 用户对律师的的咨询提问、评价
 
+## 下周计划
+
+1. UI模板设计
+2. tanki 用户中心 _页面设计_
+3. timothy 产品 订单 _页面设计_
+4. alex 律师博客 _页面设计_
+
 ## 计划历史
 
 ** 第一周 **
@@ -45,6 +52,52 @@
 > 
 > BlogComment(ID,user,publish_date,article,text)
 > 
+
+## 网站页面设计规划
+
+![网站页面设计](https://bytebucket.org/spuerme/org/raw/082d7d30a94a1f56864a69fa6a1d287c0d49f050/docs/pages.png?token=20eb985de976b86c08f6bf93e3ce74571b682005)
+
+## 服务器资源
+
+** 222.69.93.107 服务器(调试)端口分配 **
+
+> 6001 - alex
+> 
+> 6002 - timothy
+> 
+> 6003 - tanki
+> 
+
+** 222.69.93.107 服务器数据库初始化参考 **
+
+> create database org\_dev character set utf8;
+> 
+> create database org\_alex character set utf8;
+> 
+> create database org\_timothy character set utf8;
+> 
+> create database org\_tanki character set utf8;
+> 
+> grant all privileges on org\_alex.* to org\_alex@'localhost' identified by 'org\_alex';
+> 
+> grant all privileges on org\_tanki.* to org\_tanki@'localhost' identified by 'org\_tanki';
+> 
+> grant all privileges on org\_tanki.* to org\_tanki@'%' identified by 'org\_tanki';
+> 
+> grant all privileges on org\_timothy.* to org\_timothy@'%' identified by 'org\_timothy';
+> 
+> grant all privileges on org\_timothy.* to org\_timothy@'localhost' identified by 'org\_timothy';
+> 
+> grant all privileges on org\_dev.* to org\_dev@'localhost' identified by 'org\_dev';
+> 
+> grant all privileges on org\_dev.* to org\_dev@'%' identified by 'org\_dev';
+> 
+> flush privileges;
+> 
+
+'org\_dev'作为公用数据库、数据库账户、数据库密码
+，为了方便隔离调试环境，也可以使用其他几个账户对应的数据库。
+
 
 ## 说明
 
@@ -98,91 +151,6 @@ settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部�
 """
 ~~~
 
-
-** 222.69.93.107 服务器(调试)端口分配 **
-
-> 6001 - alex
-> 
-> 6002 - timothy
-> 
-> 6003 - tanki
-> 
-
-** 222.69.93.107 服务器数据库初始化参考 **
-
-> mysql> create database org\_dev character set utf8;
-> 
-> Query OK, 1 row affected (0.00 sec)
-> 
-> 
-> 
-> mysql> create database org\_alex character set utf8;
-> 
-> Query OK, 1 row affected (0.02 sec)
-> 
-> 
-> 
-> mysql> create database org\_timothy character set utf8;
-> 
-> Query OK, 1 row affected (0.00 sec)
-> 
-> 
-> 
-> mysql> create database org\_tanki character set utf8;
-> 
-> Query OK, 1 row affected (0.00 sec)
-> 
-> 
-> 
-> mysql> grant all privileges on org\_alex.* to org\_alex@'localhost' identified by 'org\_alex';
-> 
-> Query OK, 0 rows affected (0.03 sec)
-> 
-> 
-> 
-> mysql> grant all privileges on org\_tanki.* to org\_tanki@'localhost' identified by 'org\_tanki';
-> 
-> Query OK, 0 rows affected (0.00 sec)
-> 
-> 
-> 
-> mysql> grant all privileges on org\_tanki.* to org\_tanki@'%' identified by 'org\_tanki';
-> 
-> Query OK, 0 rows affected (0.00 sec)
-> 
-> 
-> 
-> mysql> grant all privileges on org\_timothy.* to org\_timothy@'%' identified by 'org\_timothy';
-> 
-> Query OK, 0 rows affected (0.00 sec)
-> 
-> 
-> 
-> mysql> grant all privileges on org\_timothy.* to org\_timothy@'localhost' identified by 'org\_timothy';
-> 
-> Query OK, 0 rows affected (0.00 sec)
-> 
-> 
-> 
-> mysql> grant all privileges on org\_dev.* to org\_dev@'localhost' identified by 'org\_dev';
-> 
-> Query OK, 0 rows affected (0.00 sec)
-> 
-> 
-> 
-> mysql> grant all privileges on org\_dev.* to org\_dev@'%' identified by 'org\_dev';
-> 
-> Query OK, 0 rows affected (0.00 sec)
-> 
-> 
-> 
-> mysql> flush privileges;
-> 
-> Query OK, 0 rows affected (0.01 sec)
-> 
-
-'org\_dev'作为公用数据库、数据库账户、数据库密码
-，为了方便隔离调试环境，也可以使用其他几个账户对应的数据库。
 
 ## 参考 
 
