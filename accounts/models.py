@@ -18,7 +18,7 @@ class Client(models.Model):
 
 	def __unicode__(self):
 		return self.user.username
-	
+
 class Lawyer(models.Model):
 	user = models.OneToOneField(User)
 	balance = models.DecimalField(max_digits=16, decimal_places=3,default=0)
@@ -38,7 +38,7 @@ class Remark(models.Model):
 	publish_date = models.DateTimeField('date published',auto_now=True)
 
 	def __unicode__(self):
-		return self.grade
+		return str(self.grade)
 
 class Question(models.Model):
 	lawyer = models.ForeignKey(Lawyer)
@@ -49,7 +49,7 @@ class Question(models.Model):
 
 	def __unicode__(self):
 		return self.title
-		
+
 class Question_text(models.Model):
 	question = models.ForeignKey(Question)
 	user_flag = models.IntegerField(default=0)
@@ -58,4 +58,4 @@ class Question_text(models.Model):
 
 	def __unicode__(self):
 		return self.text[:20]
-		
+
