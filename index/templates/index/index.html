@@ -27,6 +27,29 @@
       <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+
+   <!--  <h1>Index</h1>
+<h2>User</h2>
+{% if user.is_authenticated %}
+<p>Welcome, {{ user.username }}. (<a href="{% url 'accounts:logout' %}">Logout</a>)</p>  
+
+{% else %}
+<p>Welcome, there. Please <a href="{% url 'accounts:login' %}">login</a> 
+  or <a href="{% url 'accounts:register' %}">sign up</a>.</p>
+{% endif %}
+
+<h2>Products</h2>
+{% if latest_products_list %}
+<ul>
+{% for product in latest_products_list %}
+  <li><a href="/products/{{ product.id }}/">{{ product.name }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No products are available.</p>
+{% endif %} -->
+
   </head>
 
   <body ryt12699="1">
@@ -64,7 +87,8 @@
           </ul>
 
 		{% else %}
-				<form class="navbar-form navbar-right" role="form">
+				<form class="navbar-form navbar-right" action="{% url 'accounts:login' %}" method="post" >
+          {% csrf_token %}
 		            <div class="form-group">
 		              <input type="text" placeholder="Email" class="form-control">
 		            </div>
@@ -72,6 +96,7 @@
 		              <input type="password" placeholder="Password" class="form-control">
 		            </div>
 		            <button type="submit" class="btn btn-success">Sign in</button>
+                <a href="{% url 'accounts:register' %}"><button class="btn btn-primary">Sign up</button></a>
 		        </form>
 		{% endif %}
           
