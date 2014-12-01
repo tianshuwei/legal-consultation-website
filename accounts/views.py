@@ -23,9 +23,11 @@ def login_view(request):
 		username,password = request.POST['username'],request.POST['password']
 		user = authenticate(username=username, password=password)
 		if user is not None:
+			print 'Login ok'
 			login(request, user)
 			return HttpResponseRedirect(reverse('index:index'))
 		else:
+			print 'Login err'
 			return HttpResponseRedirect(reverse('index:index'))
 
 	else:
