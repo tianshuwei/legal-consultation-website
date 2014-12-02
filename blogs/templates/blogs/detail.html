@@ -1,0 +1,22 @@
+<h1>Blog Text</h1>
+
+<h2>{{ article.title }}</h2>
+<div>
+	{{ article.text }}
+</div>
+
+<h2>Comments</h2>
+{% comment %}
+{% for comment in products_comments %}
+<div>
+ 	<p> {{comment.client}} </p> 
+ 	<p> {{comment.comment}} </p> 
+ 	<p> {{comment.publish_date}} </p> 
+</div>
+{% endfor %}
+<form action="{% url 'products:new_comment' product.id %}" method="post" >
+	{% csrf_token %}
+	<textarea name="txt_comment"></textarea>
+	<input type="submit"/>
+</form>
+{% endcomment %}

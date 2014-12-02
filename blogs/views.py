@@ -7,21 +7,8 @@ from django import forms
 from django.views import generic
 from blogs.models import BlogArticle, BlogComment, BlogCategory
 
-# def index_view(request, pk):
-# 	template = loader.get_template('accounts/register.html')
-# 	context = RequestContext(request, {
-# 		'register_form':register_form
-# 	})
-# 	return HttpResponse(template.render(context))
-
 def new_article_view(request):
     raise Http404
-
-# def index_view(request, pk):
-#     template = loader.get_template('blogs/index.html')
-#     context = RequestContext(request, {
-#     })
-#     return HttpResponse(template.render(context))
 
 class IndexView(generic.ListView):
 	template_name = 'blogs/index.html'
@@ -29,6 +16,11 @@ class IndexView(generic.ListView):
 
 	def get_queryset(self):
 		return BlogArticle.objects.filter(author=self.kwargs['pk']).order_by('-publish_date')
+
+class DetailView(generic.DetailView):
+	model = BlogArticle
+	template_name = 'blogs/detail.html'
+	context_object_name = 'article'
 
 def text_view(request, pk):
     raise Http404

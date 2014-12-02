@@ -25,11 +25,7 @@ class DetailView(generic.DetailView):
 	template_name = 'products/detail.html'
 
 	def get_context_data(self, **kwargs):
-		print
-
-		# Call the base implementation first to get a context
 		context = super(DetailView, self).get_context_data(**kwargs)
-		# Add in a QuerySet of all the books
 		context['products_comments'] = Comment.objects.filter(product_id=self.object.id)
 		return context
 
