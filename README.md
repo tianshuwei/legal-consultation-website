@@ -2,15 +2,9 @@
  
 ## 本周计划
 
-1. Django数据库表相关实验
-2. products模块列表/详细页，用户评论
-3. 用户对律师的的咨询提问、评价
-
-## 下周计划
-
 1. UI模板设计
-2. tanki 用户中心 _页面设计_
-3. timothy 产品 订单 _页面设计_
+2. tanki _页面设计_
+3. timothy 产品 订单 咨询提问、评价 _页面设计_
 4. alex 律师博客 _页面设计_
 
 ## 计划历史
@@ -26,7 +20,58 @@
 2. 规划网站的页面设计
 3. 完善关系模式
 
-## 站点关系模式（非主属性可能不全）
+** 第三周 **
+
+1. Django数据库表相关实验
+2. products模块列表/详细页，用户评论
+3. 用户对律师的的咨询提问、评价 (未完)
+
+## 全站URL设计  2014.12.2
+
+~~~
+# org/urls.py
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^index/', include('index.urls',namespace='index')),
+    url(r'^accounts/', include('accounts.urls',namespace='accounts')),
+    url(r'^products/',include('products.urls',namespace='products')),
+    url(r'^blogs/',include('blogs.urls',namespace='blogs')),
+    url(r'^smartcontract/',include('smartcontract.urls',namespace='smartcontract')),
+
+# accounts/urls.py
+    url(r'^login/$', views.login_view, name='login'),
+    url(r'^logout/$', views.logout_view, name='logout'),
+    url(r'^register/$', views.register_view, name='register'),
+    url(r'^lawyerlist/$', views.lawyerlist_view, name='lawyerlist'), # ListView
+    url(r'^usercenter/$', views.usercenter_view, name='usercenter'),
+    url(r'^lawyercenter/$', views.lawyercenter_view, name='lawyercenter'),
+    url(r'^profile/$', views.profile_view, name='profile'), # DetailView
+    url(r'^q(?P<pk>\d+)/$', views.question_view, name='question'), # DetailView
+    url(r'^o(?P<pk>\d+)/$', views.order_detail_view, name='order_detail'), #DetailView
+    url(r'^balance/$', views.balance_view, name='balance'),
+    url(r'^r(?P<pk>\d+)/$', views.remark_view, name='remark'), # pk->user.id (lawyer)
+    url(r'^question/$', views.new_question_view, name='new_question'),
+
+# blogs/urls.py
+    url(r'^$', views.index_view, name='index'), # ListView
+    url(r'^t(?P<pk>\d+)/$', views.text_view, name='text'), # DetailView
+    url(r'^categories/$', views.categories_view, name='categories'), # ListView
+    url(r'^new/$', views.new_article_view, name='new_article'),
+
+# index/urls.py
+    url(r'^$', views.index_view, name='index'),
+
+# products/urls.py
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^c(?P<pk>\d+)/$', views.new_comment_view, name='new_comment')
+    url(r'^order/$', views.new_order_view, name='new_order'),
+
+# smartcontract/urls.p
+    url(r'^test/$', views.test_render_view, name='test'),
+
+~~~
+
+## 全站关系模式（非主属性可能不全）
 
 > User(ID,username,password) （Django内置用户模块）
 > 
@@ -53,7 +98,7 @@
 > BlogComment(ID,user,publish_date,article,text)
 > 
 
-## 网站页面设计规划
+## 全站页面设计
 
 ![网站页面设计](https://bytebucket.org/spuerme/org/raw/082d7d30a94a1f56864a69fa6a1d287c0d49f050/docs/pages.png?token=20eb985de976b86c08f6bf93e3ce74571b682005)
 
