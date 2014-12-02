@@ -17,18 +17,18 @@ from blogs.models import BlogArticle, BlogComment, BlogCategory
 def new_article_view(request):
     raise Http404
 
-def index_view(request, pk):
-    template = loader.get_template('blogs/index.html')
-    context = RequestContext(request, {
-    })
-    return HttpResponse(template.render(context))
+# def index_view(request, pk):
+#     template = loader.get_template('blogs/index.html')
+#     context = RequestContext(request, {
+#     })
+#     return HttpResponse(template.render(context))
 
 class IndexView(generic.ListView):
 	template_name = 'blogs/index.html'
 	context_object_name = 'latest_blogs_list'
 
 	def get_queryset(self):
-		return BlogArticle.objects.order_by('-publish_date')
+		return BlogArticle.objects.filter(author=self.kwargs['pk']).order_by('-publish_date')
 
 def text_view(request, pk):
     raise Http404
