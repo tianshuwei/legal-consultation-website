@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from django.template import RequestContext, loader
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect,Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.core.urlresolvers import reverse
 from django import forms
-
 
 class LoginForm(forms.Form):
 	username = forms.CharField(label="Username",max_length=254)
@@ -62,3 +61,29 @@ def register_view(request):
 # 	})
 # 	return HttpResponse(template.render(context))
 
+def lawyerlist_view(request):
+    raise Http404
+
+def usercenter_view(request):
+    raise Http404
+
+def lawyercenter_view(request):
+    raise Http404
+
+def profile_view(request):
+    raise Http404
+
+def question_view(request, pk):
+    raise Http404
+
+def order_detail_view(request, pk):
+    raise Http404
+
+def balance_view(request):
+    raise Http404
+
+def remark_view(request, pk):
+    raise Http404
+
+def new_question_view(request):
+    raise Http404

@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext, loader
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.views import generic
 from products.models import Product,Comment
 from django.core.urlresolvers import reverse
@@ -25,8 +25,8 @@ class DetailView(generic.DetailView):
 	template_name = 'products/detail.html'
 
 	def get_context_data(self, **kwargs):
-		print 
-		
+		print
+
 		# Call the base implementation first to get a context
 		context = super(DetailView, self).get_context_data(**kwargs)
 		# Add in a QuerySet of all the books
@@ -39,7 +39,7 @@ def new_comment_view(request, pk):
 	try:
 		# for k in dir(request.user):
 		# 	if 'client' in k:
-		# 		print repr(getattr(request.user,k)),getattr(request.user,k) 
+		# 		print repr(getattr(request.user,k)),getattr(request.user,k)
 		comment = Comment.objects.create(comment=request.POST['txt_comment'], client=request.user.client, product=p)
 		comment.save()
 	except :
@@ -48,6 +48,5 @@ def new_comment_view(request, pk):
 	else:
 		return HttpResponseRedirect(reverse('products:detail', args=(p.id,)))
 
-
-
-
+def new_order_view(request):
+    raise Http404
