@@ -22,9 +22,6 @@ class DetailView(generic.DetailView):
 	template_name = 'blogs/detail.html'
 	context_object_name = 'article'
 
-def text_view(request, pk):
-    raise Http404
-
 def categories_view(request):
     raise Http404
 
