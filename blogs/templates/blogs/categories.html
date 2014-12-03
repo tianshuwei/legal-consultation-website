@@ -1,0 +1,12 @@
+<h1>Blog Index</h1>
+{% if categories %}
+<ul>
+{% for category in categories %}
+	<li><a href="#">{{ category.name }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No categories are available.</p>
+{% endif %}
+
+

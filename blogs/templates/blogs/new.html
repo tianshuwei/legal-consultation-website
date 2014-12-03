@@ -1,0 +1,6 @@
+
+<form action="{% url 'blogs:new_article' %}" method="post" >
+	{% csrf_token %}
+	{{ article_create }}
+	<input type="submit"/>
+</form>
