@@ -6,17 +6,15 @@
 </div>
 
 <h2>Comments</h2>
-{% comment %}
-{% for comment in products_comments %}
+{% for comment in comments %}
 <div>
- 	<p> {{comment.client}} </p> 
- 	<p> {{comment.comment}} </p> 
+ 	<p> {{comment.user}} </p> 
+ 	<p> {{comment.text}} </p> 
  	<p> {{comment.publish_date}} </p> 
 </div>
 {% endfor %}
-<form action="{% url 'products:new_comment' product.id %}" method="post" >
+<form action="{% url 'blogs:new_comment' article.id %}" method="post" >
 	{% csrf_token %}
 	<textarea name="txt_comment"></textarea>
 	<input type="submit"/>
 </form>
-{% endcomment %}

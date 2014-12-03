@@ -1,10 +1,8 @@
 <h1>Blog Index</h1>
-<h2>User</h2>
-<h2>Products</h2>
 {% if latest_blogs_list %}
 <ul>
 {% for article in latest_blogs_list %}
-  <li>{{ article.title }}</li>
+	<li><a href="{% url 'blogs:text' article.id %}">{{ article.title }}</a></li>
 {% endfor %}
 </ul>
 {% else %}
