@@ -1,11 +1,1 @@
-<h1>Products</h1>
-
-{% if latest_products_list %}
-<ul>
-{% for product in latest_products_list %}
-	<li><a href="{% url 'products:detail' product.id %}">{{ product.name }}</a></li>
-{% endfor %}
-</ul>
-{% else %}
-<p>No products are available.</p>
-{% endif %}
+{% extends 'products/index_template.html'%}
