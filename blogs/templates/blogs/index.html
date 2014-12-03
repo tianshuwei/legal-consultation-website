@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}律师博客 - xxx{% endblock %}
+{% block main %}
+
 <h1>Blog Index</h1>
 {% if latest_blogs_list %}
 <ul>
@@ -9,4 +13,4 @@
 <p>No articles are available.</p>
 {% endif %}
 
-
+{% endblock %}
