@@ -39,7 +39,13 @@ def new_comment_view(request, pk):
 @login_required
 def categories_view(request):
 	try:
-		return HttpResponseRedirect(reverse('blogs:index',kwargs={'pk':request.user.lawyer.id}))
+		categories=BlogCategory.objects.filter(user=request.user.lawyer)
+		template = loader.get_template('blogs/categories.html')
+	 	context = RequestContext(request, {
+	 		'categories': categories,
+	 	})
+	 	return HttpResponse(template.render(context))
+		# return HttpResponseRedirect(reverse('blogs:index',kwargs={'pk':request.user.lawyer.id}))
 	except ObjectDoesNotExist, e:
 		raise Http404
 
