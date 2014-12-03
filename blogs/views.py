@@ -9,8 +9,25 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from blogs.models import BlogArticle, BlogComment, BlogCategory
 
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = BlogArticle
+        fields = ['title', 'category', 'tags', 'text']
+
+# class ArticleCreateForm(forms.Form):
+#     title = forms.CharField(label="Title",max_length=265)
+#     category = forms.ForeignKey(label="Category",BlogCategory)
+#     tags = forms.CharField(max_length=256, default='')
+# 	text = forms.TextField()
+
 def new_article_view(request):
-    raise Http404
+	# categories=BlogCategory.objects.filter(user=request.user.lawyer)
+	template = loader.get_template('blogs/new.html')
+	context = RequestContext(request, {
+		# 'categories': categories,
+		'article_create': ArticleForm(),
+	})
+	return HttpResponse(template.render(context))
 
 class IndexView(generic.ListView):
 	template_name = 'blogs/index.html'
