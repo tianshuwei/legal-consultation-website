@@ -1,6 +1,17 @@
-
-<form action="{% url 'blogs:new_article' %}" method="post" >
+{% extends 'base.html' %}
+{% block title %}新文章{% endblock %}
+{% block main %}
+<h1>写新文章</h1>
+<a href="{% url 'blogs:index' request.user.lawyer.id %}">返回博客主页</a>
+<form method="post" >
 	{% csrf_token %}
-	{{ article_create }}
+	{{ article_create }} {# << 渲染表单 #}
+	{% comment %}
+
+	- 其他渲染形式参考 https://docs.djangoproject.com/en/1.7/topics/forms/#form-rendering-options
+	- 手动渲染表单参考 https://docs.djangoproject.com/en/1.7/topics/forms/#rendering-fields-manually
+
+	{% endcomment %}
 	<input type="submit"/>
 </form>
+{% endblock %}

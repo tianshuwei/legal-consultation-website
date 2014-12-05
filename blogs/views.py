@@ -1,68 +1,96 @@
-from django.shortcuts import render, get_object_or_404
-from django.template import RequestContext, loader
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
-from django import forms
-from django.views import generic
-from django.contrib.auth.decorators import login_required
+# -*- coding: utf-8 -*-
+from org.tools import *
 from blogs.models import BlogArticle, BlogComment, BlogCategory
 
 class ArticleForm(forms.ModelForm):
-    class Meta:
-        model = BlogArticle
-        fields = ['title', 'category', 'tags', 'text']
-
-# class ArticleCreateForm(forms.Form):
-#     title = forms.CharField(label="Title",max_length=265)
-#     category = forms.ForeignKey(label="Category",BlogCategory)
-#     tags = forms.CharField(max_length=256, default='')
-# 	text = forms.TextField()
-
-def new_article_view(request):
-	# categories=BlogCategory.objects.filter(user=request.user.lawyer)
-	template = loader.get_template('blogs/new.html')
-	context = RequestContext(request, {
-		# 'categories': categories,
-		'article_create': ArticleForm(),
-	})
-	return HttpResponse(template.render(context))
-
-class IndexView(generic.ListView):
-	template_name = 'blogs/index.html'
-	context_object_name = 'latest_blogs_list'
-
-	def get_queryset(self):
-		return BlogArticle.objects.filter(author=self.kwargs['pk']).order_by('-publish_date')
-
-class DetailView(generic.DetailView):
-	model = BlogArticle
-	template_name = 'blogs/detail.html'
-	context_object_name = 'article'
-
-	def get_context_data(self, **kwargs):
-		context = super(DetailView, self).get_context_data(**kwargs)
-		context['comments'] = BlogComment.objects.filter(article_id=self.object.id)
-		return context
+	class Meta:
+		model = BlogArticle
+		fields = ['title', 'category', 'tags', 'text']
 
 @login_required
-def new_comment_view(request, pk):
-	p = get_object_or_404(BlogArticle, pk=pk)
-	comment = BlogComment.objects.create(text=request.POST['txt_comment'], user=request.user, article=p)
-	comment.save()
-	return HttpResponseRedirect(reverse('blogs:text', args=(p.id,)))
+def delete_article_view(request, pk_text):
+	article=get_object_or_404(BlogArticle, pk=pk_text)
+	if checkf(lambda: request.user.lawyer==article.author):
+		article.delete()
+		message(request, u'文章删除成功')
+	else:
+		message(request, u'文章删除失败')
+	return redirect('blogs:index', pk_lawyer=article.author.id)
+
+@login_required
+def edit_article_view(request, pk_text):
+	article=get_object_or_404(BlogArticle, pk=pk_text)
+	if request.method=='POST':
+		if checkf(lambda: request.user.lawyer==article.author):
+			form=ArticleForm(request.POST, instance=article)
+			form.save()
+			message(request, u'文章编辑成功')
+		else:
+			message(request, u'文章编辑失败')
+		return redirect('blogs:index', pk_lawyer=article.author.id)
+	else: 
+		return response(request, 'blogs/edit.html', 
+			article_edit=ArticleForm(instance=article),
+			article=article)	
+
+@login_required
+def new_article_view(request):
+	if request.method=='POST':
+		try:
+			BlogArticle.objects.create(
+				author=request.user.lawyer,
+				title=request.POST['title'],
+				category=BlogCategory.objects.get(id=request.POST['category']),
+				tags=request.POST['tags'],
+				text=request.POST['text']
+			).save()
+		except BlogCategory.DoesNotExist, e: message(request, u'该分类不存在')
+		except ObjectDoesNotExist, e: 
+			message(request, u'该律师不存在')
+			return redirect('index:index')
+		else: message(request, u'文章创建成功')
+		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
+	else: 
+		return response(request, 'blogs/new.html', 
+			article_create=ArticleForm())
+
+def home_view(request):
+	try:
+		return response(request, 'blogs/index.html', 
+			is_master=True,
+			categories=BlogCategory.objects.filter(user=request.user.lawyer),
+			latest_blogs_list=BlogArticle.objects.filter(author=request.user.lawyer.id).order_by('-publish_date'))
+	except ObjectDoesNotExist, e: raise Http404
+
+def index_view(request, pk_lawyer):
+	return response(request, 'blogs/index.html', 
+		is_master=checkf(lambda: request.user.lawyer.id==int(pk_lawyer)),
+		categories=BlogCategory.objects.filter(user=request.user.lawyer),
+		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date'))
+
+def detail_view(request, pk_text):
+	article=get_object_or_404(BlogArticle, pk=pk_text)
+	return response(request, 'blogs/detail.html', 
+		is_master=checkf(lambda: request.user.lawyer==article.author),
+		article=article,
+		comments=BlogComment.objects.filter(article_id=pk_text))
+
+@login_required
+def new_comment_view(request, pk_text):
+	if request.method=='POST':
+		article=get_object_or_404(BlogArticle, pk=pk_text)
+		BlogComment.objects.create( 
+			user=request.user, 
+			article=article,
+			text=request.POST['txt_comment']
+		).save()
+		return redirect('blogs:text', pk_text=article.id)
+	else: raise Http404
 
 @login_required
 def categories_view(request):
-	try:
-		categories=BlogCategory.objects.filter(user=request.user.lawyer)
-		template = loader.get_template('blogs/categories.html')
-	 	context = RequestContext(request, {
-	 		'categories': categories,
-	 	})
-	 	return HttpResponse(template.render(context))
-		# return HttpResponseRedirect(reverse('blogs:index',kwargs={'pk':request.user.lawyer.id}))
-	except ObjectDoesNotExist, e:
-		raise Http404
+	try: 
+		return response(request, 'blogs/categories.html', 
+			categories=BlogCategory.objects.filter(user=request.user.lawyer))
+	except ObjectDoesNotExist, e: raise Http404
 

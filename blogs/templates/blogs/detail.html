@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
-{% block title %}xxx的律师博客 - {{ article.title }}{% endblock %}
+{% block title %}{{ request.user }}的律师博客 - {{ article.title }}{% endblock %}
 {% block main %}
-<h1>Blog Text</h1>
+<h1>{{ article.title }}</h1>
+{% if is_master %}
+<a href="{% url 'blogs:index' article.author.id %}">返回博客主页</a>
+<a href="{% url 'blogs:edit_article' article.id %}">编辑</a>
+<a href="{% url 'blogs:delete_article' article.id %}">删除</a>
+{% endif %}
 
-<h2>{{ article.title }}</h2>
 <div>
 	{{ article.text }}
 </div>
 
-<h2>Comments</h2>
+<h2>评论</h2>
 {% for comment in comments %}
 <div>
  	<p> {{comment.user}} </p> 

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}编辑文章{% endblock %}
+{% block main %}
+<h1>编辑文章</h1>
+<a href="{% url 'blogs:text' article.id %}">返回</a>
+<form method="post" >
+	{% csrf_token %}
+	{{ article_edit }}
+	<input type="submit"/>
+</form>
+{% endblock %}
