@@ -55,11 +55,7 @@ def new_article_view(request):
 			article_create=ArticleForm())
 
 def home_view(request):
-	try:
-		return response(request, 'blogs/index.html', 
-			is_master=True,
-			categories=BlogCategory.objects.filter(user=request.user.lawyer),
-			latest_blogs_list=BlogArticle.objects.filter(author=request.user.lawyer.id).order_by('-publish_date'))
+	try: return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	except ObjectDoesNotExist, e: raise Http404
 
 def index_view(request, pk_lawyer):
