@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}律师博客 - xxx{% endblock %}
+{% block title %}律师博客 - {{ request.user }}{% endblock %}
 {% block main %}
 
-<h1>Blog Index</h1>
+<h1>律师博客 - {{ request.user }}</h1>
+{% if is_master %}
+<a href="{% url 'blogs:new_article' %}">写新文章</a>
+<a href="{% url 'blogs:categories' %}">分类管理</a>
+{% endif %}
+
 {% if latest_blogs_list %}
 <ul>
 {% for article in latest_blogs_list %}
@@ -10,7 +15,14 @@
 {% endfor %}
 </ul>
 {% else %}
-<p>No articles are available.</p>
+<p>目前没有文章。</p>
 {% endif %}
+
+<h3>文章分类</h3>
+<ul>
+{% for category in categories %}
+	<li><a href="#">{{ category.name }}</a></li>
+{% endfor %}
+</ul>
 
 {% endblock %}

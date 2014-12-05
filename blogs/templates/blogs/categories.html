@@ -1,4 +1,8 @@
-<h1>Blog Index</h1>
+{% extends 'base.html' %}
+{% block title %}文章分类{% endblock %}
+{% block main %}
+<h1>文章分类</h1>
+<a href="{% url 'blogs:index' request.user.lawyer.id %}">返回博客主页</a>
 {% if categories %}
 <ul>
 {% for category in categories %}
@@ -8,5 +12,5 @@
 {% else %}
 <p>No categories are available.</p>
 {% endif %}
-
+{% endblock %}
 
