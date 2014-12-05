@@ -21,7 +21,7 @@
 <h3>文章分类</h3>
 <ul>
 {% for category in categories %}
-	<li><a href="#">{{ category.name }}</a></li>
+	<li><a href="{% url 'blogs:index_category' pk_lawyer category.id %}">{{ category.name }}</a></li>
 {% endfor %}
 </ul>
 

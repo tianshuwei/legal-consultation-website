@@ -65,8 +65,16 @@ def home_view(request):
 def index_view(request, pk_lawyer):
 	return response(request, 'blogs/index.html', 
 		is_master=checkf(lambda: request.user.lawyer.id==int(pk_lawyer)),
+		pk_lawyer=int(pk_lawyer),
 		categories=BlogCategory.objects.filter(user=request.user.lawyer),
 		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date'))
+
+def index_category_view(request, pk_lawyer, pk_category):
+	category=get_object_or_404(BlogCategory, pk=pk_category)
+	return response(request, 'blogs/index_category.html', 
+		is_master=checkf(lambda: request.user.lawyer.id==int(pk_lawyer)),
+		category=category,
+		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).filter(category=category).order_by('-publish_date'))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)

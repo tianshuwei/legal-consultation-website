@@ -6,7 +6,12 @@
 {% if categories %}
 <ul>
 {% for category in categories %}
-	<li><a href="#">{{ category.name }}</a></li>
+	<li>
+		<a href="{% url 'blogs:index_category' request.user.lawyer.id category.id %}">{{ category.name }}</a>
+
+		<a href="#">编辑</a>
+		<a href="#">删除</a>
+	</li>
 {% endfor %}
 </ul>
 {% else %}
