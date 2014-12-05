@@ -1,9 +1,22 @@
 # README
  
+## 公告
+
+> 鉴于Django对View的封装存在诸多不足，决定取消generic view的使用，
+> org/tools.py中有自己封装的写view的API，用法参考blogs应用。
+> 
+
+## 下周计划
+
+1. 用户中心、律师中心 _页面设计_
+2. view重构
+3. 关系模式调整 Product -> client改user
+4. product应用测试
+
 ## 本周计划
 
 1. UI模板设计
-2. tanki _页面设计_
+2. tanki UI模板设计
 3. timothy 产品 订单 咨询提问、评价 _页面设计_
 4. alex 律师博客 _页面设计_
 
@@ -28,7 +41,7 @@
 
 ## 全站URL设计  2014.12.2
 
-~~~
+~~~python
 # org/urls.py
     url(r'^admin/', include(admin.site.urls)),
     url(r'^index/', include('index.urls',namespace='index')),
@@ -154,48 +167,6 @@ python源代码使用制表符缩进，UNIX风格换行符换行；
 settings.py已通过.gitignore设置为忽略，因为settings.py与调试/部署环境密切相关，没有同步的意义。如果需要参考数据库配置，参考同目录下settings-sample.py。
 
 开发过程遇到问题留意最后的参考链接，参考链接会随项目开发进程不断更新。
-
-** Django站点目录结构示例： **
-
-~~~
-"""
-.
-├── manage.py   项目管理工具
-├── mysite   项目设置
-│   ├── __init__.py
-│   ├── __init__.pyc
-│   ├── settings.py  全局设置
-│   ├── settings.pyc
-│   ├── urls.py   整站URL模型
-│   ├── urls.pyc
-│   ├── wsgi.py
-│   └── wsgi.pyc
-└── polls  项目中的一个应用
-    ├── admin.py   后台设置
-        ├── admin.pyc
-        ├── __init__.py
-        ├── __init__.pyc
-        ├── migrations   更新数据库的工具
-        │   ├── 0001_initial.py
-        │   ├── 0001_initial.pyc
-        │   ├── __init__.py
-        │   └── __init__.pyc
-        ├── models.py    应用的关系模式
-        ├── models.pyc
-        ├── templates   模板
-        │   └── polls   应用模板的命名空间
-        │       ├── detail.html   应用中的模板
-        │       ├── index.html
-        │       └── results.html
-        ├── tests.py   单元测试
-        ├── tests.pyc
-        ├── urls.py   应用的URL模型
-        ├── urls.pyc
-        ├── views.py   类似MVC中的控制层或Java Servlet
-        └── views.pyc
-"""
-~~~
-
 
 ## 参考 
 
