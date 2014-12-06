@@ -4,19 +4,19 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.shortcuts import render
 
-def message(request,msg=None):
-	"""	
-	会话消息
+# def message(request,msg=None):
+# 	"""	
+# 	会话消息
 
-		msg         会话消息
+# 		msg         会话消息
 
-		模板中取会话消息示例：
-			{% if request.session.result_text %}
-				{{ request.session.result_text }}
-			{% endif %}
-	"""
-	if msg: request.session['result_text'] = msg
-	else: del request.session['result_text']
+# 		模板中取会话消息示例：
+# 			{% if request.session.result_text %}
+# 				{{ request.session.result_text }}
+# 			{% endif %}
+# 	"""
+# 	if msg: request.session['result_text'] = msg
+# 	else: del request.session['result_text']
 
 def redirect(url_ref,**kwargs):
 	"""
@@ -61,3 +61,4 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.shortcuts import get_object_or_404
+from django.contrib import messages

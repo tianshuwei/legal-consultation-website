@@ -13,9 +13,9 @@ def delete_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if checkf(lambda: request.user.lawyer==article.author):
 		article.delete()
-		message(request, u'文章删除成功')
+		messages.success(request, u'文章删除成功')
 	else:
-		message(request, u'文章删除失败')
+		messages.error(request, u'文章删除失败')
 	return redirect('blogs:index', pk_lawyer=article.author.id)
 
 @login_required
@@ -25,9 +25,9 @@ def edit_article_view(request, pk_text):
 		if checkf(lambda: request.user.lawyer==article.author):
 			form=ArticleForm(request.POST, instance=article)
 			form.save()
-			message(request, u'文章编辑成功')
+			messages.success(request, u'文章编辑成功')
 		else:
-			message(request, u'文章编辑失败')
+			messages.error(request, u'文章编辑失败')
 		return redirect('blogs:index', pk_lawyer=article.author.id)
 	else: 
 		return response(request, 'blogs/edit.html', 
@@ -45,12 +45,12 @@ def new_article_view(request):
 				tags=request.POST['tags'],
 				text=request.POST['text']
 			).save()
-		except BlogCategory.DoesNotExist, e: message(request, u'该分类不存在')
+		except BlogCategory.DoesNotExist, e: messages.error(request, u'该分类不存在')
 		except ObjectDoesNotExist, e: 
-			message(request, u'该律师不存在')
+			messages.error(request, u'该律师不存在')
 			return redirect('index:index')
-		except: message(request, u'文章创建失败')
-		else: message(request, u'文章创建成功')
+		except: messages.error(request, u'文章创建失败')
+		else: messages.success(request, u'文章创建成功')
 		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	else: 
 		return response(request, 'blogs/new.html', 
@@ -104,9 +104,9 @@ def categories_view(request):
 				user=request.user.lawyer,
 				name=request.POST['name']
 			).save()
-		except ObjectDoesNotExist, e: message(request, u'新分类创建失败')
-		except: message(request, u'新分类创建失败')
-		else: message(request, u'新分类创建成功')
+		except ObjectDoesNotExist, e: messages.error(request, u'新分类创建失败')
+		except: messages.error(request, u'新分类创建失败')
+		else: messages.success(request, u'新分类创建成功')
 		return redirect('blogs:categories')
 	else:
 		try: 
@@ -119,9 +119,9 @@ def delete_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
 	if checkf(lambda: request.user.lawyer==category.user):
 		category.delete()
-		message(request, u'分类删除成功')
+		messages.success(request, u'分类删除成功')
 	else:
-		message(request, u'分类删除失败')
+		messages.error(request, u'分类删除失败')
 	return redirect('blogs:categories')
 
 @login_required
@@ -130,7 +130,7 @@ def rename_category_view(request, pk_category):
 	if checkf(lambda: request.user.lawyer==category.user):
 		category.name=request.POST['name']
 		category.save()
-		message(request, u'分类重命名成功')
+		messages.success(request, u'分类重命名成功')
 	else:
-		message(request, u'分类重命名失败')
+		messages.error(request, u'分类重命名失败')
 	return redirect('blogs:categories')
