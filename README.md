@@ -98,19 +98,23 @@ def index_view(request, pk_lawyer):
 
 ~~~
 
-## 下周计划
-
-1. 用户中心、律师中心 _页面设计_
-2. view重构
-3. 关系模式调整 Product -> client改user
-4. product应用测试
-
 ## 本周计划
 
 1. UI模板设计
 2. tanki UI模板设计
 3. timothy 产品 订单 咨询提问、评价 _页面设计_
 4. alex 律师博客 _页面设计_
+5. 用户中心初步
+
+## 下一步计划
+
+1. 用户中心、律师中心 _页面设计_
+2. view重构
+3. 关系模式调整
+4. blogs, products测试
+5. 统计功能需求分析（把触发器设计进去）
+6. 导航栏设计
+7. blogs 分页显示、搜索、标签
 
 ## 计划历史
 
@@ -160,12 +164,14 @@ def index_view(request, pk_lawyer):
 	url(r'^$', views.home_view, name='home'),
 	url(r'^(?P<pk_lawyer>\d+)/$', views.index_view, name='index'),
 	url(r'^(?P<pk_lawyer>\d+)/(?P<pk_category>\d+)/$', views.index_category_view, name='index_category'),
-	url(r'^t(?P<pk_text>\d+)/$', views.detail_view, name='text'),
 	url(r'^c(?P<pk_text>\d+)/$', views.new_comment_view, name='new_comment'),
 	url(r'^categories/$', views.categories_view, name='categories'),
-	url(r'^new/$', views.new_article_view, name='new_article'),
-	url(r'^e(?P<pk_text>\d+)/$', views.edit_article_view, name='edit_article'),
-	url(r'^del(?P<pk_text>\d+)/$', views.delete_article_view, name='delete_article'),
+	url(r'^categories/rm(?P<pk_category>\d+)/$', views.delete_category_view, name='delete_category'),
+	url(r'^categories/mv(?P<pk_category>\d+)/$', views.rename_category_view, name='rename_category'),
+	url(r'^t(?P<pk_text>\d+)/$', views.detail_view, name='text'),
+	url(r'^text/rm(?P<pk_text>\d+)/$', views.delete_article_view, name='delete_article'),
+	url(r'^text/ed(?P<pk_text>\d+)/$', views.edit_article_view, name='edit_article'),
+	url(r'^text/new/$', views.new_article_view, name='new_article'),
 
 # index/urls.py
 	url(r'^$', views.index_view, name='index'),
