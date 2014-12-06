@@ -6,6 +6,98 @@
 > org/tools.py中有自己封装的写view的API，用法参考blogs应用。
 > 
 
+_org/tools.py_
+
+~~~python
+# -*- coding: utf-8 -*-
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from django.template import RequestContext, loader
+from django.shortcuts import render
+
+def message(request,msg=None):
+	"""	
+	会话消息
+
+		msg         会话消息
+
+		模板中取会话消息示例：
+			{% if request.session.result_text %}
+				{{ request.session.result_text }}
+			{% endif %}
+	"""
+	if msg: request.session['result_text'] = msg
+	else: del request.session['result_text']
+
+def redirect(url_ref,**kwargs):
+	"""
+	HTTP重定向
+
+		url_ref       url引用名
+		kwargs        url中的命名参数
+	"""
+	return HttpResponseRedirect(reverse(url_ref, kwargs = kwargs))
+
+def response(request, template_name, **context):
+	"""
+	常规HTTP响应
+
+		request        被响应HTTP请求
+		template_name  模板
+		context        模板上下文变量
+	"""
+	return HttpResponse(loader.get_template(template_name).render(RequestContext(request, context)))
+
+def checkf(exp, default=None):
+	"""
+	求lambda表达式的值，异常返回default（默认为None）
+
+		exp            一个无参lambda表达式
+		default        异常返回默认值
+	""" 
+	try: return exp()
+	except: return default
+
+"""
+views.py中使用
+
+from org.tools import *
+
+之后这些下面的包自动导入
+"""
+
+from django.http import Http404
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django import forms
+from django.shortcuts import get_object_or_404
+~~~
+
+_Example_
+
+~~~python
+from org.tools import * # important! 导入写view用的API
+# ... 然后导入用到的关系模式
+
+# ...
+
+def home_view(request):
+	try: return redirect('blogs:index', pk_lawyer=request.user.lawyer.id) # HTTP重定向
+	except ObjectDoesNotExist, e: raise Http404 # 引发HTTP错误
+
+def index_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/index.html',  # 常规HTTP响应
+		lawyer=lawyer,
+		is_master=checkf(lambda: request.user.lawyer==lawyer),
+		categories=BlogCategory.objects.filter(user=pk_lawyer),
+		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date'))
+
+# ...
+
+~~~
+
 ## 下周计划
 
 1. 用户中心、律师中心 _页面设计_
@@ -43,44 +135,49 @@
 
 ~~~python
 # org/urls.py
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^index/', include('index.urls',namespace='index')),
-    url(r'^accounts/', include('accounts.urls',namespace='accounts')),
-    url(r'^products/',include('products.urls',namespace='products')),
-    url(r'^blogs/',include('blogs.urls',namespace='blogs')),
-    url(r'^smartcontract/',include('smartcontract.urls',namespace='smartcontract')),
+	url(r'^admin/', include(admin.site.urls)),
+	url(r'^index/', include('index.urls',namespace='index')),
+	url(r'^accounts/', include('accounts.urls',namespace='accounts')),
+	url(r'^products/',include('products.urls',namespace='products')),
+	url(r'^blogs/',include('blogs.urls',namespace='blogs')),
+	url(r'^smartcontract/',include('smartcontract.urls',namespace='smartcontract')),
 
 # accounts/urls.py
-    url(r'^login/$', views.login_view, name='login'),
-    url(r'^logout/$', views.logout_view, name='logout'),
-    url(r'^register/$', views.register_view, name='register'),
-    url(r'^lawyerlist/$', views.lawyerlist_view, name='lawyerlist'), # ListView
-    url(r'^usercenter/$', views.usercenter_view, name='usercenter'),
-    url(r'^lawyercenter/$', views.lawyercenter_view, name='lawyercenter'),
-    url(r'^profile/$', views.profile_view, name='profile'), # DetailView
-    url(r'^q(?P<pk>\d+)/$', views.question_view, name='question'), # DetailView
-    url(r'^o(?P<pk>\d+)/$', views.order_detail_view, name='order_detail'), #DetailView
-    url(r'^balance/$', views.balance_view, name='balance'),
-    url(r'^r(?P<pk>\d+)/$', views.remark_view, name='remark'), # pk->user.id (lawyer)
-    url(r'^question/$', views.new_question_view, name='new_question'),
+	url(r'^login/$', views.login_view, name='login'),
+	url(r'^logout/$', views.logout_view, name='logout'),
+	url(r'^register/$', views.register_view, name='register'),
+	url(r'^lawyerlist/$', views.lawyerlist_view, name='lawyerlist'), # ListView
+	url(r'^usercenter/$', views.usercenter_view, name='usercenter'),
+	url(r'^lawyercenter/$', views.lawyercenter_view, name='lawyercenter'),
+	url(r'^profile/$', views.profile_view, name='profile'), # DetailView
+	url(r'^q(?P<pk>\d+)/$', views.question_view, name='question'), # DetailView
+	url(r'^o(?P<pk>\d+)/$', views.order_detail_view, name='order_detail'), #DetailView
+	url(r'^balance/$', views.balance_view, name='balance'),
+	url(r'^r(?P<pk>\d+)/$', views.remark_view, name='remark'), # pk->user.id (lawyer)
+	url(r'^question/$', views.new_question_view, name='new_question'),
 
 # blogs/urls.py
-    url(r'^$', views.index_view, name='index'), # ListView
-    url(r'^t(?P<pk>\d+)/$', views.text_view, name='text'), # DetailView
-    url(r'^categories/$', views.categories_view, name='categories'), # ListView
-    url(r'^new/$', views.new_article_view, name='new_article'),
+	url(r'^$', views.home_view, name='home'),
+	url(r'^(?P<pk_lawyer>\d+)/$', views.index_view, name='index'),
+	url(r'^(?P<pk_lawyer>\d+)/(?P<pk_category>\d+)/$', views.index_category_view, name='index_category'),
+	url(r'^t(?P<pk_text>\d+)/$', views.detail_view, name='text'),
+	url(r'^c(?P<pk_text>\d+)/$', views.new_comment_view, name='new_comment'),
+	url(r'^categories/$', views.categories_view, name='categories'),
+	url(r'^new/$', views.new_article_view, name='new_article'),
+	url(r'^e(?P<pk_text>\d+)/$', views.edit_article_view, name='edit_article'),
+	url(r'^del(?P<pk_text>\d+)/$', views.delete_article_view, name='delete_article'),
 
 # index/urls.py
-    url(r'^$', views.index_view, name='index'),
+	url(r'^$', views.index_view, name='index'),
 
 # products/urls.py
-    url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
-    url(r'^c(?P<pk>\d+)/$', views.new_comment_view, name='new_comment')
-    url(r'^order/$', views.new_order_view, name='new_order'),
+	url(r'^$', views.IndexView.as_view(), name='index'),
+	url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
+	url(r'^c(?P<pk>\d+)/$', views.new_comment_view, name='new_comment')
+	url(r'^order/$', views.new_order_view, name='new_order'),
 
 # smartcontract/urls.p
-    url(r'^test/$', views.test_render_view, name='test'),
+	url(r'^test/$', views.test_render_view, name='test'),
 
 ~~~
 
