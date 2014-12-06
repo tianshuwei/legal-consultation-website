@@ -36,7 +36,7 @@ def new_comment_view(request, pk):
 		# for k in dir(request.user):
 		# 	if 'client' in k:
 		# 		print repr(getattr(request.user,k)),getattr(request.user,k)
-		comment = Comment.objects.create(comment=request.POST['txt_comment'], client=request.user.client, product=p)
+		comment = Comment.objects.create(text=request.POST['txt_comment'], user=request.user, product=p)
 		comment.save()
 	except :
 		raise

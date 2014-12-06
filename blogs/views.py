@@ -64,7 +64,7 @@ def index_view(request, pk_lawyer):
 	return response(request, 'blogs/index.html', 
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=BlogCategory.objects.filter(user=pk_lawyer),
+		categories=BlogCategory.objects.filter(lawyer=pk_lawyer),
 		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date'))
 
 def index_category_view(request, pk_lawyer, pk_category):
@@ -88,7 +88,7 @@ def new_comment_view(request, pk_text):
 	if request.method=='POST':
 		article=get_object_or_404(BlogArticle, pk=pk_text)
 		BlogComment.objects.create( 
-			user=request.user, 
+			lawyer=request.user, 
 			article=article,
 			text=request.POST['txt_comment']
 		).save()
@@ -99,6 +99,6 @@ def new_comment_view(request, pk_text):
 def categories_view(request):
 	try: 
 		return response(request, 'blogs/categories.html', 
-			categories=BlogCategory.objects.filter(user=request.user.lawyer))
+			categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
 	except ObjectDoesNotExist, e: raise Http404
 
