@@ -20,15 +20,12 @@ class RegisterForm(forms.Form):
 def login_view(request):
 	if request.method=='POST':
 		username,password = request.POST['username'],request.POST['password']
-		next_url=request.POST['next']
+		# next_url=request.POST['next'] if 'next' in request.POST else ''
 		user = authenticate(username=username, password=password)
 		if user is not None:
-			print 'Login ok'
 			login(request, user)
-			#if(request=="new_order") return HttpResponseRedirect(reverse('products:detail'))
 			return HttpResponseRedirect(reverse('index:index'))
 		else:
-			print 'Login err'
 			return HttpResponseRedirect(reverse('index:index'))
 
 	else:
