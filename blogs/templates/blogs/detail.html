@@ -2,9 +2,9 @@
 {% block title %}{{ request.user }}的律师博客 - {{ article.title }}{% endblock %}
 {% block main %}
 <h1>{{ article.title }}</h1>
-{% if is_master %}
 <a href="{% url 'blogs:index' article.author.id %}">返回博客主页</a>
 <a href="{% url 'blogs:index_category' article.author.id article.category.id %}">返回{{ article.category.name }}</a>
+{% if is_master %}
 <a href="{% url 'blogs:edit_article' article.id %}">编辑</a>
 <a href="{% url 'blogs:delete_article' article.id %}">删除</a>
 {% endif %}

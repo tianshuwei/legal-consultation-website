@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}律师博客 - {{ request.user }}{% endblock %}
+{% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
 {% block main %}
 
-<h1>律师博客 - {{ request.user }}</h1>
+<h1>律师博客 - {{ lawyer.user.username }}</h1>
 {% if is_master %}
 <a href="{% url 'blogs:new_article' %}">写新文章</a>
 <a href="{% url 'blogs:categories' %}">分类管理</a>
@@ -21,7 +21,7 @@
 <h3>文章分类</h3>
 <ul>
 {% for category in categories %}
-	<li><a href="{% url 'blogs:index_category' pk_lawyer category.id %}">{{ category.name }}</a></li>
+	<li><a href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a></li>
 {% endfor %}
 </ul>
 
