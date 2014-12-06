@@ -31,8 +31,8 @@ function new_order()
 
 {% for comment in products_comments %}
 <div>
- 	<p> {{comment.client}} </p> 
- 	<p> {{comment.comment}} </p> 
+ 	<p> {{comment.user}} </p> 
+ 	<p> {{comment.text}} </p> 
  	<p> {{comment.publish_date}} </p> 
 </div>
 {% endfor %}
