@@ -15,20 +15,6 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.shortcuts import render
 
-def message(request,msg=None):
-	"""	
-	会话消息
-
-		msg         会话消息
-
-		模板中取会话消息示例：
-			{% if request.session.result_text %}
-				{{ request.session.result_text }}
-			{% endif %}
-	"""
-	if msg: request.session['result_text'] = msg
-	else: del request.session['result_text']
-
 def redirect(url_ref,**kwargs):
 	"""
 	HTTP重定向
@@ -102,16 +88,17 @@ def index_view(request, pk_lawyer):
 
 1. UI模板设计
 2. tanki UI模板设计
-3. timothy 产品 订单 咨询提问、评价 _页面设计_
+3. timothy 产品 订单 _页面设计_
 4. alex 律师博客 _页面设计_
-5. 用户中心初步
+2. view重构
+3. 关系模式调整
 
 ## 下一步计划
 
 1. 用户中心、律师中心 _页面设计_
-2. view重构
-3. 关系模式调整
+3. timothy 咨询提问、评价 _页面设计_
 4. blogs, products测试
+5. 用户中心初步
 5. 统计功能需求分析（把触发器设计进去）
 6. 导航栏设计
 7. blogs 分页显示、搜索、标签
