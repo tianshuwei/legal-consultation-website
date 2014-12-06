@@ -20,10 +20,12 @@ class RegisterForm(forms.Form):
 def login_view(request):
 	if request.method=='POST':
 		username,password = request.POST['username'],request.POST['password']
+		next_url=request.POST['next']
 		user = authenticate(username=username, password=password)
 		if user is not None:
 			print 'Login ok'
 			login(request, user)
+			#if(request=="new_order") return HttpResponseRedirect(reverse('products:detail'))
 			return HttpResponseRedirect(reverse('index:index'))
 		else:
 			print 'Login err'
@@ -33,7 +35,8 @@ def login_view(request):
 		login_form=LoginForm()
 		template = loader.get_template('accounts/login.html')
 		context = RequestContext(request, {
-			'login_form':login_form
+			'login_form':login_form,
+			'next_url':request.GET['next']
 		})
 		return HttpResponse(template.render(context))
 

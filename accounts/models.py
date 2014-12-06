@@ -14,7 +14,7 @@ class Client(models.Model):
 	user = models.OneToOneField(User)
 	balance = models.DecimalField(max_digits=16, decimal_places=3,default=0)
 	points = models.IntegerField(default=0)
-	comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
+	#comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
 
 	def __unicode__(self):
 		return self.user.username
@@ -24,7 +24,7 @@ class Lawyer(models.Model):
 	balance = models.DecimalField(max_digits=16, decimal_places=3,default=0)
 	blacklist = models.BooleanField(default=False)
 	score = models.IntegerField(default=0)
-	blog = models.URLField(max_length=512)
+	#blog = models.URLField(max_length=512)
 	remarks = models.ManyToManyField(Client, through="Remark", through_fields=("lawyer","client"), related_name="c_l_remarks")
 	questions = models.ManyToManyField(Client, through="Question", through_fields=("lawyer","client"), related_name="c_l_questions")
 
@@ -43,7 +43,7 @@ class Remark(models.Model):
 class Question(models.Model):
 	lawyer = models.ForeignKey(Lawyer)
 	client = models.ForeignKey(Client)
-	title = models.CharField(max_length=256,default='')
+	title = models.CharField(max_length=255,default='')
 	description = models.TextField()
 	publish_date = models.DateTimeField('date published',auto_now=True)
 

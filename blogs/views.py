@@ -65,7 +65,7 @@ def index_view(request, pk_lawyer):
 	return response(request, 'blogs/index.html', 
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=BlogCategory.objects.filter(user=pk_lawyer),
+		categories=BlogCategory.objects.filter(lawyer=pk_lawyer),
 		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date'))
 
 def index_category_view(request, pk_lawyer, pk_category):
@@ -89,7 +89,7 @@ def new_comment_view(request, pk_text):
 	if request.method=='POST':
 		article=get_object_or_404(BlogArticle, pk=pk_text)
 		BlogComment.objects.create( 
-			user=request.user, 
+			lawyer=request.user, 
 			article=article,
 			text=request.POST['txt_comment']
 		).save()
@@ -98,10 +98,16 @@ def new_comment_view(request, pk_text):
 
 @login_required
 def categories_view(request):
+<<<<<<< HEAD
+	try: 
+		return response(request, 'blogs/categories.html', 
+			categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
+	except ObjectDoesNotExist, e: raise Http404
+=======
 	if request.method=='POST':
 		try: 
 			BlogCategory.objects.create(
-				user=request.user.lawyer,
+				lawyer=request.user.lawyer,
 				name=request.POST['name']
 			).save()
 		except ObjectDoesNotExist, e: messages.error(request, u'新分类创建失败')
@@ -111,13 +117,14 @@ def categories_view(request):
 	else:
 		try: 
 			return response(request, 'blogs/categories.html', 
-				categories=BlogCategory.objects.filter(user=request.user.lawyer))
+				categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
 		except ObjectDoesNotExist, e: raise Http404
+>>>>>>> temp
 
 @login_required
 def delete_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
-	if checkf(lambda: request.user.lawyer==category.user):
+	if checkf(lambda: request.user.lawyer==category.lawyer):
 		category.delete()
 		messages.success(request, u'分类删除成功')
 	else:
@@ -127,7 +134,7 @@ def delete_category_view(request, pk_category):
 @login_required
 def rename_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
-	if checkf(lambda: request.user.lawyer==category.user):
+	if checkf(lambda: request.user.lawyer==category.lawyer):
 		category.name=request.POST['name']
 		category.save()
 		messages.success(request, u'分类重命名成功')
