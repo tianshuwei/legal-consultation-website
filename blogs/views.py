@@ -49,6 +49,7 @@ def new_article_view(request):
 		except ObjectDoesNotExist, e: 
 			message(request, u'该律师不存在')
 			return redirect('index:index')
+		except: message(request, u'文章创建失败')
 		else: message(request, u'文章创建成功')
 		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	else: 
@@ -97,8 +98,46 @@ def new_comment_view(request, pk_text):
 
 @login_required
 def categories_view(request):
+<<<<<<< HEAD
 	try: 
 		return response(request, 'blogs/categories.html', 
 			categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
 	except ObjectDoesNotExist, e: raise Http404
+=======
+	if request.method=='POST':
+		try: 
+			BlogCategory.objects.create(
+				lawyer=request.user.lawyer,
+				name=request.POST['name']
+			).save()
+		except ObjectDoesNotExist, e: message(request, u'新分类创建失败')
+		except: message(request, u'新分类创建失败')
+		else: message(request, u'新分类创建成功')
+		return redirect('blogs:categories')
+	else:
+		try: 
+			return response(request, 'blogs/categories.html', 
+				categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
+		except ObjectDoesNotExist, e: raise Http404
+>>>>>>> temp
 
+@login_required
+def delete_category_view(request, pk_category):
+	category=get_object_or_404(BlogCategory, pk=pk_category)
+	if checkf(lambda: request.user.lawyer==category.lawyer):
+		category.delete()
+		message(request, u'分类删除成功')
+	else:
+		message(request, u'分类删除失败')
+	return redirect('blogs:categories')
+
+@login_required
+def rename_category_view(request, pk_category):
+	category=get_object_or_404(BlogCategory, pk=pk_category)
+	if checkf(lambda: request.user.lawyer==category.lawyer):
+		category.name=request.POST['name']
+		category.save()
+		message(request, u'分类重命名成功')
+	else:
+		message(request, u'分类重命名失败')
+	return redirect('blogs:categories')
