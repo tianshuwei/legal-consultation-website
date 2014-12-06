@@ -4,7 +4,7 @@
 
 <h1>律师博客 - {{ lawyer.user.username }} - {{ category.name }}</h1>
 {% if is_master %}
-<a href="{% url 'blogs:index' category.user.id %}">返回博客主页</a>
+<a href="{% url 'blogs:index' category.lawyer.id %}">返回博客主页</a>
 <a href="{% url 'blogs:new_article' %}">写新文章</a>
 {% endif %}
 

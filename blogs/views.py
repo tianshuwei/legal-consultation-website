@@ -89,7 +89,7 @@ def new_comment_view(request, pk_text):
 	if request.method=='POST':
 		article=get_object_or_404(BlogArticle, pk=pk_text)
 		BlogComment.objects.create( 
-			lawyer=request.user, 
+			user=request.user, 
 			article=article,
 			text=request.POST['txt_comment']
 		).save()
@@ -98,12 +98,6 @@ def new_comment_view(request, pk_text):
 
 @login_required
 def categories_view(request):
-<<<<<<< HEAD
-	try: 
-		return response(request, 'blogs/categories.html', 
-			categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
-	except ObjectDoesNotExist, e: raise Http404
-=======
 	if request.method=='POST':
 		try: 
 			BlogCategory.objects.create(
@@ -119,7 +113,6 @@ def categories_view(request):
 			return response(request, 'blogs/categories.html', 
 				categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
 		except ObjectDoesNotExist, e: raise Http404
->>>>>>> temp
 
 @login_required
 def delete_category_view(request, pk_category):

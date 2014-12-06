@@ -34,4 +34,4 @@ class BlogSettings(models.Model):
 	items_per_page=models.IntegerField(default=0)
 
 	def __unicode__(self):
-		return self.state
+		return self.lawyer.user.username
