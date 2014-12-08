@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
@@ -47,6 +48,19 @@ def checkf(exp, default=None):
 	try: return exp()
 	except: return default
 
+def paginated(pagenumf, items_per_page, dataset):
+	"""
+	结果集分页
+
+		pagenumf       当前页码的lambda表达式
+		items_per_page 每页项目数
+		dataset        原结果集
+	""" 
+	paginator = Paginator(dataset, items_per_page)
+	try: return paginator.page(pagenumf())
+	except PageNotAnInteger: return paginator.page(1)
+	except EmptyPage: return paginator.page(paginator.num_pages)
+
 """
 views.py中使用
 
@@ -59,6 +73,7 @@ from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django import forms
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django import forms
+
