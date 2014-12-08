@@ -1,107 +1,18 @@
 # README
- 
-## 公告
-
-> 鉴于Django对View的封装存在诸多不足，决定取消generic view的使用，
-> org/tools.py中有自己封装的写view的API，用法参考blogs应用。
-> 
-
-_org/tools.py_
-
-~~~python
-# -*- coding: utf-8 -*-
-from django.http import HttpResponse, HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.template import RequestContext, loader
-from django.shortcuts import render
-
-def redirect(url_ref,**kwargs):
-	"""
-	HTTP重定向
-
-		url_ref       url引用名
-		kwargs        url中的命名参数
-	"""
-	return HttpResponseRedirect(reverse(url_ref, kwargs = kwargs))
-
-def response(request, template_name, **context):
-	"""
-	常规HTTP响应
-
-		request        被响应HTTP请求
-		template_name  模板
-		context        模板上下文变量
-	"""
-	return HttpResponse(loader.get_template(template_name).render(RequestContext(request, context)))
-
-def checkf(exp, default=None):
-	"""
-	求lambda表达式的值，异常返回default（默认为None）
-
-		exp            一个无参lambda表达式
-		default        异常返回默认值
-	""" 
-	try: return exp()
-	except: return default
-
-"""
-views.py中使用
-
-from org.tools import *
-
-之后这些下面的包自动导入
-"""
-
-from django.http import Http404
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.models import User
-from django.contrib.auth.decorators import login_required
-from django import forms
-from django.shortcuts import get_object_or_404
-~~~
-
-_Example_
-
-~~~python
-from org.tools import * # important! 导入写view用的API
-# ... 然后导入用到的关系模式
-
-# ...
-
-def home_view(request):
-	try: return redirect('blogs:index', pk_lawyer=request.user.lawyer.id) # HTTP重定向
-	except ObjectDoesNotExist, e: raise Http404 # 引发HTTP错误
-
-def index_view(request, pk_lawyer):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	return response(request, 'blogs/index.html',  # 常规HTTP响应
-		lawyer=lawyer,
-		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=BlogCategory.objects.filter(user=pk_lawyer),
-		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date'))
-
-# ...
-
-~~~
 
 ## 本周计划
 
-1. UI模板设计
-2. tanki UI模板设计
-3. timothy 产品 订单 _页面设计_
-4. alex 律师博客 _页面设计_
-2. view重构
-3. 关系模式调整
+3. 产品模块设计
+3. 咨询提问、评价
+5. 用户中心初步
+6. 导航栏设计
+5. 统计功能需求分析（把触发器设计进去）
 
 ## 下一步计划
 
-1. 用户中心、律师中心 _页面设计_
-3. timothy 咨询提问、评价 _页面设计_
+1. 用户中心、律师中心
 4. blogs, products测试
-5. 用户中心初步
-5. 统计功能需求分析（把触发器设计进去）
-6. 导航栏设计
-7. blogs 分页显示、搜索、标签
+7. blogs 搜索、标签
 
 ## 计划历史
 
@@ -121,6 +32,14 @@ def index_view(request, pk_lawyer):
 1. Django数据库表相关实验
 2. products模块列表/详细页，用户评论
 3. 用户对律师的的咨询提问、评价 (未完)
+
+** 第四周 **
+
+1. UI模板设计
+2. tanki UI模板设计
+4. alex 律师博客 _页面设计_
+2. view重构
+3. 关系模式调整
 
 ## 全站URL设计  2014.12.2
 

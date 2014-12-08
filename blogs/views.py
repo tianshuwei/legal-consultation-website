@@ -7,6 +7,12 @@ class ArticleForm(forms.ModelForm):
 	class Meta:
 		model = BlogArticle
 		fields = ['title', 'category', 'tags', 'text']
+		labels = {
+			'title' : '标题',
+			'category' : '分类',
+			'tags' : '标签',
+			'text' : '正文',
+		}
 
 @login_required
 def delete_article_view(request, pk_text):

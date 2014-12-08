@@ -15,22 +15,12 @@
 {% endfor %}
 </ul>
 
-<div class="pagination">
-	<span class="step-links">
-		{% if latest_blogs_list.has_previous %}
-			<a href="?page={{ latest_blogs_list.previous_page_number }}">previous</a>
-		{% endif %}
-
-		<span class="current">
-			Page {{ latest_blogs_list.number }} of {{ latest_blogs_list.paginator.num_pages }}.
-		</span>
-
-		{% if latest_blogs_list.has_next %}
-			<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
-		{% endif %}
-	</span>
+<div>
+	{% if latest_blogs_list.has_previous %}<a href="?page={{ latest_blogs_list.previous_page_number }}">previous</a>{% endif %}
+	<span>Page {{ latest_blogs_list.number }} of {{ latest_blogs_list.paginator.num_pages }}.</span>
+	{% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
+	{% endif %}
 </div>
-
 
 {% else %}
 <p>目前没有文章。</p>
