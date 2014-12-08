@@ -1,3 +1,44 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
+class SmartContractCategory(models.Model):
+	user = models.ForeignKey(User)
+	name = models.CharField(max_length=120, default='', unique=True)
+
+	def __unicode__(self):
+		return self.name
+
+class SmartContract(models.Model):
+	category = models.ForeignKey(SmartContractCategory)
+	name = models.CharField(max_length=255, default='')
+	publish_date = models.DateTimeField('date published', auto_now=True)
+	state = models.IntegerField(default=0)
+
+	def __unicode__(self):
+		return self.name
+
+class SmartContractTemplate(models.Model):
+	contract = models.ForeignKey(SmartContract)
+	template_type = models.CharField(max_length=32, default='')
+	text = models.TextField()
+	state = models.IntegerField(default=0)
+
+class SmartContractStep(models.Model):
+	contract = models.ForeignKey(SmartContract)
+	name = models.CharField(max_length=30, default='')
+	next = models.IntegerField(default=0)
+
+	def __unicode__(self):
+		return self.name	
+
+class SmartContractVar(models.Model):
+	step = models.ForeignKey(SmartContractStep)
+	widget = models.IntegerField(default=0)
+	name = models.CharField(max_length=32, default='')
+	label = models.CharField(max_length=255, default='')
+	help = models.CharField(max_length=255, default='')
+	next = models.IntegerField(default=0)
+
+	def __unicode__(self):
+		return self.name
+
