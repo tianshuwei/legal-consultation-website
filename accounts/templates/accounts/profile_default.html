@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}个人资料 - {{ request.user.username }}{% endblock %}
+{% block main %}
+<h1>个人资料 - {{ request.user.username }}</h1>
+<div>姓名 {{ request.user.last_name }}{{ request.user.first_name }}</div>
+<div>邮箱 {{ request.user.email }}</div>
+<div>后台权限 {{ request.user.is_staff }}<div>
+<div>管理员权限 {{ request.user.is_superuser }}<div>
+{% endblock %}

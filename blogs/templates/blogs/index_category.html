@@ -8,10 +8,11 @@
 <a href="{% url 'blogs:new_article' %}">写新文章</a>
 {% endif %}
 
-{% if latest_blogs_list %}
 <ul>
 {% for article in latest_blogs_list %}
 	<li><a href="{% url 'blogs:text' article.id %}">{{ article.title }}</a></li>
+{% empty %}
+	<li>目前没有文章。</li>
 {% endfor %}
 </ul>
 
@@ -21,9 +22,5 @@
 	{% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
 	{% endif %}
 </div>
-
-{% else %}
-<p>目前没有文章。</p>
-{% endif %}
 
 {% endblock %}

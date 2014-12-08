@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}用户中心 - {{ request.user.username }}{% endblock %}
+{% block main %}
+<h1>用户中心 - {{ request.user.username }}</h1>
+<h2>产品订单</h2>
+<h2>问题咨询</h2>
+{% endblock %}

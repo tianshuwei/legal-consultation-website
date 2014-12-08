@@ -8,10 +8,12 @@
 <a href="{% url 'blogs:categories' %}">分类管理</a>
 {% endif %}
 
-{% if latest_blogs_list %}
+
 <ul>
 {% for article in latest_blogs_list %}
 	<li><a href="{% url 'blogs:text' article.id %}">{{ article.title }}</a></li>
+{% empty %}
+	<li>目前没有文章。</li>
 {% endfor %}
 </ul>
 
@@ -22,14 +24,14 @@
 	{% endif %}
 </div>
 
-{% else %}
-<p>目前没有文章。</p>
-{% endif %}
+
 
 <h3>文章分类</h3>
 <ul>
 {% for category in categories %}
 	<li><a href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a></li>
+{% empty %}
+	<li>目前没有分类。</li>
 {% endfor %}
 </ul>
 
