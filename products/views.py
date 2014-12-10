@@ -13,21 +13,28 @@ def detail_view(request, pk_product):
 		product=product,
 		products_comments=Comment.objects.filter(product_id=pk_product))
 
+@login_required
 def new_comment_view(request, pk_product):
 	p = get_object_or_404(Product, pk=pk_product)
 	comment = Comment.objects.create(text=request.POST['txt_comment'], user=request.user, product=p)
 	comment.save()
 	return redirect('products:detail', pk_product=p.id)
 
+@login_required
 def new_order_view(request, pk_product):
-	p = get_object_or_404(Product, pk=pk_product)
-	order = Order.objects.create( 
-		client=request.user.client,
-		product=p,
-		lawyer=Lawyer.objects.filter(id=1),
-		state=0,
-		text=request.POST['text']
-	)
-	order.save()
-	return response_jquery(None)
+	try:
+		Order.objects.create( 
+			client=request.user.client,
+			product=Product.objects.get(pk=pk_product),
+			lawyer=Lawyer.objects.filter(id=1),
+			state=0,
+			text=request.POST['text']
+		).save()
+	except Exception, e: 
+		traceback.print_exc() # DEBUG_ONLY
+		messages.error(request, u'订单提交失败')
+		return response_jquery({ 'success': False })
+	else: 
+		messages.success(request, u'订单提交成功')
+		return response_jquery({ 'success': True })
 

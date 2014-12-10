@@ -41,59 +41,7 @@
 2. view重构
 3. 关系模式调整
 
-## 全站URL设计  2014.12.2
-
-~~~python
-# org/urls.py
-	url(r'^admin/', include(admin.site.urls)),
-	url(r'^index/', include('index.urls',namespace='index')),
-	url(r'^accounts/', include('accounts.urls',namespace='accounts')),
-	url(r'^products/',include('products.urls',namespace='products')),
-	url(r'^blogs/',include('blogs.urls',namespace='blogs')),
-	url(r'^smartcontract/',include('smartcontract.urls',namespace='smartcontract')),
-
-# accounts/urls.py
-	url(r'^login/$', views.login_view, name='login'),
-	url(r'^logout/$', views.logout_view, name='logout'),
-	url(r'^register/$', views.register_view, name='register'),
-	url(r'^lawyerlist/$', views.lawyerlist_view, name='lawyerlist'), # ListView
-	url(r'^usercenter/$', views.usercenter_view, name='usercenter'),
-	url(r'^lawyercenter/$', views.lawyercenter_view, name='lawyercenter'),
-	url(r'^profile/$', views.profile_view, name='profile'), # DetailView
-	url(r'^q(?P<pk>\d+)/$', views.question_view, name='question'), # DetailView
-	url(r'^o(?P<pk>\d+)/$', views.order_detail_view, name='order_detail'), #DetailView
-	url(r'^balance/$', views.balance_view, name='balance'),
-	url(r'^r(?P<pk>\d+)/$', views.remark_view, name='remark'), # pk->user.id (lawyer)
-	url(r'^question/$', views.new_question_view, name='new_question'),
-
-# blogs/urls.py
-	url(r'^$', views.home_view, name='home'),
-	url(r'^(?P<pk_lawyer>\d+)/$', views.index_view, name='index'),
-	url(r'^(?P<pk_lawyer>\d+)/(?P<pk_category>\d+)/$', views.index_category_view, name='index_category'),
-	url(r'^c(?P<pk_text>\d+)/$', views.new_comment_view, name='new_comment'),
-	url(r'^categories/$', views.categories_view, name='categories'),
-	url(r'^categories/rm(?P<pk_category>\d+)/$', views.delete_category_view, name='delete_category'),
-	url(r'^categories/mv(?P<pk_category>\d+)/$', views.rename_category_view, name='rename_category'),
-	url(r'^t(?P<pk_text>\d+)/$', views.detail_view, name='text'),
-	url(r'^text/rm(?P<pk_text>\d+)/$', views.delete_article_view, name='delete_article'),
-	url(r'^text/ed(?P<pk_text>\d+)/$', views.edit_article_view, name='edit_article'),
-	url(r'^text/new/$', views.new_article_view, name='new_article'),
-
-# index/urls.py
-	url(r'^$', views.index_view, name='index'),
-
-# products/urls.py
-	url(r'^$', views.IndexView.as_view(), name='index'),
-	url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
-	url(r'^c(?P<pk>\d+)/$', views.new_comment_view, name='new_comment')
-	url(r'^order/$', views.new_order_view, name='new_order'),
-
-# smartcontract/urls.p
-	url(r'^test/$', views.test_render_view, name='test'),
-
-~~~
-
-## 全站关系模式（非主属性可能不全）
+## 全站关系模式
 
 > User(ID,username,password) （Django内置用户模块）
 > 
