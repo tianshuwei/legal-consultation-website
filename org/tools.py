@@ -40,10 +40,14 @@ def response(request, template_name, **context):
 		is_client = Lazy(lambda: is_client(request.user)),
 	))))
 
-empty = HttpResponse("")
+import json
+def response_jquery(o):
+	"""
+	json格式序列化python对象作为HTTP响应
 
-def json(request, obj):
-	raise NotImplemented
+		o              简单的python对象
+	"""
+	return HttpResponse(json.dumps(o), content_type="application/json")
 
 def checkf(exp, default=None):
 	"""

@@ -29,5 +29,5 @@ def new_order_view(request, pk_product):
 		text=request.POST['text']
 	)
 	order.save()
-	return empty
+	return response_jquery(None)
 
