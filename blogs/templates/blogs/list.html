@@ -7,8 +7,6 @@
 <ul>
 {% for lawyer in lawyers %}
 	<li><a href="{% url 'blogs:index' lawyer.id %}">{{ lawyer.user.username }}</a></li>
-{% empty %}
-	<li>目前没有文章。</li>
 {% endfor %}
 </ul>
 
