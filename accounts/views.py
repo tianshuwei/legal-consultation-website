@@ -59,18 +59,18 @@ def profile_view(request):
 	else: return response(request, 'accounts/profile_default.html')
 
 @login_required
-def question_view(request, pk):
+def question_view(request, pk_question):
 	raise Http404
 
 @login_required
-def order_detail_view(request, pk):
+def order_detail_view(request, pk_order):
 	raise Http404
 
 @login_required
 def balance_view(request):
 	raise Http404
 
-def remark_view(request, pk):
+def remark_view(request, pk_lawyer):
 	raise Http404
 
 def new_question_view(request):

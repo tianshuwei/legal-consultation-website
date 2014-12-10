@@ -9,10 +9,10 @@ urlpatterns = patterns('',
 	url(r'^lawyerlist/$', views.lawyerlist_view, name='lawyerlist'),
 	url(r'^usercenter/$', views.usercenter_view, name='usercenter'),
 	url(r'^profile/$', views.profile_view, name='profile'),
-	url(r'^q(?P<pk>\d+)/$', views.question_view, name='question'),
-	url(r'^o(?P<pk>\d+)/$', views.order_detail_view, name='order_detail'),
+	url(r'^q(?P<pk_question>\d+)/$', views.question_view, name='question'),
+	url(r'^o(?P<pk_order>\d+)/$', views.order_detail_view, name='order_detail'),
 	url(r'^balance/$', views.balance_view, name='balance'),
-	url(r'^r(?P<pk>\d+)/$', views.remark_view, name='remark'), # pk->user.id (lawyer)
+	url(r'^r(?P<pk_lawyer>\d+)/$', views.remark_view, name='remark'),
 	url(r'^question/$', views.new_question_view, name='new_question'),
 )
 
