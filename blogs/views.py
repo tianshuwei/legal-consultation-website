@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
 from accounts.models import Lawyer
-from blogs.models import BlogArticle, BlogComment, BlogCategory
+from blogs.models import BlogArticle, BlogComment, BlogCategory, BlogSettings
 
 class ArticleForm(forms.ModelForm):
 	class Meta:
@@ -66,31 +66,39 @@ def home_view(request):
 	try: return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	except ObjectDoesNotExist, e: raise Http404
 
+def list_view(request):
+	return response(request, 'blogs/list.html',
+		lawyers=Lawyer.objects.all())
+
 def index_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
+	if blogsettings.state==1: raise Http404 # Blog disabled
 	return response(request, 'blogs/index.html', 
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=BlogCategory.objects.filter(lawyer=pk_lawyer),
-		latest_blogs_list=paginated(lambda: request.GET.get('page'), 3, # TODO items per page
-			BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date')))
+		categories=lawyer.blogcategory_set.all(),
+		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+			lawyer.blogarticle_set.order_by('-publish_date')))
 
 def index_category_view(request, pk_lawyer, pk_category):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	category=get_object_or_404(BlogCategory, pk=pk_category)
+	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
+	if blogsettings.state==1: raise Http404 # Blog disabled
 	return response(request, 'blogs/index_category.html', 
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		category=category,
-		latest_blogs_list=paginated(lambda: request.GET.get('page'), 3, # TODO items per page
-			BlogArticle.objects.filter(author=pk_lawyer).filter(category=category).order_by('-publish_date')))
+		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+			lawyer.blogarticle_set.filter(category=category).order_by('-publish_date')))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	return response(request, 'blogs/detail.html', 
 		is_master=checkf(lambda: request.user.lawyer==article.author),
 		article=article,
-		comments=BlogComment.objects.filter(article_id=pk_text))
+		comments=article.blogcomment_set.order_by('-publish_date'))
 
 @login_required
 def new_comment_view(request, pk_text):
@@ -119,7 +127,7 @@ def categories_view(request):
 	else:
 		try: 
 			return response(request, 'blogs/categories.html', 
-				categories=BlogCategory.objects.filter(lawyer=request.user.lawyer))
+				categories=request.user.lawyer.blogcategory_set.all())
 		except ObjectDoesNotExist, e: raise Http404
 
 @login_required

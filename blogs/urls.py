@@ -4,6 +4,7 @@ from blogs import views
 
 urlpatterns = patterns('',
 	url(r'^$', views.home_view, name='home'),
+	url(r'^all/$', views.list_view, name='list'),
 	url(r'^(?P<pk_lawyer>\d+)/$', views.index_view, name='index'),
 	url(r'^(?P<pk_lawyer>\d+)/(?P<pk_category>\d+)/$', views.index_category_view, name='index_category'),
 	url(r'^c(?P<pk_text>\d+)/$', views.new_comment_view, name='new_comment'),

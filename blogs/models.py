@@ -29,9 +29,9 @@ class BlogComment(models.Model):
 		return self.text[:20]
 
 class BlogSettings(models.Model):
-	lawyer=models.ForeignKey("accounts.Lawyer")
+	lawyer=models.OneToOneField("accounts.Lawyer")
 	state=models.IntegerField(default=0)
-	items_per_page=models.IntegerField(default=0)
+	items_per_page=models.IntegerField(default=15)
 
 	def __unicode__(self):
 		return self.lawyer.user.username
