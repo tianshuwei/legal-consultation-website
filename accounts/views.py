@@ -8,6 +8,7 @@ class RegisterForm(forms.Form):
 	username = forms.CharField(label="账户",max_length=254)
 	last_name = forms.CharField(label="姓",max_length=20)
 	first_name = forms.CharField(label="名",max_length=20)
+	email = forms.EmailField(label="邮箱")
 	password = forms.CharField(label="密码", widget=forms.PasswordInput)
 	password_confirm = forms.CharField(label="密码确认", widget=forms.PasswordInput)
 
@@ -26,9 +27,17 @@ def logout_view(request):
 	logout(request)
 	return redirect('index:index')
 
-def register_view(request):
+def register_view(request, role):
 	if request.method=='POST':
-		User.objects.create_user(request.POST['username'], password=request.POST['password'])
+		user=User.objects.create_user(request.POST['username'], 
+			password=request.POST['password'],
+			email=request.POST['email'],
+			last_name = request.POST['last_name'],
+			first_name = request.POST['first_name'],
+		)
+		user.save()
+		if role=='client': Client.objects.create(user=user).save()
+		elif role=='lawyer': Lawyer.objects.create(user=user).save()
 		return redirect('accounts:login')
 	else: return response(request, 'accounts/register.html', register_form=RegisterForm())
 

@@ -1,8 +1,10 @@
-<h1>Register</h1>
-
-<form action="{% url 'accounts:register' %}" method="post">
+{% extends 'base.html' %}
+{% block title %}注册{% endblock %}
+{% block main %}
+<h1>注册</h1>
+<form method="post">
 {% csrf_token %}
 {{ register_form }}
 <input type="submit" />
 </form>
-
+{% endblock %}
