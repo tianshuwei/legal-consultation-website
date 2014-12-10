@@ -36,8 +36,7 @@ def detail_view(request, pk_product):
 	product=get_object_or_404(Product, pk=pk_product)
 	return response(request, 'products/detail.html',
 		product=product,
-		products_comments=Comment.objects.filter(product_id=pk_product), 
-		is_client=is_client(request.user))
+		products_comments=Comment.objects.filter(product_id=pk_product))
 
 def new_comment_view(request, pk):
 	# print pk, request.POST['txt_comment']
@@ -65,15 +64,5 @@ def new_order_view(request, pk):
 		text=request.POST['text']
 		)
 	order.save()
-	print order
-	return HttpResponse("")   #redirect('products:detail', args=(p.id))
+	return empty #redirect('products:detail', args=(p.id))
 
-def get_role(user):
-	try:return user.lawyer
-	except Lawyer.DoesNotExist, e:
-		try: return user.client
-		except:return user
-
-def is_client(user):
-	u=get_role(user)
-	return type(u) is Client

@@ -6,20 +6,19 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 
 # def message(request,msg=None):
-# 	"""	
-# 	会话消息
-
-# 		msg         会话消息
-
-# 		模板中取会话消息示例：
-# 			{% if request.session.result_text %}
-# 				{{ request.session.result_text }}
-# 			{% endif %}
-# 	"""
 # 	if msg: request.session['result_text'] = msg
 # 	else: del request.session['result_text']
 
-def redirect(url_ref,**kwargs):
+class Lazy(object):
+	def __init__(self, f):
+		super(Lazy, self).__init__()
+		self.f, self.v, self.a = f, None, False
+
+	def __call__(self):
+		if not self.a: self.v, self.a = self.f(), True
+		return self.v
+
+def redirect(url_ref, **kwargs):
 	"""
 	HTTP重定向
 
@@ -36,7 +35,15 @@ def response(request, template_name, **context):
 		template_name  模板
 		context        模板上下文变量
 	"""
-	return HttpResponse(loader.get_template(template_name).render(RequestContext(request, context)))
+	return HttpResponse(loader.get_template(template_name).render(RequestContext(request, dict(context, 
+		is_lawyer = Lazy(lambda: is_lawyer(request.user)),
+		is_client = Lazy(lambda: is_client(request.user)),
+	))))
+
+empty = HttpResponse("")
+
+def json(request, obj):
+	raise NotImplemented
 
 def checkf(exp, default=None):
 	"""
@@ -61,13 +68,16 @@ def paginated(pagenumf, items_per_page, dataset):
 	except PageNotAnInteger: return paginator.page(1)
 	except EmptyPage: return paginator.page(paginator.num_pages)
 
-"""
-views.py中使用
+from accounts.models import Lawyer, Client
 
-from org.tools import *
+def get_role(user):
+	try:return user.lawyer
+	except Lawyer.DoesNotExist, e:
+		try: return user.client
+		except:return user
 
-之后这些下面的包自动导入
-"""
+is_client = lambda user: type(get_role(user)) is Client
+is_lawyer = lambda user: type(get_role(user)) is Lawyer
 
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist

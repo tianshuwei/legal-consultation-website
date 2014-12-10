@@ -36,19 +36,11 @@ def lawyerlist_view(request):
 	return response(request, 'accounts/lawyerlist.html',
 		lawyers=Lawyer.objects.all())
 
-def get_role(user):
-	try: return user.lawyer
-	except Lawyer.DoesNotExist, e:
-		try: return user.client
-		except: return user
-
 @login_required
 def usercenter_view(request):
 	user = get_role(request.user)
-	if type(user) is Lawyer:
-		return response(request, 'accounts/lawyercenter.html')
-	elif type(user) is Client:
-		return response(request, 'accounts/usercenter.html')
+	if type(user) is Lawyer: return response(request, 'accounts/lawyercenter.html')
+	elif type(user) is Client: return response(request, 'accounts/usercenter.html')
 
 @login_required
 def profile_view(request):
