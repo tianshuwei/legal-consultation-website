@@ -1,3 +1,8 @@
+{% extends 'base.html'%}
+{% block title %}Products{% endblock %}
+{% block products %}class="active" {% endblock %}
+
+{% block main %}
 <h1>Products</h1>
 
 <h1>{{ product.question_text }}</h1>
@@ -8,21 +13,31 @@
 	<p>Price: {{ product.price }}</p>
 </div>
 {% if user.is_authenticated %}
+{% if is_client %}
 <input type="button" name="order" value="订购" onclick="new_order()" />
+
 <script type="text/javascript">
 function new_order()
 {
 	if(confirm("确认订购"))
 	{
-		；
+		  $.post("{% url 'products:new_order' product.id }",
+			  {
+				text:"", 
+				csrfmiddlewaretoken:$.cookie('csrftoken')
+			  },
+			  function(data,status){
+				window.location.reload();
+			  });
 	}
 	else
 	{
-		；
+		
 	}
 
 }
 </script>
+{% endif %}
 {% else %}
 <li><a href="{% url 'accounts:login' %}?next={{ request.get_full_path }}">{{ "订购请登录" }}</a></li>
 {% endif %}
@@ -31,9 +46,9 @@ function new_order()
 
 {% for comment in products_comments %}
 <div>
- 	<p> {{comment.user}} </p> 
- 	<p> {{comment.text}} </p> 
- 	<p> {{comment.publish_date}} </p> 
+	<p> {{comment.user}} </p> 
+	<p> {{comment.text}} </p> 
+	<p> {{comment.publish_date}} </p> 
 </div>
 {% endfor %}
 
@@ -42,3 +57,4 @@ function new_order()
 	<textarea name="txt_comment"></textarea>
 	<input type="submit"/>
 </form>
+{% endblock %}
