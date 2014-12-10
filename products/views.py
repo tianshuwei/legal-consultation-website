@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from org.tools import *
 from products.models import Product,Comment,Order
 from accounts.models import Lawyer,Client

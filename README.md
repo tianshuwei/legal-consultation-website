@@ -1,5 +1,31 @@
 # README
 
+## 公告
+
+settings.py加入git同步，不一样的部分被放到了org/deployment.py。示例如下：
+
+~~~python
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'enq9o3g*0w(d)bpivhhuns+z96i=bcn)a$dz_^plfpgp$1-99^'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+DATABASES = {
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': 'org_dev',
+		'HOST': 'localhost',
+		'USER': 'org_dev',
+		'PASSWORD': 'org_dev',
+		'PORT': '3306',
+		'CHARSET': 'utf8'
+	}
+}
+~~~
+
+
 ## 本周计划
 
 3. 产品模块设计
