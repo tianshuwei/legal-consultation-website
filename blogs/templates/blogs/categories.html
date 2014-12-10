@@ -4,7 +4,6 @@
 <h1>文章分类</h1>
 <a href="{% url 'blogs:index' request.user.lawyer.id %}">返回博客主页</a>
 
-{% if categories %}
 <ul>
 {% for category in categories %}
 	<li>
@@ -17,12 +16,10 @@
 		</form>
 		<a href="{% url 'blogs:delete_category' category.id %}">删除</a>
 	</li>
+{% empty %}
+<li>No categories are available.</li>
 {% endfor %}
 </ul>
-{% else %}
-<p>No categories are available.</p>
-{% endif %}
-
 
 <h3>新分类</h3>
 <form method="post">

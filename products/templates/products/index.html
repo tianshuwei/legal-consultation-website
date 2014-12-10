@@ -23,10 +23,10 @@
             <a href="{% url 'products:detail' product.id %}" title={{ product.name }} target="_blank" onclick="_hmt.push(['_trackEvent', 'tile', 'click', 'codeguide'])"><img class="lazy" src="http://static.bootcss.com/www/assets/img/codeguide.png" width="300" height="150" data-src="http://static.bootcss.com/www/assets/img/codeguide.png" alt="Headroom.js"></a>
             <div class="caption">
               <h3> 
-                <a href="{% url 'products:detail' product.id %}" title={{ product.name }} target="_blank" onclick="_hmt.push(['_trackEvent', 'tile', 'click', 'codeguide'])">{{ product.name }}<br><small>by lawyerA</small></a>
+                <a href="{% url 'products:detail' product.id %}" title={{ product.name }} target="_blank" onclick="_hmt.push(['_trackEvent', 'tile', 'click', 'codeguide'])">{{ product.name }}<br><small>{{ product.price }}</small></a>
               </h3>
               <p>
-              subscriptrion
+              {{ product.description }} 
               </p>
             </div>
         </div>

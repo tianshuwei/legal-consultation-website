@@ -20,6 +20,8 @@
  	<p> {{comment.text}} </p> 
  	<p> {{comment.publish_date}} </p> 
 </div>
+{% empty %}
+<div>前没有评论。</div>
 {% endfor %}
 <form action="{% url 'blogs:new_comment' article.id %}" method="post" >
 	{% csrf_token %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}律师{% endblock %}
+{% block main %}
+<h1>律师</h1>
+<ul>
+	{% for lawyer in lawyers %}
+	<li><a href="{% url 'blogs:index' lawyer.id %}">{{ lawyer }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

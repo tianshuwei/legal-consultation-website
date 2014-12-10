@@ -7,6 +7,12 @@ class ArticleForm(forms.ModelForm):
 	class Meta:
 		model = BlogArticle
 		fields = ['title', 'category', 'tags', 'text']
+		labels = {
+			'title' : '标题',
+			'category' : '分类',
+			'tags' : '标签',
+			'text' : '正文',
+		}
 
 @login_required
 def delete_article_view(request, pk_text):
@@ -66,7 +72,8 @@ def index_view(request, pk_lawyer):
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		categories=BlogCategory.objects.filter(lawyer=pk_lawyer),
-		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date'))
+		latest_blogs_list=paginated(lambda: request.GET.get('page'), 3, # TODO items per page
+			BlogArticle.objects.filter(author=pk_lawyer).order_by('-publish_date')))
 
 def index_category_view(request, pk_lawyer, pk_category):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
@@ -75,7 +82,8 @@ def index_category_view(request, pk_lawyer, pk_category):
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		category=category,
-		latest_blogs_list=BlogArticle.objects.filter(author=pk_lawyer).filter(category=category).order_by('-publish_date'))
+		latest_blogs_list=paginated(lambda: request.GET.get('page'), 3, # TODO items per page
+			BlogArticle.objects.filter(author=pk_lawyer).filter(category=category).order_by('-publish_date')))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
