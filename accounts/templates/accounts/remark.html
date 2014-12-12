@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}评价{% endblock %}
+{% block main %}
+<h1>评价</h1>
+当前评分 {{ remark.grade }}
+<form method="post">
+	{% csrf_token %}
+	{{ remark_form }}
+	<input type="submit" />
+</form>
+{% endblock %}
+

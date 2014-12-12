@@ -2,9 +2,13 @@
 {% block title %}律师{% endblock %}
 {% block main %}
 <h1>律师</h1>
-<ul>
+<table>
 	{% for lawyer in lawyers %}
-	<li><a href="{% url 'blogs:index' lawyer.id %}">{{ lawyer }}</a></li>
+	<tr>
+		<td><a href="{% url 'accounts:profile_lawyer' lawyer.id %}">{{ lawyer }}</a></td>
+		<td><a href="{% url 'blogs:index' lawyer.id %}">博客</a></td>
+		<td><a href="{% url 'accounts:remark' lawyer.id %}">评价</a></td>
+	</tr>
 	{% endfor %}
-</ul>
+</table>
 {% endblock %}

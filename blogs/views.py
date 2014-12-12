@@ -8,14 +8,14 @@ class ArticleForm(forms.ModelForm):
 		model = BlogArticle
 		fields = ['title', 'category', 'tags', 'text']
 		labels = {
-			'title' : '标题',
-			'category' : '分类',
-			'tags' : '标签',
-			'text' : '正文',
+			'title' : u'标题',
+			'category' : u'分类',
+			'tags' : u'标签',
+			'text' : u'正文',
 		}
 
 @login_required
-def delete_article_view(request, pk_text):
+def delete_article_view(request, pk_text): # TODO use post
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if checkf(lambda: request.user.lawyer==article.author):
 		article.delete()
@@ -131,7 +131,7 @@ def categories_view(request):
 		except ObjectDoesNotExist, e: raise Http404
 
 @login_required
-def delete_category_view(request, pk_category):
+def delete_category_view(request, pk_category): # TODO use post
 	category=get_object_or_404(BlogCategory, pk=pk_category)
 	if checkf(lambda: request.user.lawyer==category.lawyer):
 		category.delete()

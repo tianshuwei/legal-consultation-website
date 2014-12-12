@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}个人资料 - {{ role.user.username }}{% endblock %}
+{% block main %}
+<a href="{% url 'accounts:usercenter' %}">用户中心</a>
+{% if role.is_lawyer %}
+<a href="{% url 'accounts:lawyerlist' %}">所有律师</a>
+{% endif %}
+<h1>个人资料 - {{ role.user.username }}</h1>
+<div>姓名 {{ role.user.last_name }}{{ role.user.first_name }}</div>
+<div>邮箱 {{ role.user.email }}</div>
+<hr/>
+<div>账户余额 ￥ {{ role.balance }}</div>
+{% if is_master %}
+<h3>编辑个人资料</h3>
+<form method="post">
+	{% csrf_token %}
+	{{ profile_edit }}
+	<input type="submit" />
+</form>
+{% endif %}
+{% endblock %}

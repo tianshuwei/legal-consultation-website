@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-{% block title %}个人资料 - {{ request.user.username }}{% endblock %}
-{% block main %}
-<h1>律师个人资料 - {{ request.user.username }}</h1>
-<div>姓名 {{ request.user.last_name }}{{ request.user.first_name }}</div>
-<div>邮箱 {{ request.user.email }}</div>
-<hr/>
-<div>账户余额 ￥	{{ request.user.lawyer.balance }}</div>
-{% endblock %}

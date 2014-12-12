@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}充值{% endblock %}
+{% block main %}
+<a href="{% url 'accounts:usercenter' %}">{% if is_lawyer %}律师中心{% else %}用户中心{% endif %}</a>
+<h1>充值</h1>
+当前余额 ￥{{ role.balance }}
+<form method="post">
+	{% csrf_token %}
+	￥<input type="text" name="amount" />
+	<input type="submit" />
+</form>
+{% endblock %}
+

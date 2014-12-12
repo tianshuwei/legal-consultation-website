@@ -36,8 +36,8 @@ def response(request, template_name, **context):
 		context        模板上下文变量
 	"""
 	return HttpResponse(loader.get_template(template_name).render(RequestContext(request, dict(context, 
-		is_lawyer = Lazy(lambda: is_lawyer(request.user)),
-		is_client = Lazy(lambda: is_client(request.user)),
+		is_lawyer = Lazy(lambda: get_role(request.user).is_lawyer),
+		is_client = Lazy(lambda: get_role(request.user).is_client),
 	))))
 
 import json
@@ -73,15 +73,16 @@ def paginated(pagenumf, items_per_page, dataset):
 	except EmptyPage: return paginator.page(paginator.num_pages)
 
 from accounts.models import Lawyer, Client
-
 def get_role(user):
-	try:return user.lawyer
-	except Lawyer.DoesNotExist, e:
-		try: return user.client
-		except:return user
-
-is_client = lambda user: type(get_role(user)) is Client
-is_lawyer = lambda user: type(get_role(user)) is Lawyer
+	def foo(user):
+		try:return user.lawyer
+		except Lawyer.DoesNotExist, e:
+			try: return user.client
+			except:return user
+	u = foo(user)
+	u.is_lawyer = type(u) is Lawyer
+	u.is_client = type(u) is Client
+	return u
 
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist

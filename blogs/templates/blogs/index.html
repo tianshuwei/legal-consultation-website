@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
+{% block title %}律师博客 - {{ lawyer.user.username }}{% if is_master %}T{% else %}F{% endif %}{% endblock %}
 {% block main %}
 
 <h1>律师博客 - {{ lawyer.user.username }}</h1>
