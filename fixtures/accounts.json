@@ -1,0 +1,357 @@
+[
+{
+  "fields": {
+    "username": "alex",
+    "first_name": "",
+    "last_name": "",
+    "is_active": true,
+    "is_superuser": true,
+    "is_staff": true,
+    "last_login": "2014-12-08T13:01:15Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$mpvBMv7dLs8e$oX6sK1EQkyJb7dd9+8TfvC5NiXfu8HI/z7w4Z6UxiNY=",
+    "email": "aleozlx@126.com",
+    "date_joined": "2014-12-06T14:43:49Z"
+  },
+  "model": "auth.user",
+  "pk": 1
+},
+{
+  "fields": {
+    "username": "lawyer0",
+    "first_name": "zero",
+    "last_name": "lawyer",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-12T09:39:48Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$EceT8UXGjnrd$LJnGeeTI4qXcW8iWbicGVIqmGr6BhAaedIGgpne7CI4=",
+    "email": "lawyer0@ecust.edu.cn",
+    "date_joined": "2014-12-06T14:44:27Z"
+  },
+  "model": "auth.user",
+  "pk": 2
+},
+{
+  "fields": {
+    "username": "client0",
+    "first_name": "zero",
+    "last_name": "client",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-12T09:40:01Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$DqX7zk4f6npo$Y4VL4HKaayfdyWJn8257LChqJFxcTNU5kPhn+aKu+9s=",
+    "email": "client0@ecust.edu.cn",
+    "date_joined": "2014-12-08T12:01:37Z"
+  },
+  "model": "auth.user",
+  "pk": 3
+},
+{
+  "fields": {
+    "username": "client1",
+    "first_name": "one",
+    "last_name": "client",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-10T12:51:33Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$mIuhtG1VV906$ewny1oiTatcvFoHnO4Vaje9WDSiZZDG3EVMOhg4dI7U=",
+    "email": "client1@ecust.edu.cn",
+    "date_joined": "2014-12-10T12:51:33Z"
+  },
+  "model": "auth.user",
+  "pk": 6
+},
+{
+  "fields": {
+    "username": "lawyer1",
+    "first_name": "one",
+    "last_name": "lawyer",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-10T12:52:00Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$02ispWyX2eNq$w0YEop7Pmx61MfGHDzN+9Hk389xaKA3DgzikeXPV074=",
+    "email": "lawyer1@ecust.edu.cn",
+    "date_joined": "2014-12-10T12:52:00Z"
+  },
+  "model": "auth.user",
+  "pk": 7
+},
+{
+  "fields": {
+    "username": "client2",
+    "first_name": "two",
+    "last_name": "client",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-13T05:01:34Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$n93p6MLPSVXX$PG62+3TCkw/sYKVp8jL1F8tsabW2xpx7xusRsBbBs/o=",
+    "email": "client2@ecust.edu.cn",
+    "date_joined": "2014-12-13T05:01:34Z"
+  },
+  "model": "auth.user",
+  "pk": 8
+},
+{
+  "fields": {
+    "username": "client3",
+    "first_name": "three",
+    "last_name": "client",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-13T05:02:25Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$eQdpWYOKn332$Ea/gArmnDp45sWMxmE9KHnN5aDv5rb1emqyL2aK5jEo=",
+    "email": "client3@ecust.edu.cn",
+    "date_joined": "2014-12-13T05:02:25Z"
+  },
+  "model": "auth.user",
+  "pk": 9
+},
+{
+  "fields": {
+    "username": "client4",
+    "first_name": "four",
+    "last_name": "client",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-13T05:43:59Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$DsarpORtZTgf$8fFJExYN34qXGgyrotv1I3ploMwxbg7W3r12Pn7r0js=",
+    "email": "client4@ecust.edu.cn",
+    "date_joined": "2014-12-13T05:43:59Z"
+  },
+  "model": "auth.user",
+  "pk": 10
+},
+{
+  "fields": {
+    "username": "client5",
+    "first_name": "five",
+    "last_name": "client",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": "2014-12-13T05:44:23Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$12000$cSCBHbGKWIne$EnwWbC16I9kQLGizxAlunVvsSy6GmI9TxSWiQl9MdTo=",
+    "email": "client5@ecust.edu.cn",
+    "date_joined": "2014-12-13T05:44:23Z"
+  },
+  "model": "auth.user",
+  "pk": 11
+},
+{
+  "fields": {
+    "balance": "133.300",
+    "user": 3,
+    "points": 0
+  },
+  "model": "accounts.client",
+  "pk": 1
+},
+{
+  "fields": {
+    "balance": "100.000",
+    "user": 6,
+    "points": 0
+  },
+  "model": "accounts.client",
+  "pk": 2
+},
+{
+  "fields": {
+    "balance": "100.000",
+    "user": 8,
+    "points": 0
+  },
+  "model": "accounts.client",
+  "pk": 3
+},
+{
+  "fields": {
+    "balance": "20.000",
+    "user": 9,
+    "points": 0
+  },
+  "model": "accounts.client",
+  "pk": 4
+},
+{
+  "fields": {
+    "balance": "200.000",
+    "user": 10,
+    "points": 0
+  },
+  "model": "accounts.client",
+  "pk": 5
+},
+{
+  "fields": {
+    "balance": "320.000",
+    "user": 11,
+    "points": 0
+  },
+  "model": "accounts.client",
+  "pk": 6
+},
+{
+  "fields": {
+    "blacklist": false,
+    "score": 0,
+    "balance": "100.000",
+    "user": 2
+  },
+  "model": "accounts.lawyer",
+  "pk": 1
+},
+{
+  "fields": {
+    "blacklist": false,
+    "score": 0,
+    "balance": "100.000",
+    "user": 7
+  },
+  "model": "accounts.lawyer",
+  "pk": 3
+},
+{
+  "fields": {
+    "grade": 237,
+    "client": 1,
+    "publish_date": "2014-12-12T12:07:47Z",
+    "lawyer": 1
+  },
+  "model": "accounts.remark",
+  "pk": 1
+},
+{
+  "fields": {
+    "grade": 0,
+    "client": 1,
+    "publish_date": "2014-12-12T11:43:25Z",
+    "lawyer": 3
+  },
+  "model": "accounts.remark",
+  "pk": 2
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:55:30Z",
+    "description": "Question0",
+    "lawyer": 1,
+    "title": "Question0"
+  },
+  "model": "accounts.question",
+  "pk": 1
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:54:43Z",
+    "description": "Question1",
+    "lawyer": 1,
+    "title": "Question1"
+  },
+  "model": "accounts.question",
+  "pk": 2
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:54:51Z",
+    "description": "Question2",
+    "lawyer": 1,
+    "title": "Question2"
+  },
+  "model": "accounts.question",
+  "pk": 3
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:54:59Z",
+    "description": "Question3",
+    "lawyer": 1,
+    "title": "Question3"
+  },
+  "model": "accounts.question",
+  "pk": 4
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:55:07Z",
+    "description": "Question4",
+    "lawyer": 1,
+    "title": "Question4"
+  },
+  "model": "accounts.question",
+  "pk": 5
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:55:14Z",
+    "description": "Question5",
+    "lawyer": 1,
+    "title": "Question5"
+  },
+  "model": "accounts.question",
+  "pk": 6
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:55:21Z",
+    "description": "Question6",
+    "lawyer": 1,
+    "title": "Question6"
+  },
+  "model": "accounts.question",
+  "pk": 7
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:55:39Z",
+    "description": "Question7",
+    "lawyer": 1,
+    "title": "Question7"
+  },
+  "model": "accounts.question",
+  "pk": 8
+},
+{
+  "fields": {
+    "client": 1,
+    "publish_date": "2014-12-13T05:55:47Z",
+    "description": "Question8",
+    "lawyer": 1,
+    "title": "Question8"
+  },
+  "model": "accounts.question",
+  "pk": 9
+}
+]
