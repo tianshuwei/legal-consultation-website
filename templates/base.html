@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE HTML>
 
 <html lang="en"><head>
@@ -22,6 +23,15 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+    
+    <link rel="stylesheet" href="{% static "css/animate.min.css" %}">
+
+    <script src="{% static "js/wow.min.js" %}"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
@@ -54,7 +64,7 @@
 
   <body ryt12699="1">
 
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-static-top navbar-default navbar-header-full navbar-dark" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -68,7 +78,7 @@
         <div id="navbar" class="navbar-collapse collapse">
   <ul class="nav navbar-nav">
             <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
-            <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">About</a></li>
+            <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
           </ul>
         {% if user.is_authenticated %}
 		<ul class="nav navbar-nav navbar-right">
@@ -98,13 +108,13 @@
                 <a href="{% url 'accounts:register' 'client' %}"><button class="btn btn-primary">Sign up</button></a>
 		        </form>
 		{% endif %}
-          
+
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
- {% block jumbotron %}
+ {% block head %}
     <div class="jumbotron">
       <div class="container">
         <h1>Hello, world!</h1>
@@ -113,9 +123,7 @@
       </div>
     </div>
      {% endblock %}
- 
 
-      
     <div class="container">
       <!-- Example row of columns -->
       {% block main %}
