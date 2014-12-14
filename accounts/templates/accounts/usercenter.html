@@ -4,6 +4,7 @@
 {% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}
 {% endblock %}
 
+{% block head %}{% endblock %}
 {% block main %}
 <h1>{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}</h1>
 <a href="{% url 'accounts:profile_self' %}">个人资料</a>

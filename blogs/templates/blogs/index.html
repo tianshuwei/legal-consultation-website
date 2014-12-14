@@ -1,38 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}律师博客 - {{ lawyer.user.username }}{% if is_master %}T{% else %}F{% endif %}{% endblock %}
+{% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
+
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">律师博客 - {{ lawyer.user.username }}</h1>
+
+		{% if is_master %}
+        <ol class="breadcrumb pull-right">
+			<li><a href="{% url 'blogs:new_article' %}">写新文章</a></li>
+		</ol>
+		{% endif %}
+    </div>
+</header>
+{% endblock %}
+
+{% block blogs %}class="active"{% endblock %}
 {% block main %}
 
-<h1>律师博客 - {{ lawyer.user.username }}</h1>
-{% if is_master %}
-<a href="{% url 'blogs:new_article' %}">写新文章</a>
-<a href="{% url 'blogs:categories' %}">分类管理</a>
-{% endif %}
+<h1></h1>
 
 
-<div>
+
+<!-- <div>
 	{% if latest_blogs_list.has_previous %}<a href="?page={{ latest_blogs_list.previous_page_number }}">previous</a>{% endif %}
 	<span>Page {{ latest_blogs_list.number }} of {{ latest_blogs_list.paginator.num_pages }}.</span>
 	{% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
 	{% endif %}
-</div>
+</div> -->
 
 
 
-<h3>文章分类</h3>
-<ul>
-{% for category in categories %}
-	<li><a href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a></li>
-{% empty %}
-	<li>目前没有分类。</li>
-{% endfor %}
-</ul>
+
 
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-push-4">
+        {% block contexts %}
         {% for article in latest_blogs_list %}
-			<li><a href="{% url 'blogs:text' article.id %}">{{ article.title }}</a></li>
-
             <article class="post animated fadeInLeft animation-delay-8">
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -64,7 +69,7 @@
 			<li>目前没有文章。</li>
 		{% endfor %}
             <section>
-                <ul class="pagination">
+                <ul class="pagination animated fadeInLeft animation-delay-8">
                     <li class="disabled"><a href="#">«</a></li>
                     <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
                     <li><a href="#">2</a></li>
@@ -79,6 +84,7 @@
                     <li><a href="#">»</a></li>
                 </ul>
             </section>
+         {% endblock %}
         </div> <!-- col-md-8 -->
         <div class="col-md-4 col-md-pull-8">
             <aside class="sidebar">
@@ -135,10 +141,25 @@
                                 <li><a href="#">April 2013</a></li>
                             </ul>
                         </div>
+
                         <div class="tab-pane" id="categories">
-                             <h3 class="post-title no-margin-top">Categories</h3>
-                            <ul class="simple">
-                                <li><a href="#">Game Programming</a></li>
+                             <h3 class="post-title no-margin-top">
+                             Categories
+                                {% if is_master %}
+                                       <i class="fa fa-cog cfg-btn" onclick="cfg_cats()" id="cfgBtn"></i>
+                                {% endif %}
+                             </h3>
+                            <ul class="simple" id="all_cats">
+                            {% for category in categories %}
+								<li>
+                                <a id="cats" href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a>
+                                <i class="fa fa-pencil cfg-btn animated fadeInLeft " action="edit_ctg()" style="visibility: hidden;"></i>
+                                <i class="fa fa-remove cfg-btn animated fadeInLeft " action="remove_ctg()" style="visibility: hidden;"></i>
+                                </li>
+							{% empty %}
+								<li>目前没有分类。</li>
+							{% endfor %}
+                                <!-- <li><a href="#">Game Programming</a></li>
                                 <li><a href="#">Artificial Intelligence</a>
                                     <ul>
                                         <li><a href="#">Artificial Life</a></li>
@@ -146,7 +167,7 @@
                                     </ul>
                                 </li>
                                 <li><a href="#">Resources</a></li>
-                                <li><a href="#">Web Developer</a></li>
+                                <li><a href="#">Web Developer</a></li> -->
                             </ul>
                         </div>
 
@@ -233,5 +254,31 @@
         </div>
     </div> <!-- row -->
 </div>
-
+<script type="text/javascript">
+function cfg_cats () {
+    var cats=$('#cats');
+    for(var i=0;i<cats.length;i++)
+    {
+        $(cats[i]).siblings().css("visibility","visible");
+        $('#cfgBtn').attr("onclick","finish_cfg()");
+        // $('#all_cats').after("<div id="add_cats" style="visibility: hidden;">
+        // <div class="input-group">
+        //   <input type="text" class="form-control" placeholder="input name here">
+        //   <span class="input-group-addon" onclick="create_ctg()">
+        //   <i class="fa fa-check cfg-button-reverse" onclick="create_ctg()"></i>
+        //   </span>
+        // </div>
+        // </div>");
+    }
+}
+function finish_cfg () {
+    var cats=$('#cats');
+    for(var i=0;i<cats.length;i++)
+    {
+        $(cats[i]).siblings().css("visibility","hidden");
+        $('#cfgBtn').attr("onclick","cfg_cats()");
+        
+    }
+}
+</script>>
 {% endblock %}

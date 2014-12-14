@@ -36,6 +36,8 @@
 
     <script src="{% static "js/wow.min.js" %}"></script>
 
+    <script src="{% static "js/jquery.cookie.js" %}"></script>
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
@@ -83,19 +85,21 @@
   <ul class="nav navbar-nav">
             <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
             <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
+            <li {% block blogs %}{% endblock %}><a href="{% url 'blogs:home' %}">blogs</a></li>
           </ul>
         {% if user.is_authenticated %}
 		<ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'accounts:logout' %}">LogOut</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">personal file <span class="caret"></span></a>
+            <li><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i>　<strong>{{ user.username }}</strong>'s center</a></li>
+            <!-- <li class="dropdown">
+              <a href="{% url 'accounts:usercenter' %}" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}'s center</a>
               <ul class="dropdown-menu" role="menu">
                 <li><a href="#">Action</a></li>
                 <li><a href="#">Another action</a></li>
                 <li><a href="#">Something else here</a></li>
                 <li class="divider"></li>
                 <li><a href="#">Separated link</a></li>
-              </ul>
+              </ul> -->
             </li>
           </ul>
 

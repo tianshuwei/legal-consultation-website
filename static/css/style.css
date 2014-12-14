@@ -21,6 +21,33 @@
   -webkit-box-shadow:0 0 8px rgba(82,168,236,.6);
   box-shadow:0 0 8px rgba(82,168,236,.6)
 }
+
+
+.cfg-btn{
+  color: #555;
+  margin-left: 10px;
+  transition: width 2s;
+  -moz-transition: width 2s;  /* Firefox 4 */
+  -webkit-transition: width 2s; /* Safari 和 Chrome */
+  -o-transition: width 2s;
+}
+
+.cfg-btn-reverse{
+  color: #fff;
+  margin-left: 10px;
+  transition: width 2s;
+  -moz-transition: width 2s;  /* Firefox 4 */
+  -webkit-transition: width 2s; /* Safari 和 Chrome */
+  -o-transition: width 2s;
+}
+
+.cfg-btn:hover{
+  color: #000;
+}
+
+.cfg-btn-reverse:hover{
+  color: #555;
+}
 /*-----------------------------------*/
 .animation-delay-1 {
   -webkit-animation-delay: .1s !important;
@@ -1399,6 +1426,7 @@ hr.double {
   background-color: #0099da;
   color: #fff;
   padding: 20px 0;
+  padding-top: 70px;
   margin-bottom: 40px;
   position: relative;
 }
