@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}提问{% endblock %}
+{% block main %}
+<h1>提问</h1>
+<div>客户 <a href="{% url 'accounts:profile' 'c' question.client.id %}">{{ question.client.user.username }}</a></div>
+<div>律师 <a href="{% url 'accounts:profile' 'l' question.lawyer.id %}">{{ question.lawyer.user.username }}</a></div>
+<div>标题 {{ question.title }}</div>
+<div>描述 {{ question.description }}</div>
+<div>日期 {{ question.publish_date }}</div>
+
+{% for question_text in question_texts %}
+<div>
+	<p> {% if question_text.user_flag %} 追问:  
+		{% else %} 回答: 
+		{% endif %}
+	 {{question_text.text}} </p> 
+	<p> {{comment.publish_date}} </p> 
+</div>
+{% endfor %}
+
+<form action="{% url 'accounts:new_question_text' question.id %}" method="post" >
+	{% csrf_token %}
+	<textarea name="txt_question"></textarea>
+	<input type="submit"/>
+</form>
+
+<a href="{% url 'accounts:usercenter' %}">返回用户中心</a>
+{% endblock %}
+

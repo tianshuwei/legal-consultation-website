@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}新问题{% endblock %}
+{% block main %}
+<h1>提新问题</h1>
+<a href="{% url 'accounts:usercenter'  %}">返回用户中心</a>
+<form method="post" >
+	{% csrf_token %}
+	{{ question_create }} 
+	<input type="submit"/>
+</form>
+{% endblock %}

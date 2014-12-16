@@ -32,7 +32,7 @@ function new_order()
 	{
 		  $.post("{% url 'products:new_order' product.id }",
 			  {
-				text:"", 
+				text:"xxx", 
 				csrfmiddlewaretoken:$.cookie('csrftoken')
 			  },
 			  function(data,status){
