@@ -27,7 +27,7 @@ def new_order_view(request, pk_product):
 		Order.objects.create( 
 			client=request.user.client,
 			product=Product.objects.get(pk=pk_product),
-			lawyer=Lawyer.objects.filter(id=1),
+			lawyer=Lawyer.objects.filter(id=1).get(),
 			state=0,
 			text=request.POST['text']
 		).save()

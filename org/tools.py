@@ -5,10 +5,6 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.shortcuts import render
 
-# def message(request,msg=None):
-# 	if msg: request.session['result_text'] = msg
-# 	else: del request.session['result_text']
-
 class Lazy(object):
 	def __init__(self, f):
 		super(Lazy, self).__init__()
@@ -49,6 +45,20 @@ def response_jquery(o):
 	"""
 	return HttpResponse(json.dumps(o), content_type="application/json")
 
+JSSUBMITTEDMARK='jssubmittedmark'
+def response_auto(request, o, url_ref, **kwargs):
+	"""
+	根据请求形式自动选择redirect或response_jquery来响应。适合两种情况都要响应的view。
+
+	若请求通过普通表单提交，则调用redirect(url_ref, **kwargs)；
+	若请求通过$submit提交，则调用response_jquery(o)。
+
+		o 				response_jquery的参数
+		url_ref 		redirect的参数
+		**kwargs 		redirect的参数
+	"""
+	return response_jquery(o) if JSSUBMITTEDMARK in request.POST and request.POST[JSSUBMITTEDMARK]=='$submit 2014' else redirect(url_ref, **kwargs)
+
 def checkf(exp, default=None):
 	"""
 	求lambda表达式的值，异常返回default（默认为None）
@@ -84,11 +94,22 @@ def get_role(user):
 	u.is_client = type(u) is Client
 	return u
 
+# def message(request,msg=None):
+# 	if msg: request.session['result_text'] = msg
+# 	else: del request.session['result_text']
+from django.contrib import messages
+__messages_override=['debug','error','info','success','warning']
+__messages={funcname:getattr(messages,funcname) for funcname in __messages_override}
+for funcname in __messages_override:
+	def foo(request,message,unconditional=False):
+		if unconditional or JSSUBMITTEDMARK not in request.POST:
+			return __messages[funcname](request,message)
+	setattr(messages,funcname,foo)
+
 from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from django.contrib import messages
 from django import forms
 import traceback

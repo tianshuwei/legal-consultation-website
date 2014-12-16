@@ -1,31 +1,146 @@
-{% extends 'base.html' %}
+{% extends 'blogs/index.html' %}
 {% block title %}{{ request.user }}的律师博客 - {{ article.title }}{% endblock %}
-{% block main %}
-<h1>{{ article.title }}</h1>
-<a href="{% url 'blogs:index' article.author.id %}">返回博客主页</a>
-<a href="{% url 'blogs:index_category' article.author.id article.category.id %}">返回{{ article.category.name }}</a>
-{% if is_master %}
-<a href="{% url 'blogs:edit_article' article.id %}">编辑</a>
-<a href="{% url 'blogs:delete_article' article.id %}">删除</a>
-{% endif %}
 
-<div>
-	{{ article.text }}
-</div>
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">律师博客 -<strong>display error here</strong>> {{ lawyer.user.username }}</h1>
 
-<h2>评论</h2>
-{% for comment in comments %}
-<div>
- 	<p> {{comment.user}} </p> 
- 	<p> {{comment.text}} </p> 
- 	<p> {{comment.publish_date}} </p> 
-</div>
+		{% if is_master %}
+        <ol class="breadcrumb pull-right">
+        	<li><a href="{% url 'blogs:index' article.author.id %}">主页</a></li>
+        	<li><a href="{% url 'blogs:index_category' article.author.id article.category.id %}">{{ article.category.name }}</a></li>
+			<li><a href="#">{{ article.title }} - 正文</a></li>
+		</ol>
+		{% endif %}
+    </div>
+</header>
+{% endblock %}
+
+{% block contexts %}
+<section>
+    <h2 class="page-header no-margin-top">{{ article.title }}
+    {% if is_master %}
+    <small>
+    	<a href="{% url 'blogs:edit_article' article.id %}">[编辑]</a>
+		<a href="{% url 'blogs:delete_article' article.id %}">[删除]</a>
+    </small>
+	{% endif %}
+	</h2>
+    <p>{{ article.text }}</p>
+</section>
+<section>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <a href="#" class="social-icon-ar sm no-margin-bottom rss"><i class="fa fa-rss"></i></a>
+            <a href="#" class="social-icon-ar sm no-margin-bottom facebook"><i class="fa fa-facebook"></i></a>
+            <a href="#" class="social-icon-ar sm no-margin-bottom twitter"><i class="fa fa-twitter"></i></a>
+            <a href="#" class="social-icon-ar sm no-margin-bottom google-plus"><i class="fa fa-google-plus"></i></a>
+            <a href="#" class="social-icon-ar sm no-margin-bottom wordpress"><i class="fa fa-wordpress"></i></a>
+            <a href="#" class="social-icon-ar sm no-margin-bottom linkedin"><i class="fa fa-linkedin"></i></a>
+       </div>
+    </div>
+</section>
+<section>
+    <h2 class="section-title">Comments</h2>
+    <ul class="list-unstyled">
+    {% for comment in comments %}
+    <li class="comment">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                    <p>{{comment.text}} </p>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-9 col-sm-8">
+                            <i class="fa fa-user"> </i> <a href="#">{{comment.user}}</a> <i class="fa fa-clock-o"></i> {{comment.publish_date}}
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <!--<a href="#" class="pull-right">Reply</a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </li>
 {% empty %}
-<div>前没有评论。</div>
+<div>没有评论。</div>
 {% endfor %}
-<form action="{% url 'blogs:new_comment' article.id %}" method="post" >
-	{% csrf_token %}
-	<textarea name="txt_comment"></textarea>
-	<input type="submit"/>
-</form>
+        <li class="comment">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fruuntur timorem maiores. Efficiatur calere labefactant impendere praesidia ullius, necesse graecis refugiendi angusta, nescius augeri monstruosi ornatum provincias. Iucundum dolemus iucundius cruciantur affert inflammati circumcisaque certae, privatione epularum tollunt videre reliquaque maiestatis veserim inflammati vituperari memoriter.</p>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-9 col-sm-8">
+                            <i class="fa fa-user"> </i> <a href="#">Patrick</a> <i class="fa fa-clock-o"></i> Sep 29, 2013
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <!--<a href="#" class="pull-right">Reply</a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul class="list-unstyled sub-comments">
+                <li class="comment">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fruuntur timorem maiores. Efficiatur calere labefactant impendere praesidia ullius, necesse graecis refugiendi angusta, nescius augeri monstruosi ornatum provincias. Iucundum dolemus iucundius cruciantur affert inflammati circumcisaque certae, privatione epularum tollunt videre reliquaque maiestatis veserim inflammati vituperari memoriter.</p>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-9 col-sm-8">
+                                    <i class="fa fa-user"> </i> <a href="#">Patrick</a> <i class="fa fa-clock-o"></i> Sep 29, 2013
+                                </div>
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <!--<a href="#" class="pull-right">Reply</a>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </li>
+            </ul>
+        </li>
+        <li class="comment">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fruuntur timorem maiores. Efficiatur calere labefactant impendere praesidia ullius, necesse graecis refugiendi angusta, nescius augeri monstruosi ornatum provincias. Iucundum dolemus iucundius cruciantur affert inflammati circumcisaque certae, privatione epularum tollunt videre reliquaque maiestatis veserim inflammati vituperari memoriter.</p>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-9 col-sm-8">
+                            <i class="fa fa-user"> </i> <a href="#">Patrick</a> <i class="fa fa-clock-o"></i> Sep 29, 2013
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <!--<a href="#" class="pull-right">Reply</a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</section>
+<section class="comment-form">
+    <h2 class="section-title">Leave a Comment</h2>
+    <form action="{% url 'blogs:new_comment' article.id %}" method="post" role="form">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        <div class="form-group">
+            <label for="inputMessage">Mesagge</label>
+            <textarea class="form-control" id="inputMessage" rows="6" name="txt_comment"></textarea>
+        </div>
+        <button type="submit" class="btn btn-ar pull-right btn-primary">Submit</button>
+    {% else %}
+    	<div class="form-group">
+            <label for="inputName">please <a href="#">login</a>or <a href="#">sign up</a> before comment.</label>
+        </div>
+    {% endif %}
+    </form>
+</section>
 {% endblock %}

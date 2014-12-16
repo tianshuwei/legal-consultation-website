@@ -116,14 +116,20 @@ def new_comment_view(request, pk_text):
 def categories_view(request):
 	if request.method=='POST':
 		try: 
-			BlogCategory.objects.create(
+			category=BlogCategory.objects.create(
 				lawyer=request.user.lawyer,
 				name=request.POST['name']
-			).save()
-		except ObjectDoesNotExist, e: messages.error(request, u'新分类创建失败')
-		except: messages.error(request, u'新分类创建失败')
-		else: messages.success(request, u'新分类创建成功')
-		return redirect('blogs:categories')
+			)
+			category.save()
+		except ObjectDoesNotExist, e: 
+			messages.error(request, u'新分类创建失败')
+			return response_auto(request, { 'success': False }, 'blogs:categories')
+		except: 
+			messages.error(request, u'新分类创建失败')
+			return response_auto(request, { 'success': False }, 'blogs:categories')
+		else: 
+			messages.success(request, u'新分类创建成功')
+			return response_auto(request, { 'success': True, 'pk': category.id }, 'blogs:categories')
 	else:
 		try: 
 			return response(request, 'blogs/categories.html', 
