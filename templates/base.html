@@ -85,7 +85,14 @@
   <ul class="nav navbar-nav">
             <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
             <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
-            <li {% block blogs %}{% endblock %}><a href="{% url 'blogs:home' %}">blogs</a></li>
+            <li {% block blogs %}{% endblock %}>
+            <a href=
+            {% if is_client %}
+            "#"
+            {% else %}
+            "{% url 'blogs:home' %}"
+            {% endif %}
+            >blogs</a></li>
           </ul>
         {% if user.is_authenticated %}
 		<ul class="nav navbar-nav navbar-right">
