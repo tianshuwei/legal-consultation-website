@@ -82,5 +82,8 @@
 	{% if questions.has_next %}<a href="?po={{ orders.number }}&pq={{ questions.next_page_number }}">next</a>
 	{% endif %}
 </div>
+{% if is_client %}
+<a href="{% url 'accounts:new_question' %}">新问题</a>
+{% endif %}
 
 {% endblock %}

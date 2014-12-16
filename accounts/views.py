@@ -2,7 +2,7 @@
 from org.tools import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from accounts.models import Lawyer, Client, Remark
+from accounts.models import Lawyer, Client, Remark, Question, Question_text
 from products.models import Order
 
 class RegisterForm(forms.Form):
@@ -84,7 +84,12 @@ def profile_view(request, role, pk):
 
 @login_required
 def question_view(request, pk_question):
-	raise Http404
+	question=get_object_or_404(Question, pk=pk_question)
+	return response(request, 'accounts/question.html',
+		question=question,
+		question_texts=Question_text.objects.filter(question_id=pk_question)
+	)
+
 
 @login_required
 def order_detail_view(request, pk_order):
@@ -148,5 +153,38 @@ def remark_view(request, pk_lawyer):
 			remark_form=RemarkForm(instance=remark), 
 		)
 
+class QuestionForm(forms.ModelForm):
+	class Meta:
+		model = Question
+		fields = ['title', 'lawyer', 'description']
+		labels = {
+			'title' : u'标题',
+			'lawyer' : u'律师',
+			'description' : u'描述',
+		}
+
+@login_required
 def new_question_view(request):
-	raise Http404
+	if request.method=='POST':
+		try:
+			qu=Question.objects.create(
+				client=request.user.client,
+				title=request.POST['title'],
+				lawyer=Lawyer.objects.get(id=request.POST['lawyer']),
+				description=request.POST['description']
+			)
+			qu.save()
+		except ObjectDoesNotExist,e: raise Http404
+		except : messages.error(request, u'问题创建失败')
+		else: messages.success(request, u'问题创建成功')
+		return redirect('accounts:question',pk_question=qu.id)
+	else: 
+		return response(request, 'accounts/new_question.html', 
+			question_create=QuestionForm())
+
+@login_required
+def new_question_text_view(request, pk_question):
+	q = get_object_or_404(Question, pk=pk_question)
+	q_text = Question_text.objects.create(text=request.POST['txt_question'], user_flag=1 if get_role(request.user).is_client else 0, question=q)
+	q_text.save()
+	return redirect('accounts:question', pk_question=q.id)
