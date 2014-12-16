@@ -37,6 +37,7 @@ EXAMPLE:
 */
 function $submit (obj, action, callback) {
 	$.post(action,$fetch(obj),function(data,status) {
+		if(callback==undefined) return;
 		if((typeof obj)=="object"&&obj.hasOwnProperty("length")){ callback(obj[1], data, status); }
 		else{ callback(data, status); }
 	});
@@ -56,6 +57,7 @@ function $fetch (obj) {
 	}
 	var r={};
 	$(form).find("input[name],textarea[name],select[name]").each(function(){ r[$(this).attr("name")]=$(this).val(); });
+	r["jssubmittedmark"]="$submit 2014";
 	return r;
 }
 
