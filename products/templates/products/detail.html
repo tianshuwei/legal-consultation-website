@@ -18,12 +18,13 @@ Product detail -- {{ product.name }}
 			{
 				if(confirm("确认订购"))
 				{
-					  $.post("{% url 'products:new_order' product.id }",
+					  $.post("{% url 'products:new_order' product.id %}",
 						  {
 							text:"", 
 							csrfmiddlewaretoken:$.cookie('csrftoken')
 						  },
 						  function(data,status){
+                            alert(data.success);
 							window.location.reload();
 						  });
 				}
