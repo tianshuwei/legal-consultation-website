@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}律师博客 - {{ lawyer.user.username }}{% if is_master %}T{% else %}F{% endif %}{% endblock %}
+{% block main %}
+
+<h1>律师博客 - {{ lawyer.user.username }}</h1>
+{% if is_master %}
+<a href="{% url 'blogs:new_article' %}">写新文章</a>
+<a href="{% url 'blogs:categories' %}">分类管理</a>
+{% endif %}
+
+
+<ul>
+{% for article in latest_blogs_list %}
+	<li><a href="{% url 'blogs:text' article.id %}">{{ article.title }}</a></li>
+{% empty %}
+	<li>目前没有文章。</li>
+{% endfor %}
+</ul>
+
+<div>
+	{% if latest_blogs_list.has_previous %}<a href="?page={{ latest_blogs_list.previous_page_number }}">previous</a>{% endif %}
+	<span>Page {{ latest_blogs_list.number }} of {{ latest_blogs_list.paginator.num_pages }}.</span>
+	{% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
+	{% endif %}
+</div>
+
+
+
+<h3>文章分类</h3>
+<ul>
+{% for category in categories %}
+	<li><a href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a></li>
+{% empty %}
+	<li>目前没有分类。</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
