@@ -129,7 +129,7 @@ def categories_view(request):
 			return response_auto(request, { 'success': False }, 'blogs:categories')
 		else: 
 			messages.success(request, u'新分类创建成功')
-			return response_auto(request, { 'success': True, 'pk': category.id }, 'blogs:categories')
+			return response_auto(request, { 'success': True, 'pk': category.id, 'name':category.name }, 'blogs:categories')
 	else:
 		try: 
 			return response(request, 'blogs/categories.html', 

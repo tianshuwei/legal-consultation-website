@@ -85,10 +85,10 @@ def paginated(pagenumf, items_per_page, dataset):
 from accounts.models import Lawyer, Client
 def get_role(user):
 	def foo(user):
-		try:return user.lawyer
-		except Lawyer.DoesNotExist, e:
+		try: return user.lawyer
+		except:
 			try: return user.client
-			except:return user
+			except: return user
 	u = foo(user)
 	u.is_lawyer = type(u) is Lawyer
 	u.is_client = type(u) is Client
