@@ -142,7 +142,7 @@ def categories_view(request):
 		except ObjectDoesNotExist, e: raise Http404
 
 @login_required
-def delete_category_view(request, pk_category): # TODO use post
+def delete_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
 	if checkf(lambda: request.user.lawyer==category.lawyer):
 		category.delete()
