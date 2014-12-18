@@ -20,19 +20,6 @@
 
 <h1></h1>
 
-
-
-<!-- <div>
-	{% if latest_blogs_list.has_previous %}<a href="?page={{ latest_blogs_list.previous_page_number }}">previous</a>{% endif %}
-	<span>Page {{ latest_blogs_list.number }} of {{ latest_blogs_list.paginator.num_pages }}.</span>
-	{% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
-	{% endif %}
-</div> -->
-
-
-
-
-
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-push-4">
@@ -68,20 +55,36 @@
 		{% empty %}
 			<li>目前没有文章。</li>
 		{% endfor %}
+
+
+        <!-- <div>
+    {% if latest_blogs_list.has_previous %}<a href="?page={{ latest_blogs_list.previous_page_number }}">previous</a>{% endif %}
+    <span>Page {{ latest_blogs_list.number }} of {{ latest_blogs_list.paginator.num_pages }}.</span>
+    {% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
+    {% endif %}
+</div> -->
             <section>
                 <ul class="pagination animated fadeInLeft animation-delay-8">
-                    <li class="disabled"><a href="#">«</a></li>
-                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#">6</a></li>
-                    <li><a href="#">7</a></li>
-                    <li><a href="#">8</a></li>
-                    <li><a href="#">9</a></li>
-                    <li><a href="#">10</a></li>
-                    <li><a href="#">»</a></li>
+
+                     {% if latest_blogs_list.has_previous %}
+                     <li><a href="?page={{ latest_blogs_list.previous_page_number }}">«</a></li>
+                     {% else %}
+                     <li class="disabled"><a href="#">«</a></li>
+                     {% endif %}
+
+                    {% for i in latest_blogs_list %}
+                    {% if i == latest_blogs_list.number %}
+                    <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
+                    {% else %}
+                    <li><a href="#">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if latest_blogs_list.has_next %}
+                     <li><a href="?page={{ latest_blogs_list.next_page_number }}">«</a></li>
+                     {% else %}
+                     <li class="disabled"><a href="#">»</a></li>
+                     {% endif %}
                 </ul>
             </section>
          {% endblock %}
@@ -153,14 +156,14 @@
                             {% for category in categories %}
 								<li>
                                 <div id="cats_{{ category.id }}" >
-                                <a id="cats" href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a>
+                                <a class="cats" href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a>
                                 {% if is_master %}
-                                <i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({{ category.id }})" style="visibility: hidden;"></i>
-                                <i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="remove_ctg()" style="visibility: hidden;"></i>
+                                <i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({{ category.id }})" style="display: none;"></i>
+                                <i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="$submit(['cfg_cats',{{ category.id }}],'{% url 'blogs:delete_category' category.id %}',del_ctg)" style="display: none;"></i>
                                 {% endif %}
                                 </div>
                                 {% if is_master %}
-                                <div id="cfg_cats_{{ category.id }}" style="display:none;">
+                                <div id="cfg_cats_{{ category.id }}"  style="display:none;">
                                         {% csrf_token %}
                                     <div class="input-group">
                                       <input type="text" class="form-control" name="name" placeholder="input name here">
@@ -174,7 +177,7 @@
 								<li>目前没有分类。</li>
 							{% endfor %}
                             {% if is_master %}
-                            <div id="add_cats" style="display:none;">
+                            <div id="add_cats" class="animated fadeInDown" style="display:none;">
                                      {% csrf_token %}
                                     <div class="input-group">
                                       <input type="text" class="form-control" name="name" placeholder="input name here">
@@ -280,28 +283,73 @@
         </div>
     </div> <!-- row -->
 </div>
+
+
+    <li class="template" style="display:none;">
+    <div id="cats_temp" >
+    <a class="cats" href="{# {% url 'blogs:index_category' lawyer.id category.id %} #}">__________//{{ category.name }}</a>
+    {% if is_master %}
+    <i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({# {{ category.id }} #})" style="display: none;"></i>
+    <i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="remove_ctg()" style="display: none;"></i>
+    {% endif %}
+    </div>
+    {% if is_master %}
+    <div id="cfg_cats"  style="display:none;">
+            {% csrf_token %}
+        <div class="input-group">
+          <input type="text" class="form-control" name="name" placeholder="input name here">
+          <span class="input-group-addon" onclick="$submit(['cfg_cats',{# {{ category.id }} #}],'{# {% url 'blogs:rename_category' category.id %} #}',cfg_ctg)">
+          <i class="fa fa-check cfg-button-reverse"></i>
+          </span>
+        </div>
+    {% endif %}
+    </li>
+
+{% if is_master %}
 <script type="text/javascript">
 function edit_ctg(index){
     $($id("cfg_cats",index)+" div input").attr("value",$($id("cats",index)+" a").text());
     $($id("cfg_cats",index)).removeAttr('style');
     $($id("cats",index)).hide();
 }
+
+function clone_ctg(data){
+    var template = $(".template").clone();
+    template.children("a.cats").attr("href","data.catURL");  //todo
+    template.children("a.cats").text(data.name);
+    template.children("a.cats").next().attr("onclick",data.pk);
+    template.children("#cfg_cats div span").attr("onclick","data.deleteURL");
+    template.children("#cfg_cats").attr("id",$id("cfg_cats",data.pk));
+    template.removeClass("template");
+    template.removeAttr("style");
+    return template;
+}
+
 function cfg_ctg(pk,data,status){
+    if (status!="success") {alert("failed");return;}
+    alert(data.name);
+    $($id("cats",pk)+" a").text(data.name);
     $($id("cats",pk)).show();
     $($id("cfg_cats",pk)).attr('style','display:none;');
 }
 function add_ctg(data,status){
-    $('#add_cats').css("display","none");
-    $($id("cfg_cats",pk)).attr('style','display:none;');
-    $('#add_cats').before("<li></li>");
+    $('#all_cats li').last().after(clone_ctg(data));
+    $('#add_cats div input').removeAttr("value");
+    $($id("cfg_cats",data.pk)).attr('style','display:none;');
+}
+
+function del_ctg(pk,data,status){
+    if (status!="success") {alert("failed");return;}
+
+    $($id("cats",pk)).parents("li").remove();
 }
 function cfg_cats () {
-    var cats=$('#cats');
+    var cats=$('.cats');
     for(var i=0;i<cats.length;i++)
     {
-        $(cats[i]).siblings().css("visibility","visible");
+        $(cats[i]).siblings().show();
         $('#cfgBtn').attr("onclick","finish_cfg()");
-        $('#add_cats').removeAttr("style");
+        $('#add_cats').show();
         // $('#all_cats').after("<div id="add_cats" style="visibility: hidden;">
         // <div class="input-group">
         //   <input type="text" class="form-control" placeholder="input name here">
@@ -313,13 +361,14 @@ function cfg_cats () {
     }
 }
 function finish_cfg () {
-    var cats=$('#cats');
+    var cats=$('.cats');
     for(var i=0;i<cats.length;i++)
     {
-        $(cats[i]).siblings().css("visibility","hidden");
+        $(cats[i]).siblings().hide();
         $('#cfgBtn').attr("onclick","cfg_cats()");
-        $('#add_cats').css("display","none");
+        $('#add_cats').hide();
     }
 }
 </script>>
+ {% endif %}
 {% endblock %}
