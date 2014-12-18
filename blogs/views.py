@@ -129,7 +129,12 @@ def categories_view(request):
 			return response_auto(request, { 'success': False }, 'blogs:categories')
 		else: 
 			messages.success(request, u'新分类创建成功')
-			return response_auto(request, { 'success': True, 'pk': category.id, 'name':category.name }, 'blogs:categories')
+			return response_auto(request, { 
+				'success': True, 
+				'pk': category.id, 
+				'name':category.name, 
+				'href': url_of('blogs:index_category', pk_lawyer=category.lawyer.id, pk_category=category.id)
+			}, 'blogs:categories')
 	else:
 		try: 
 			return response(request, 'blogs/categories.html', 
@@ -142,9 +147,10 @@ def delete_category_view(request, pk_category): # TODO use post
 	if checkf(lambda: request.user.lawyer==category.lawyer):
 		category.delete()
 		messages.success(request, u'分类删除成功')
+		return response_auto(request, { 'success': True }, 'blogs:categories')
 	else:
 		messages.error(request, u'分类删除失败')
-	return redirect('blogs:categories')
+		return response_auto(request, { 'success': False }, 'blogs:categories')
 
 @login_required
 def rename_category_view(request, pk_category):
@@ -153,6 +159,7 @@ def rename_category_view(request, pk_category):
 		category.name=request.POST['name']
 		category.save()
 		messages.success(request, u'分类重命名成功')
+		return response_auto(request, { 'success': True, 'pk':category.id, 'name':category.name  }, 'blogs:categories')
 	else:
 		messages.error(request, u'分类重命名失败')
-	return redirect('blogs:categories')
+		return response_auto(request, { 'success': False }, 'blogs:categories')

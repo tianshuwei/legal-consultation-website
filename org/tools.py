@@ -23,6 +23,9 @@ def redirect(url_ref, **kwargs):
 	"""
 	return HttpResponseRedirect(reverse(url_ref, kwargs = kwargs))
 
+def url_of(url_ref, **kwargs):
+	return reverse(url_ref, kwargs = kwargs)
+
 def response(request, template_name, **context):
 	"""
 	常规HTTP响应
