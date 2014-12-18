@@ -81,7 +81,11 @@ def paginated(pagenumf, items_per_page, dataset):
 		dataset        原结果集
 	""" 
 	paginator = Paginator(dataset, items_per_page)
-	try: return paginator.page(pagenumf())
+	try: 
+		current=int(pagenumf())
+		page=paginator.page(current)
+		page.page_range=sorted(set(i for i in (range(current-2,current+6)+[current+10,(1+current)/2,(current+paginator.count)/2]) if i in paginator.page_range))
+		return page
 	except PageNotAnInteger: return paginator.page(1)
 	except EmptyPage: return paginator.page(paginator.num_pages)
 
