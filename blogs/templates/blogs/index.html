@@ -63,6 +63,7 @@
     {% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
     {% endif %}
 </div> -->
+
             <section>
                 <ul class="pagination animated fadeInLeft animation-delay-8">
 
@@ -72,11 +73,11 @@
                      <li class="disabled"><a href="#">«</a></li>
                      {% endif %}
 
-                    {% for i in latest_blogs_list %}
+                    {% for i in  latest_blogs_list.page_range %}
                     {% if i == latest_blogs_list.number %}
                     <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
                     {% else %}
-                    <li><a href="#">{{ i }}</a></li>
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
                     {% endif %}
                     {% endfor %}
 
@@ -287,7 +288,7 @@
 
     <li class="template" style="display:none;">
     <div id="cats_temp" >
-    <a class="cats" href="{# {% url 'blogs:index_category' lawyer.id category.id %} #}">__________//{{ category.name }}</a>
+    <a class="cats" href="{# {% url 'blogs:index_category' lawyer.id category.id %} #}">__________//</a>
     {% if is_master %}
     <i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({# {{ category.id }} #})" style="display: none;"></i>
     <i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="remove_ctg()" style="display: none;"></i>
@@ -309,17 +310,20 @@
 <script type="text/javascript">
 function edit_ctg(index){
     $($id("cfg_cats",index)+" div input").attr("value",$($id("cats",index)+" a").text());
-    $($id("cfg_cats",index)).removeAttr('style');
+    $($id("cfg_cats",index)).show();
     $($id("cats",index)).hide();
 }
 
 function clone_ctg(data){
     var template = $(".template").clone();
-    template.children("a.cats").attr("href","data.catURL");  //todo
-    template.children("a.cats").text(data.name);
-    template.children("a.cats").next().attr("onclick",data.pk);
-    template.children("#cfg_cats div span").attr("onclick","data.deleteURL");
-    template.children("#cfg_cats").attr("id",$id("cfg_cats",data.pk));
+    template.find("#cats_temp").attr("id",$id("cats",data.pk).slice(1))
+    template.find("a.cats").attr("href",data.href);  //todo
+    template.find("a.cats").text(data.name);
+    template.find("a.cats").next().attr("onclick","edit_ctg("+data.pk+")");
+    template.find("#cfg_cats div span").attr("onclick",
+                //"$submit(['cfg_cats',"+data.pk+"],'"+data.del_href+"',del_ctg)"
+                "#");
+    template.children("#cfg_cats").attr("id",$id("cfg_cats",data.pk).slice(1));
     template.removeClass("template");
     template.removeAttr("style");
     return template;
