@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
@@ -80,14 +80,14 @@ def paginated(pagenumf, items_per_page, dataset):
 		items_per_page 每页项目数
 		dataset        原结果集
 	""" 
+	try: current=int(pagenumf())
+	except: current=1
 	paginator = Paginator(dataset, items_per_page)
-	try: 
-		current=int(pagenumf())
-		page=paginator.page(current)
-		page.page_range=sorted(set(filter(lambda i:i in paginator.page_range, range(current-2,current+6)+[current+10,(1+current)/2,(current+paginator.count)/2])))
-		return page
-	except PageNotAnInteger: return paginator.page(1)
-	except EmptyPage: return paginator.page(paginator.num_pages)
+	if current>paginator.num_pages: current=paginator.num_pages
+	if current<1: current=1
+	page=paginator.page(current)
+	page.page_range=sorted(set(filter(lambda i:i in paginator.page_range, range(current-2,current+6)+[current+10,(1+current)/2,(current+paginator.count)/2])))
+	return page
 
 from accounts.models import Lawyer, Client
 def get_role(user):
