@@ -316,14 +316,14 @@ function edit_ctg(index){
 
 function clone_ctg(data){
     var template = $(".template").clone();
-    template.find("#cats_temp").attr("id",$id("cats",data.pk))
+    template.find("#cats_temp").attr("id",$id("cats",data.pk).slice(1))
     template.find("a.cats").attr("href",data.href);  //todo
     template.find("a.cats").text(data.name);
     template.find("a.cats").next().attr("onclick","edit_ctg("+data.pk+")");
     template.find("#cfg_cats div span").attr("onclick",
                 //"$submit(['cfg_cats',"+data.pk+"],'"+data.del_href+"',del_ctg)"
                 "#");
-    template.children("#cfg_cats").attr("id",$id("cfg_cats",data.pk));
+    template.children("#cfg_cats").attr("id",$id("cfg_cats",data.pk).slice(1));
     template.removeClass("template");
     template.removeAttr("style");
     return template;

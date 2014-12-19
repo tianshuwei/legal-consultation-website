@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}
+{% endblock %}
+
+{% block head %}{% endblock %}
+{% block main %}
+<h1>{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}</h1>
+<a href="{% url 'accounts:profile_self' %}">个人资料</a>
+<a href="{% url 'accounts:balance' %}">余额充值</a>
+{% if is_lawyer %}
+<a href="{% url 'blogs:home' %}">我的律师博客</a>
+{% endif %}
+<a href="{% url 'accounts:lawyerlist' %}">所有律师</a>
+<h2>{% if is_lawyer %}接收到的订单{% else %}产品订单{% endif %}</h2>
+<table>
+	<tr>
+		{% if is_lawyer %}
+		<th>客户</th>
+		{% elif is_client %}
+		<th>律师</th>
+		{% endif %}
+		<th>产品</th>
+		<th>日期</th>
+		<th>状态</th>
+		<th>详细情况</th>
+	</tr>
+{% for order in orders %}
+	<tr>
+		{% if is_lawyer %}
+		<td><a href="{% url 'accounts:profile' 'c' order.client.id %}">{{ order.client.user.username }}</a></td>
+		{% elif is_client %}
+		<td><a href="{% url 'accounts:profile' 'l' order.lawyer.id %}">{{ order.lawyer.user.username }}</a></td>
+		{% endif %}
+		<td><a href="{% url 'products:detail' order.product.id %}">{{ order.product.name }}</a></td>
+		<td>{{ order.publish_date }}</td>
+		<td>{{ order.state }}</td>
+		<td><a href="{% url 'accounts:order_detail' order.id %}">详细情况</a></td>
+	</tr>
+{% empty %}
+	<li>目前没有订单。</li>
+{% endfor %}
+</table>
+
+<div>
+	{% if orders.has_previous %}<a href="?po={{ orders.previous_page_number }}&pq={{ questions.number }}">previous</a>{% endif %}
+	<span>Page {{ orders.number }} of {{ orders.paginator.num_pages }}.</span>
+	{% if orders.has_next %}<a href="?po={{ orders.next_page_number }}&pq={{ questions.number }}">next</a>
+	{% endif %}
+</div>
+
+<h2>问题咨询</h2>
+<table>
+	<tr>
+		{% if is_lawyer %}
+		<th>客户</th>
+		{% elif is_client %}
+		<th>律师</th>
+		{% endif %}
+		<th>标题</th>
+		<th>日期</th>
+	</tr>
+{% for question in questions %}
+	<tr>
+		{% if is_lawyer %}
+		<td><a href="{% url 'accounts:profile' 'c' question.client.id %}">{{ question.client.user.username }}</a></td>
+		{% elif is_client %}
+		<td><a href="{% url 'accounts:profile' 'l' question.lawyer.id %}">{{ question.lawyer.user.username }}</a></td>
+		{% endif %}
+		<td><a href="{% url 'accounts:question' question.id %}">{{ question.title }}</a></td>
+		<td>{{ question.publish_date }}</td>
+	</tr>
+{% empty %}
+	<li>目前没有问题。</li>
+{% endfor %}
+</table>
+
+<div>
+	{% if questions.has_previous %}<a href="?po={{ orders.number }}&pq={{ questions.previous_page_number }}">previous</a>{% endif %}
+	<span>Page {{ questions.number }} of {{ questions.paginator.num_pages }}.</span>
+	{% if questions.has_next %}<a href="?po={{ orders.number }}&pq={{ questions.next_page_number }}">next</a>
+	{% endif %}
+</div>
+{% if is_client %}
+<a href="{% url 'accounts:new_question' %}">新问题</a>
+{% endif %}
+
+{% endblock %}
