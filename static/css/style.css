@@ -14,6 +14,11 @@
 /* ---------------------------------------------------- */
 
 /*--------------custom---------------*/
+
+.portfolio-cats li a{
+  text-decoration:none;
+}
+
 .focusedInput{
   border-color:#ccc;
   border-color:rgba(82,168,236,.8);
@@ -998,6 +1003,7 @@ a.social:active {
 /* ---------------------------------------------------- */
 html {
   -webkit-font-smoothing: antialiased;
+  overflow-y: scroll;
 }
 body {
   background-color: #fff;
@@ -1423,10 +1429,11 @@ hr.double {
   border-radius: 2px;
 }
 .main-header {
+  border-top: solid 5px #0099da;
   background-color: #0099da;
   color: #fff;
   padding: 20px 0;
-  padding-top: 70px;
+  padding-top: 40px;
   margin-bottom: 40px;
   position: relative;
 }
@@ -3462,11 +3469,11 @@ a.thumbnail.active {
   background-image: -moz-linear-gradient(bottom, #ececec, #f4f4f4);
   background-image: -o-linear-gradient(bottom, #ececec, #f4f4f4);
   background-image: linear-gradient(to top, #ececec, #f4f4f4);
-  margin-bottom: 0;
-  border-bottom: 0;
+  margin-bottom: 0px;
+  border-bottom: 0px;
 }
 .navbar-default .navbar-brand {
-  font-size: 28px;
+  font-size: 40px;
   font-weight: 300;
   text-transform: lowercase;
   font-family: "Muli", sans-serif;
@@ -3511,12 +3518,12 @@ a.thumbnail.active {
   }
   /*Navbar*/
   .navbar-default .navbar-nav > li > a {
-    padding-top: 16px;
-    padding-bottom: 15px;
+    padding-top: 18px;
+    padding-bottom: 17px;
     margin-top: -1px;
     color: #000;
     font-family: "Lato";
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 400;
   }
   .navbar-default .navbar-nav > li.dropdown > a {
@@ -4589,6 +4596,7 @@ input.input-lg[type="text"] {
 .portfolio-cats li span.active:hover {
   color: #000;
   border-color: #0099da;
+  background-color: #f1f1f1;
 }
 .portfolio-cats li span.active {
   font-weight: 600;
@@ -6111,6 +6119,7 @@ a.feature-icon:hover {
 /* Header full */
 /*-------------------------------------------------------------------*/
 .header-full {
+  box-shadow: 0 0 9px #000;
   background-image: -webkit-linear-gradient(bottom, #f0f0f0, #f4f4f4);
   background-image: -moz-linear-gradient(bottom, #f0f0f0, #f4f4f4);
   background-image: -o-linear-gradient(bottom, #f0f0f0, #f4f4f4);

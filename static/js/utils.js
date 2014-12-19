@@ -73,3 +73,15 @@ function $id (prefix, pk) {
 }
 
 
+/**
+get param in url
+
+	name 		查询串的名字
+*/
+function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null;
+        }
+
+
