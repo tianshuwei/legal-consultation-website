@@ -71,20 +71,74 @@
   <body ryt12699="1">
 
     <nav class="navbar navbar-fixed-top navbar-default navbar-header-full navbar-dark" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+    <header id="header-full-top" class="hidden-xs header-full" style="z-index:100">
+    <div class="container">
+        <div class="header-full-title">
+            <h1 class="animated fadeInRight"><a href="{% url 'index:index' %}">artificial <span>reason</span></a></h1>
+            <p class="animated fadeInRight">Clean and elegant theme</p>
         </div>
+        <nav class="top-nav">
+            <ul class="top-nav-social hidden-sm">
+                <li><a href="#" class="animated fadeIn animation-delay-6 rss"><i class="fa fa-rss"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-7 twitter"><i class="fa fa-twitter"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-8 facebook"><i class="fa fa-facebook"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-9 googleplus"><i class="fa fa-google-plus"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-9 instagram"><i class="fa fa-instagram"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-8 vine"><i class="fa fa-vine"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-7 linkedin"><i class="fa fa-linkedin"></i></a></li>
+                <li><a href="#" class="animated fadeIn animation-delay-6 flickr"><i class="fa fa-flickr"></i></a></li>
+            </ul>
+
+            <div class="dropdown animated fadeInDown animation-delay-11">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Login</a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-login-box animated fadeInUp">
+                    <form role="form">
+                        <h4>Login Form</h4>
+
+                        <div class="form-group">
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" class="form-control" placeholder="Username">
+                            </div>
+                            <br>
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                            <div class="checkbox pull-left">
+                                <label>
+                                    <input type="checkbox"> Remember me
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-ar btn-primary pull-right">Login</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+            </div> <!-- dropdown -->
+
+            <div class="dropdown animated fadeInDown animation-delay-13">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-search"></i></a>
+                <div class="dropdown-menu dropdown-menu-right dropdown-search-box animated fadeInUp">
+                    <form role="form">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-ar btn-primary" type="button">Go!</button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </form>
+                </div>
+            </div> <!-- dropdown -->
+        </nav>
+    </div> <!-- container -->
+</header>
+      <div class="container">
         <div id="navbar" class="navbar-collapse collapse">
   <ul class="nav navbar-nav">
             <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
             <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
+            <li {% block lawyerlist %}{% endblock %}><a href="{% url 'accounts:lawyerlist' %}">lawyers</a></li>
             <li {% block blogs %}{% endblock %}>
             <a href=
             {% if user.is_authenticated %}
@@ -99,7 +153,7 @@
         {% if user.is_authenticated %}
 		<ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'accounts:logout' %}">LogOut</a></li>
-            <li><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i>　<strong>{{ user.username }}</strong>'s center</a></li>
+            <li><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i>&nbsp;&nbsp;<strong>{{ user.username }}</strong>'s center</a></li>
             <!-- <li class="dropdown">
               <a href="{% url 'accounts:usercenter' %}" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}'s center</a>
               <ul class="dropdown-menu" role="menu">
@@ -130,17 +184,89 @@
         </div><!--/.navbar-collapse -->
       </div>
     </nav>
-
+<div style="margin-bottom:151px"></div>
     <!-- Main jumbotron for a primary marketing message or call to action -->
  {% block head %}
-    <div class="jumbotron">
-      <div class="container">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>
-      </div>
-    </div>
-     {% endblock %}
+    <header id="header-full-plan">
+        <div class="wrap-primary-plan" style="min-height: 824px;">
+            <div class="wrap-pointers" style="min-height: 824px;">
+                <div class="container">
+                    <div id="primary-plan">
+                        <img src="../assets/img/logo_big_white.png" alt="logo" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
+                        <h1 class="animated fadeInDown animation-delay-3">Lorem ipsum dolor sit amet, consectetur.</h1>
+                        <p class="lead lead-lg animated fadeInDown animation-delay-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit nam, et distinctio omnis quidem ratione accusantium non molestiae sint dolorem.</p>
+                    </div>
+                    <div id="subscribe-plan" class="animated bounceInLeft animation-delay-9">
+                        <p class="lead lead-lg">Lorem ipsum dolor sit.</p>
+                        <div class="input-group">
+                          <input type="email" class="form-control" placeholder="Subscribe email...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-plan" type="button">lorem</button>
+                          </span>
+                        </div><!-- /input-group -->
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-md-3">
+                            <div class="content-box box-primary content-box-trans animated fadeInUp animation-delay-5">
+                                <span class="icon-ar icon-ar-lg icon-ar-white icon-ar-circle"><i class="fa fa-html5"></i></span>
+                                <h5 class="content-box-title">HTML 5</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="content-box box-primary content-box-trans animated fadeInUp animation-delay-8">
+                                <span class="icon-ar icon-ar-lg icon-ar-white icon-ar-circle"><i class="fa fa-css3"></i></span>
+                                <h5 class="content-box-title">CSS 3 &amp; Less</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="content-box box-primary content-box-trans animated fadeInUp animation-delay-8">
+                                <span class="icon-ar icon-ar-lg icon-ar-white icon-ar-circle"><i class="fa fa-codepen"></i></span>
+                                <h5 class="content-box-title">Javascript &amp; Jquery</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="content-box box-primary content-box-trans animated fadeInUp animation-delay-5">
+                                <span class="icon-ar icon-ar-lg icon-ar-white icon-ar-circle"><i class="fa fa-wordpress"></i></span>
+                                <h5 class="content-box-title">Wordpress is coming</h5>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="wrap-dark-color margin-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7 feature-container">
+                    <a class="feature-icon">
+                        <i class="fa fa-desktop"></i>
+                        <h4>Retina</h4>
+                    </a>
+                    <a class="feature-icon">
+                        <i class="fa fa-download"></i>
+                        <h4>Downloads</h4>
+                    </a>
+                    <a class="feature-icon">
+                        <i class="fa fa-cloud"></i>
+                        <h4>Cloud</h4>
+                    </a>
+                    <a class="feature-icon">
+                        <i class="fa fa-html5"></i>
+                        <h4>HTML 5</h4>
+                    </a>
+                </div>
+                <div class="col-md-5 hidden-sm hidden-xs">
+                    <p class="lead text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit lorem ipsum dolor sit amet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
 
     <div class="container">
       <!-- Example row of columns -->

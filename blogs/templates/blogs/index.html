@@ -82,7 +82,7 @@
                     {% endfor %}
 
                     {% if latest_blogs_list.has_next %}
-                     <li><a href="?page={{ latest_blogs_list.next_page_number }}">«</a></li>
+                     <li><a href="?page={{ latest_blogs_list.next_page_number }}">»</a></li>
                      {% else %}
                      <li class="disabled"><a href="#">»</a></li>
                      {% endif %}
@@ -150,7 +150,7 @@
                              <h3 class="post-title no-margin-top">
                              Categories
                                 {% if is_master %}
-                                       <i class="fa fa-cog cfg-btn" onclick="cfg_cats()" id="cfgBtn"></i>
+                                       <i class="fa fa-cogs cfg-btn" onclick="cfg_cats()" id="cfgBtn"></i>
                                 {% endif %}
                              </h3>
                             <ul class="simple" id="all_cats">
@@ -320,9 +320,12 @@ function clone_ctg(data){
     template.find("a.cats").attr("href",data.href);  //todo
     template.find("a.cats").text(data.name);
     template.find("a.cats").next().attr("onclick","edit_ctg("+data.pk+")");
+
+    template.find(".fa-remove").attr("onclick",
+                "$submit(['cfg_cats',"+data.pk+"],'"+data.del_href+"',del_ctg)");
+
     template.find("#cfg_cats div span").attr("onclick",
-                //"$submit(['cfg_cats',"+data.pk+"],'"+data.del_href+"',del_ctg)"
-                "#");
+                "$submit(['cfg_cats',"+data.pk+"],'"+data.edit_href+"',cfg_ctg)");
     template.children("#cfg_cats").attr("id",$id("cfg_cats",data.pk).slice(1));
     template.removeClass("template");
     template.removeAttr("style");
