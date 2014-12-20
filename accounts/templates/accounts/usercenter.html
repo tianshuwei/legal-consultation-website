@@ -21,22 +21,27 @@
                 <div class="col-md-3 col-sm-3 col-xs-3">
                 <div class="portfolio-menu">
                     <ul class="portfolio-cats">
-                        <li id="profile" class="active">
-                            <a href="{% url 'accounts:profile_self' %}"><span><i class="fa fa-fw fa-star"></i>个人资料</span></a>
+                        <li ><a href="{% url 'accounts:profile_self' %}">
+                            <span id="profile" class="active"><i class="fa fa-fw fa-star"></i>&nbsp;个人资料</span>
+                            </a>
                         </li>
                         {% if is_lawyer %}
-                        <li>
-                            <a href="{% url 'blogs:home' %}"><span><i class="fa fa-fw fa-user"></i>我的律师博客</span></a>
+                        <li><a href="{% url 'blogs:home' %}">
+                        	<span><i class="fa fa-fw fa-user"></i>&nbsp;我的律师博客</span>
+                        	</a>
                         </li>
                         {% endif %}
-                        <li>
-                            <a href="{% url 'accounts:lawyerlist' %}"><span><i class="fa fa-fw fa-group"></i>所有律师</span></a><!-- calendar.html -->
+                        <li><a href="{% url 'accounts:lawyerlist' %}">
+                        	<span><i class="fa fa-fw fa-group"></i>&nbsp;所有律师</span>
+                        	</a>
                         </li>
-                        <li>
-                            <a href="#"><span><i class="fa fa-fw fa-file-alt"></i>{% if is_lawyer %}接收到的订单{% else %}产品订单{% endif %}</span></a>
+                        <li><a href="#">
+                        	<span><i class="fa fa-fw fa-list-ol"></i>&nbsp;{% if is_lawyer %}接收到的订单{% else %}产品订单{% endif %}</span>
+                        	</a>
                         </li>
-                        <li>
-                            <a href="{% url 'accounts:balance' %}"><span><i class="fa fa-fw fa-money"></i>余额充值</span></a>
+                        <li><a href="{% url 'accounts:balance' %}">
+                        	<span><i class="fa fa-fw fa-dollar"></i>&nbsp;余额充值</span>
+                        	</a>
                         </li>
                     </ul>
                 </div>
