@@ -154,7 +154,9 @@
                                 {% endif %}
                              </h3>
                             <ul class="simple" id="all_cats">
-                            {% for category in categories %}
+                            {% include 'blogs/index_category.mod.html' %}
+                            {% comment %}
+                            <!-- {% for category in categories %}
 								<li>
                                 <div id="cats_{{ category.id }}" >
                                 <a class="cats" href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a>
@@ -176,7 +178,8 @@
                                 </li>
 							{% empty %}
 								<li>目前没有分类。</li>
-							{% endfor %}
+							{% endfor %} -->
+                            {% endcomment %}
                             {% if is_master %}
                             <div id="add_cats" class="animated fadeInDown" style="display:none;">
                                      {% csrf_token %}
