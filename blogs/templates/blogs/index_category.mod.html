@@ -1,0 +1,23 @@
+{% for category in categories %}
+<li>
+	<div id="cats_{{ category.id }}" >
+	<a class="cats" href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a>
+	{% if is_master %}
+	<i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({{ category.id }})" style="display: none;"></i>
+	<i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="$submit(['cfg_cats',{{ category.id }}],'{% url 'blogs:delete_category' category.id %}',del_ctg)" style="display: none;"></i>
+	{% endif %}
+	</div>
+	{% if is_master %}
+	<div id="cfg_cats_{{ category.id }}"  style="display:none;">
+		{% csrf_token %}
+		<div class="input-group">
+		  <input type="text" class="form-control" name="name" placeholder="input name here">
+		  <span class="input-group-addon" onclick="$submit(['cfg_cats',{{ category.id }}],'{% url 'blogs:rename_category' category.id %}',cfg_ctg)">
+		  <i class="fa fa-check cfg-button-reverse"></i>
+		  </span>
+		</div>
+	{% endif %}
+</li>
+{% empty %}
+<li>目前没有分类。</li>
+{% endfor %}
