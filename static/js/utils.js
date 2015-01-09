@@ -37,6 +37,7 @@ EXAMPLE:
 */
 function $submit (obj, action, callback) {
 	$.post(action,$fetch(obj),function(data,status) {
+		if(callback==undefined) return;
 		if((typeof obj)=="object"&&obj.hasOwnProperty("length")){ callback(obj[1], data, status); }
 		else{ callback(data, status); }
 	});
@@ -56,6 +57,7 @@ function $fetch (obj) {
 	}
 	var r={};
 	$(form).find("input[name],textarea[name],select[name]").each(function(){ r[$(this).attr("name")]=$(this).val(); });
+	r["jssubmittedmark"]="$submit 2014";
 	return r;
 }
 
@@ -69,5 +71,17 @@ function $fetch (obj) {
 function $id (prefix, pk) {
 	return "#"+prefix+"_"+pk;
 }
+
+
+/**
+get param in url
+
+	name 		查询串的名字
+*/
+function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null;
+        }
 
 

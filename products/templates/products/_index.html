@@ -1,0 +1,12 @@
+{% extends 'base.html'%}
+{% block title %}Products{% endblock %}
+{% block products %}class="active" {% endblock %}
+{% block main %}
+<div>
+{% for product in latest_products_list %}
+<a href="{% url 'products:detail' product.id %}">{{ product.name }}</a>
+{% empty %}
+No products are available.
+{% endfor %}
+</div>
+{% endblock %}

@@ -116,14 +116,27 @@ def new_comment_view(request, pk_text):
 def categories_view(request):
 	if request.method=='POST':
 		try: 
-			BlogCategory.objects.create(
+			category=BlogCategory.objects.create(
 				lawyer=request.user.lawyer,
 				name=request.POST['name']
-			).save()
-		except ObjectDoesNotExist, e: messages.error(request, u'新分类创建失败')
-		except: messages.error(request, u'新分类创建失败')
-		else: messages.success(request, u'新分类创建成功')
-		return redirect('blogs:categories')
+			)
+			category.save()
+		except ObjectDoesNotExist, e: 
+			messages.error(request, u'新分类创建失败')
+			return response_auto(request, { 'success': False }, 'blogs:categories')
+		except: 
+			messages.error(request, u'新分类创建失败')
+			return response_auto(request, { 'success': False }, 'blogs:categories')
+		else: 
+			messages.success(request, u'新分类创建成功')
+			return response_auto(request, { 
+				'success': True, 
+				'pk': category.id, 
+				'name':category.name, 
+				'href': url_of('blogs:index_category', pk_lawyer=category.lawyer.id, pk_category=category.id),
+				'edit_href': url_of('blogs:rename_category', pk_category=category.id),
+				'del_href': url_of('blogs:delete_category', pk_category=category.id),
+			}, 'blogs:categories')
 	else:
 		try: 
 			return response(request, 'blogs/categories.html', 
@@ -131,14 +144,15 @@ def categories_view(request):
 		except ObjectDoesNotExist, e: raise Http404
 
 @login_required
-def delete_category_view(request, pk_category): # TODO use post
+def delete_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
 	if checkf(lambda: request.user.lawyer==category.lawyer):
 		category.delete()
 		messages.success(request, u'分类删除成功')
+		return response_auto(request, { 'success': True }, 'blogs:categories')
 	else:
 		messages.error(request, u'分类删除失败')
-	return redirect('blogs:categories')
+		return response_auto(request, { 'success': False }, 'blogs:categories')
 
 @login_required
 def rename_category_view(request, pk_category):
@@ -147,6 +161,7 @@ def rename_category_view(request, pk_category):
 		category.name=request.POST['name']
 		category.save()
 		messages.success(request, u'分类重命名成功')
+		return response_auto(request, { 'success': True, 'pk':category.id, 'name':category.name  }, 'blogs:categories')
 	else:
 		messages.error(request, u'分类重命名失败')
-	return redirect('blogs:categories')
+		return response_auto(request, { 'success': False }, 'blogs:categories')

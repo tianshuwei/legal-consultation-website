@@ -2,7 +2,7 @@
 from org.tools import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from accounts.models import Lawyer, Client, Remark,Question,Question_text
+from accounts.models import Lawyer, Client, Remark, Question, Question_text
 from products.models import Order
 
 class RegisterForm(forms.Form):
@@ -88,7 +88,7 @@ def question_view(request, pk_question):
 	return response(request, 'accounts/question.html',
 		question=question,
 		question_texts=Question_text.objects.filter(question_id=pk_question)
-		)
+	)
 
 
 @login_required
