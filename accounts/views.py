@@ -31,15 +31,16 @@ def logout_view(request):
 def register_view(request, role):
 	if request.method=='POST':
 		try:
-			user=User.objects.create_user(request.POST['username'], 
+			username,profile=request.POST['username'],dict(
 				password=request.POST['password'],
 				email=request.POST['email'],
 				last_name = request.POST['last_name'],
 				first_name = request.POST['first_name'],
 			)
-			user.save()
-			if role=='client': Client.objects.create(user=user).save()
-			elif role=='lawyer': Lawyer.objects.create(user=user).save()
+			if role=='client': 
+				Client.objects.register(username,**profile)
+			elif role=='lawyer': 
+				Lawyer.objects.register(username,**profile)
 		except: messages.success(request, u'注册失败')
 		else: messages.success(request, u'注册成功')
 		return redirect('accounts:login')

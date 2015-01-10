@@ -1,5 +1,7 @@
-from django.db import models
+# -*- coding: utf-8 -*-
+from django.db import models, transaction
 from django.contrib.auth.models import User
+from blogs.models import BlogSettings, BlogCategory
 
 """
 Fields in User
@@ -10,23 +12,46 @@ Fields in User
 	last_name
 """
 
+class ClientManager(models.Manager):
+	@transaction.atomic
+	def register(self, username, **profile):
+		user=User.objects.create_user(username,**profile)
+		user.save()
+		client=Client.objects.create(user=user)
+		client.save()
+		return client
+
 class Client(models.Model):
 	user = models.OneToOneField(User)
 	balance = models.DecimalField(max_digits=16, decimal_places=3,default=0)
 	points = models.IntegerField(default=0)
 	#comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
 
+	objects = ClientManager()
+
 	def __unicode__(self):
 		return self.user.username
+
+class LawyerManager(models.Manager):
+	@transaction.atomic
+	def register(self, username, **profile):
+		user=User.objects.create_user(username,**profile)
+		user.save()
+		lawyer=Lawyer.objects.create(user=user)
+		lawyer.save()
+		BlogSettings.objects.create(lawyer=lawyer).save()
+		BlogCategory.objects.create(lawyer=lawyer, name=u"默认").save()
+		return lawyer
 
 class Lawyer(models.Model):
 	user = models.OneToOneField(User)
 	balance = models.DecimalField(max_digits=16, decimal_places=3,default=0)
 	blacklist = models.BooleanField(default=False)
 	score = models.IntegerField(default=0)
-	#blog = models.URLField(max_length=512)
 	remarks = models.ManyToManyField(Client, through="Remark", through_fields=("lawyer","client"), related_name="c_l_remarks")
 	questions = models.ManyToManyField(Client, through="Question", through_fields=("lawyer","client"), related_name="c_l_questions")
+
+	objects = LawyerManager()
 
 	def __unicode__(self):
 		return self.user.username
