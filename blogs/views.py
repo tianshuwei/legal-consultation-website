@@ -77,9 +77,9 @@ def index_view(request, pk_lawyer):
 	return response(request, 'blogs/index.html', 
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=lawyer.blogcategory_set.all(),
+		categories=lawyer.blogcategory_set.filter(state__lte=0),
 		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
-			lawyer.blogarticle_set.order_by('-publish_date')))
+			lawyer.blogarticle_set.filter(category__isnull=False).order_by('-publish_date')))
 
 def index_category_view(request, pk_lawyer, pk_category):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
@@ -147,7 +147,7 @@ def categories_view(request):
 def delete_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
 	if checkf(lambda: request.user.lawyer==category.lawyer):
-		category.delete()
+		category.remove()
 		messages.success(request, u'分类删除成功')
 		return response_auto(request, { 'success': True }, 'blogs:categories')
 	else:
