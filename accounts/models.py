@@ -40,7 +40,7 @@ class LawyerManager(models.Manager):
 		lawyer=Lawyer.objects.create(user=user)
 		lawyer.save()
 		BlogSettings.objects.create(lawyer=lawyer).save()
-		BlogCategory.objects.create(lawyer=lawyer, name=u"默认").save()
+		BlogCategory.objects.create(lawyer=lawyer, name=u"默认", state=-1).save()
 		return lawyer
 
 class Lawyer(models.Model):
