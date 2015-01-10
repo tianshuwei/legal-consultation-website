@@ -4,6 +4,31 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from settings import DEBUG
+from index.models import TransactionRecord
+from datetime import datetime
+import random
+
+# def debugonly(func):
+# 	return func if DEBUG else lambda:None
+
+def transacserial(transaction_name):
+	return ''.join([
+		transaction_name[:2].upper(),
+		datetime.now().strftime("%Y%m%d%H%M%S"),
+		''.join(random.choice('QWERTYUIOPASDFGHJKLZXCVBNMZY') for i in xrange(4))
+	])
+
+TRANSACSERIAL='transacserial'
+def recorded(request, transaction_name):
+	if request.method=='POST' and TRANSACSERIAL in request.POST:
+		return TransactionRecord.objects.create(
+			title=transaction_name.lower(),
+			serial=request.POST['transacserial'],
+			result='unknown'
+		)
+	else: 
+		return lambda msg: msg
 
 class Lazy(object):
 	def __init__(self, f):

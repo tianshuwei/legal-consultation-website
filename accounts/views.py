@@ -18,10 +18,14 @@ def login_view(request):
 		username,password = request.POST['username'],request.POST['password']
 		next_url = request.GET['next'] if 'next' in request.GET else reverse('index:index')
 		user = authenticate(username=username, password=password)
+		rec=recorded(request,'login')
 		if user is not None:
 			login(request, user)
+			rec(u'{0}登入成功'.format(username))
 			return HttpResponseRedirect(next_url)
-		else: return HttpResponseRedirect(next_url)
+		else: 
+			rec(u'{0}登入失败'.format(username))
+			return HttpResponseRedirect(next_url)
 	else:  return response(request, 'accounts/login.html')
 
 def logout_view(request):
