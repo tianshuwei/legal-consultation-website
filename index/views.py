@@ -10,9 +10,7 @@ def index_view(request):
 	)
 
 def my_custom_page_not_found_view(request):
-	return response(request,'index/index.html',
-		latest_products_list=[]
-	)
+	return response(request,'index/404.html')
 
 def transaction_record_view(request):
 	return response(request, 'index/transaction_record.html',
