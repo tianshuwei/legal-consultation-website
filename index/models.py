@@ -11,8 +11,12 @@ class TransactionRecord(models.Model):
 	def __unicode__(self):
 		return self.title
 
-	def __call__(self, msg):
-		self.result, self.message = ('success' if u'成功' in msg else 'error'), msg
-		self.save()
-		return msg
+	def __call__(self, *args):
+		if len(args)==0: # unintentionally called by template system
+			return self 
+		else: 
+			msg=args[0]
+			self.result, self.message = ('success' if u'成功' in msg else 'error'), msg
+			self.save()
+			return msg
 

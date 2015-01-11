@@ -13,6 +13,36 @@ import random
 # 	return func if DEBUG else lambda:None
 
 def transacserial(transaction_name):
+	"""
+	事务序列号
+
+		transaction_name 事务名称
+
+	形式：事务名称开头两位字母+日期时间+四位随机字母
+	用来唯一标识一个功能性事务，一方面功能测试框架可以根据事务日志跟踪一个操作的结果，
+	方便测试断言，解除测试与UI耦合；另一方面事务日志可作为网站的日志。
+
+	事务日志的关系模式定义在 index.models.TransactionRecord 类中。
+
+	首先，在模板里面用自定义filter（参数就是是事务名称），把事务序列号以hidden类型
+	input元素形式渲染进表单中：
+
+	{{ "login"|transacserial }}
+
+		渲染结果类似 <input name="transacserial" type="hidden" value="LO20150111004128XBLT">
+
+	处理POST请求的时候定义一个记录，recorded函数定义在tools.py中，它从request里面
+	读出事务序列号，创建新记录：
+
+	rec=recorded(request,'login')
+
+	处理成功后调用这个对象来记录事务：
+
+	rec(u'{0}登入成功'.format(username))
+
+	功能测试中可以从HTML文档中找到input元素，获得事务序列号。凭事务序列号调用
+	数据库API读取测试结果进行断言。
+	"""
 	return ''.join([
 		transaction_name[:2].upper(),
 		datetime.now().strftime("%Y%m%d%H%M%S"),
@@ -21,6 +51,14 @@ def transacserial(transaction_name):
 
 TRANSACSERIAL='transacserial'
 def recorded(request, transaction_name):
+	"""
+	创建事务记录对象，返回值一定是恒等函数（语法糖，方便重复利用实参）。
+
+		transaction_name 事务名称
+
+	如果请求包含事务序列号，则建立事务日志，跟踪这个事务。
+	否则返回一个什么都不干的恒等函数。
+	"""
 	if request.method=='POST' and TRANSACSERIAL in request.POST:
 		return TransactionRecord.objects.create(
 			title=transaction_name.lower(),
@@ -78,12 +116,12 @@ def response_auto(request, o, url_ref, **kwargs):
 	"""
 	根据请求形式自动选择redirect或response_jquery来响应。适合两种情况都要响应的view。
 
-	若请求通过普通表单提交，则调用redirect(url_ref, **kwargs)；
-	若请求通过$submit提交，则调用response_jquery(o)。
-
 		o 				response_jquery的参数
 		url_ref 		redirect的参数
 		**kwargs 		redirect的参数
+
+	若请求通过普通表单提交，则调用redirect(url_ref, **kwargs)；
+	若请求通过$submit提交，则调用response_jquery(o)。
 	"""
 	return response_jquery(o) if JSSUBMITTEDMARK in request.POST and request.POST[JSSUBMITTEDMARK]=='$submit 2014' else redirect(url_ref, **kwargs)
 
