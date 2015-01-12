@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 from org.testingtools import *
-from django.test import TestCase, LiveServerTestCase
+from django.test import TestCase #, LiveServerTestCase
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.select import Select
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
-
-class BasicTests(LiveServerTestCase, TestingToolsMixin):
+class BasicTests(StaticLiveServerTestCase, TestingToolsMixin):
 	fixtures = [
 		'fixtures/accounts.json',
 		'fixtures/blogs.json',
@@ -21,13 +22,23 @@ class BasicTests(LiveServerTestCase, TestingToolsMixin):
 		cls.selenium.quit()
 		super(BasicTests, cls).tearDownClass()
 
-	def test_00login(self):
+	def test_00home(self):
+		print self
+		print dir(self)
 		self.login('lawyer0')
-		self.selenium.get(self.reverse("index:index"))
+		self.nav("blogs:home")
 
-	def test_01home(self):
+	def test_01new_article(self):
 		self.login('lawyer0')
-		self.selenium.get(self.reverse("blogs:home"))
+		self.nav("blogs:new_article")
+		transacserial=self.transacserial_from('#frmArticle')
+		self.find('#frmArticle [name="title"]').send_keys('New Article')
+		Select(self.find('#frmArticle [name="category"]')).select_by_index(1)
+		self.find('#frmArticle [name="tags"]').send_keys('test')
+		self.find('#frmArticle [name="text"]').send_keys('New Article Text')
+		self.find('#frmArticle [type="submit"]').click()
+		time.sleep(1)
+		self.assertTransaction(transacserial)
 
 """
 Public members of LiveServerTestCase:

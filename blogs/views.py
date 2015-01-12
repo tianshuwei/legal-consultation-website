@@ -43,6 +43,7 @@ def edit_article_view(request, pk_text):
 @login_required
 def new_article_view(request):
 	if request.method=='POST':
+		rec=recorded(request,'blogs:new_article')
 		try:
 			BlogArticle.objects.create(
 				author=request.user.lawyer,
@@ -51,12 +52,13 @@ def new_article_view(request):
 				tags=request.POST['tags'],
 				text=request.POST['text']
 			).save()
-		except BlogCategory.DoesNotExist, e: messages.error(request, u'该分类不存在')
+		except BlogCategory.DoesNotExist, e: 
+			messages.error(request, rec(u'该分类不存在'))
 		except ObjectDoesNotExist, e: 
-			messages.error(request, u'该律师不存在')
+			messages.error(request, rec(u'该律师不存在'))
 			return redirect('index:index')
-		except: messages.error(request, u'文章创建失败')
-		else: messages.success(request, u'文章创建成功')
+		except: messages.error(request, rec(u'文章创建失败'))
+		else: messages.success(request, rec(u'文章创建成功'))
 		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	else: 
 		return response(request, 'blogs/new.html', 
