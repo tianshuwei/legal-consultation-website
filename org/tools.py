@@ -59,14 +59,13 @@ def recorded(request, transaction_name):
 	如果请求包含事务序列号，则建立事务日志，跟踪这个事务。
 	否则返回一个什么都不干的恒等函数。
 	"""
-	if request.method=='POST' and TRANSACSERIAL in request.POST:
-		return TransactionRecord.objects.create(
-			title=transaction_name.lower(),
-			serial=request.POST['transacserial'],
-			result='unknown'
-		)
-	else: 
-		return lambda msg: msg
+	rec = TransactionRecord.objects.create(
+		title=transaction_name.lower(),
+		serial=request.POST['transacserial'],
+		result='unknown'
+	) if request.method=='POST' and TRANSACSERIAL in request.POST else lambda msg: msg
+	rec.save()
+	return rec
 
 class Lazy(object):
 	def __init__(self, f):
