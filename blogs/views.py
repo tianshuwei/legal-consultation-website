@@ -19,9 +19,9 @@ def delete_article_view(request, pk_text): # TODO use post
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if checkf(lambda: request.user.lawyer==article.author):
 		article.delete()
-		messages.success(request, u'文章删除成功')
+		messages.success(request, _('Success deleting article.')) #u'文章删除成功')
 	else:
-		messages.error(request, u'文章删除失败')
+		messages.error(request,  _('Failure deleting article.')) #u'文章删除失败')
 	return redirect('blogs:index', pk_lawyer=article.author.id)
 
 @login_required

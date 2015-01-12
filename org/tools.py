@@ -181,4 +181,5 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django import forms
+from django.utils.translation import ugettext as _
 import traceback
