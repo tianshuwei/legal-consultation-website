@@ -28,12 +28,13 @@ def delete_article_view(request, pk_text): # TODO use post
 def edit_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if request.method=='POST':
+		rec=recorded(request,'blogs:new_article')
 		if checkf(lambda: request.user.lawyer==article.author):
 			form=ArticleForm(request.POST, instance=article)
 			form.save()
-			messages.success(request, u'文章编辑成功')
+			messages.success(request, rec(u'文章编辑成功'))
 		else:
-			messages.error(request, u'文章编辑失败')
+			messages.error(request, rec(u'文章编辑失败'))
 		return redirect('blogs:index', pk_lawyer=article.author.id)
 	else: 
 		return response(request, 'blogs/edit.html', 
