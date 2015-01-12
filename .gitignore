@@ -1,2 +1,4 @@
 *.pyc
 org/deployment.py
+tmp/
+deployment/
