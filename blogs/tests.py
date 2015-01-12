@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
 from org.testingtools import *
-from django.test import TestCase #, LiveServerTestCase
-from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.support.select import Select
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
 class BasicTests(StaticLiveServerTestCase, TestingToolsMixin):
 	fixtures = [
@@ -46,29 +41,4 @@ class BasicTests(StaticLiveServerTestCase, TestingToolsMixin):
 		self.find('#frmArticle [type="submit"]').click()
 		time.sleep(1)
 		self.assertTransaction(transacserial)
-
-"""
-Public members of LiveServerTestCase:
-['addCleanup', 'addTypeEqualityFunc', 'assertAlmostEqual', 'assertAlmostEquals', 
-'assertContains', 'assertDictContainsSubset', 'assertDictEqual', 'assertEqual', 
-'assertEquals', 'assertFalse', 'assertFieldOutput', 'assertFormError', 
-'assertFormsetError', 'assertGreater', 'assertGreaterEqual', 'assertHTMLEqual', 
-'assertHTMLNotEqual', 'assertIn', 'assertInHTML', 'assertIs', 'assertIsInstance', 
-'assertIsNone', 'assertIsNot', 'assertIsNotNone', 'assertItemsEqual', 
-'assertJSONEqual', 'assertLess', 'assertLessEqual', 'assertListEqual', 
-'assertMultiLineEqual', 'assertNotAlmostEqual', 'assertNotAlmostEquals', 
-'assertNotContains', 'assertNotEqual', 'assertNotEquals', 'assertNotIn', 
-'assertNotIsInstance', 'assertNotRegexpMatches', 'assertNumQueries', 
-'assertQuerysetEqual', 'assertRaises', 'assertRaisesMessage', 'assertRaisesRegexp', 
-'assertRedirects', 'assertRegexpMatches', 'assertSequenceEqual', 'assertSetEqual', 
-'assertTemplateNotUsed', 'assertTemplateUsed', 'assertTrue', 'assertTupleEqual', 
-'assertXMLEqual', 'assertXMLNotEqual', 'assert_', 'available_apps', 'client', 
-'client_class', 'countTestCases', 'debug', 'defaultTestResult', 'doCleanups', 
-'fail', 'failIf', 'failIfAlmostEqual', 'failIfEqual', 'failUnless', 
-'failUnlessAlmostEqual', 'failUnlessEqual', 'failUnlessRaises', 'failureException', 
-'fixtures', 'id', 'live_server_url', 'longMessage', 'maxDiff', 'modify_settings', 
-'reset_sequences', 'run', 'selenium', 'serialized_rollback', 'server_thread', 'setUp', 
-'setUpClass', 'settings', 'shortDescription', 'skipTest', 'static_handler', 'tearDown', 
-'tearDownClass', 'test_login']
-"""
 

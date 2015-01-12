@@ -35,3 +35,26 @@ class TestingToolsMixin(object):
 
 	def assertTransaction(self, serial):
 		self.assertTrue(self.query_transaction(serial))
+
+from django.test import TestCase #, LiveServerTestCase
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.select import Select
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+
+"""
+Assertion methods:
+['assertAlmostEqual', 'assertAlmostEquals', 
+'assertContains', 'assertDictContainsSubset', 'assertDictEqual', 'assertEqual', 
+'assertEquals', 'assertFalse', 'assertFieldOutput', 'assertFormError', 
+'assertFormsetError', 'assertGreater', 'assertGreaterEqual', 'assertHTMLEqual', 
+'assertHTMLNotEqual', 'assertIn', 'assertInHTML', 'assertIs', 'assertIsInstance', 
+'assertIsNone', 'assertIsNot', 'assertIsNotNone', 'assertItemsEqual', 
+'assertJSONEqual', 'assertLess', 'assertLessEqual', 'assertListEqual', 
+'assertMultiLineEqual', 'assertNotAlmostEqual', 'assertNotAlmostEquals', 
+'assertNotContains', 'assertNotEqual', 'assertNotEquals', 'assertNotIn', 
+'assertNotIsInstance', 'assertNotRegexpMatches', 'assertNumQueries', 
+'assertQuerysetEqual', 'assertRaises', 'assertRaisesMessage', 'assertRaisesRegexp', 
+'assertRedirects', 'assertRegexpMatches', 'assertSequenceEqual', 'assertSetEqual', 
+'assertTemplateNotUsed', 'assertTemplateUsed', 'assertTrue', 'assertTupleEqual', 
+'assertXMLEqual', 'assertXMLNotEqual']
+"""
