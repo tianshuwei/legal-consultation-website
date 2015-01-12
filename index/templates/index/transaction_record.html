@@ -3,10 +3,10 @@
 {% block head %}{% endblock %}
 {% block main %}
 <table data-toggle="table" data-pagination="true" data-search="true" data-height="300" data-show-toggle="true" data-show-columns="true" >
-	<thead><tr><th data-sortable="true">序列号</th><th data-sortable="true">结果</th><th>消息</th><th data-sortable="true">时间</th></tr></thead>
+	<thead><tr><th data-sortable="true">序列号</th><th data-sortable="true">标题</th><th data-sortable="true">结果</th><th>消息</th><th data-sortable="true">时间</th></tr></thead>
 	<tbody>
 	{% for record in records %}
-		<tr><td>{{ record.serial }}</td><td>{{ record.result }}</td><td>{{ record.message }}</td><td>{{ record.publish_date }}</td></tr>
+		<tr><td>{{ record.serial }}</td><td>{{ record.title }}</td><td>{{ record.result }}</td><td>{{ record.message }}</td><td>{{ record.publish_date }}</td></tr>
 	{% endfor %}
 	</tbody>
 </table>

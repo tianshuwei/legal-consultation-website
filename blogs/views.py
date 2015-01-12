@@ -15,14 +15,17 @@ class ArticleForm(forms.ModelForm):
 		}
 
 @login_required
-def delete_article_view(request, pk_text): # TODO use post
+def delete_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
-	if checkf(lambda: request.user.lawyer==article.author):
-		article.delete()
-		messages.success(request, u'文章删除成功')
-	else:
-		messages.error(request, u'文章删除失败')
-	return redirect('blogs:index', pk_lawyer=article.author.id)
+	if request.method=='POST':
+		rec=recorded(request,'blogs:delete_article')
+		if checkf(lambda: request.user.lawyer==article.author):
+			article.remove()
+			messages.success(request, rec(u'文章删除成功'))
+			return response_auto(request, { 'success': True }, 'blogs:index', pk_lawyer=article.author.id)
+		else:
+			messages.error(request, rec(u'文章删除失败'))
+			return response_auto(request, { 'success': False }, 'blogs:index', pk_lawyer=article.author.id)
 
 @login_required
 def edit_article_view(request, pk_text):
