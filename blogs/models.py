@@ -2,10 +2,25 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 
+class BlogCategoryManager(models.Manager):
+	use_for_related_fields = True
+
+	def get_public_categories(self):
+		return self.get_queryset().filter(state__lte=0)
+
+	def get_default_category(self, lawyer):
+		default_category, created=BlogCategory.objects.get_or_create(lawyer=lawyer,name=u"默认")
+		if created: 
+			default_category.state=-1
+			default_category.save()
+		return default_category
+
 class BlogCategory(models.Model):
 	lawyer = models.ForeignKey("accounts.Lawyer")
 	name = models.CharField(max_length=255, default='', unique=True)
 	state = models.IntegerField(default=0) # 0=PUBLIC 1=PRIVATE -1=SYSTEM 
+
+	objects = BlogCategoryManager()
 
 	def __unicode__(self):
 		return self.name
@@ -13,19 +28,17 @@ class BlogCategory(models.Model):
 	@transaction.atomic
 	def remove(self):
 		if self.state<0: return
-		self.blogarticle_set.all().update(category=self.get_default())
+		self.blogarticle_set.all().update(category=BlogCategory.objects.get_default_category(self.lawyer))
 		self.delete()
-
-	def get_default(self):
-		default_category, created=BlogCategory.objects.get_or_create(lawyer=self.lawyer,name=u"默认")
-		if created: default_category.state=-1
-		default_category.save()
-		return default_category
 
 class BlogArticleManager(models.Manager):
 	use_for_related_fields = True
+
 	def get_public_articles(self):
 		return self.get_queryset().filter(category__isnull=False).order_by('-publish_date')
+
+	def get_articles_from(self,category):
+		return self.get_queryset().filter(category=category).order_by('-publish_date')
 
 class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)

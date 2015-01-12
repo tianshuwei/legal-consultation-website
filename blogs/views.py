@@ -27,7 +27,7 @@ def delete_article_view(request, pk_text): # TODO use post
 @login_required
 def edit_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
-	if request.method=='POST':
+	if request.method=='POST': # [LiveTest]
 		rec=recorded(request,'blogs:new_article')
 		if checkf(lambda: request.user.lawyer==article.author):
 			form=ArticleForm(request.POST, instance=article)
@@ -43,7 +43,7 @@ def edit_article_view(request, pk_text):
 
 @login_required
 def new_article_view(request):
-	if request.method=='POST':
+	if request.method=='POST': # [LiveTest]
 		rec=recorded(request,'blogs:new_article')
 		try:
 			BlogArticle.objects.create(
@@ -80,7 +80,7 @@ def index_view(request, pk_lawyer):
 	return response(request, 'blogs/index.html', 
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=lawyer.blogcategory_set.filter(state__lte=0),
+		categories=lawyer.blogcategory_set.get_public_categories(),
 		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_public_articles()))
 
@@ -94,7 +94,7 @@ def index_category_view(request, pk_lawyer, pk_category):
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		category=category,
 		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
-			lawyer.blogarticle_set.filter(category=category).order_by('-publish_date')))
+			lawyer.blogarticle_set.get_articles_from(category).order_by('-publish_date')))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
