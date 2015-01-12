@@ -41,6 +41,8 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
+class FunctionalTestCase(StaticLiveServerTestCase, TestingToolsMixin): pass
+
 """
 Assertion methods:
 ['assertAlmostEqual', 'assertAlmostEquals', 

@@ -1,6 +1,6 @@
 from org.testingtools import *
 
-class BasicTests(StaticLiveServerTestCase, TestingToolsMixin):
+class FTest(FunctionalTestCase):
 	fixtures = [
 		'fixtures/accounts.json',
 		'fixtures/blogs.json',
@@ -10,16 +10,12 @@ class BasicTests(StaticLiveServerTestCase, TestingToolsMixin):
 	def setUpClass(cls):
 		cls.selenium = WebDriver()
 		cls.selenium.maximize_window()
-		super(BasicTests, cls).setUpClass()
+		super(FTest, cls).setUpClass()
 
 	@classmethod
 	def tearDownClass(cls):
 		cls.selenium.quit()
-		super(BasicTests, cls).tearDownClass()
-
-	def test_home(self):
-		self.login('lawyer0')
-		self.nav("blogs:home")
+		super(FTest, cls).tearDownClass()
 
 	def test_new_article(self):
 		self.login('lawyer0')
