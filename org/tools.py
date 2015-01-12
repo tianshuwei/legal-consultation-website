@@ -16,7 +16,7 @@ def transacserial(transaction_name):
 	"""
 	事务序列号
 
-		transaction_name 事务名称
+		transaction_name 事务名称，可以任意取，建议与该事务对应的POST请求的URL的name相同。
 
 	形式：事务名称开头两位字母+日期时间+四位随机字母
 	用来唯一标识一个功能性事务，一方面功能测试框架可以根据事务日志跟踪一个操作的结果，
