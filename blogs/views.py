@@ -82,7 +82,7 @@ def index_view(request, pk_lawyer):
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		categories=lawyer.blogcategory_set.filter(state__lte=0),
 		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
-			lawyer.blogarticle_set.filter(category__isnull=False).order_by('-publish_date')))
+			lawyer.blogarticle_set.get_public_articles()))
 
 def index_category_view(request, pk_lawyer, pk_category):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)

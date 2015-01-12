@@ -22,6 +22,11 @@ class BlogCategory(models.Model):
 		default_category.save()
 		return default_category
 
+class BlogArticleManager(models.Manager):
+	use_for_related_fields = True
+	def get_public_articles(self):
+		return self.get_queryset().filter(category__isnull=False).order_by('-publish_date')
+
 class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)
 	title = models.CharField(max_length=255, default='')
@@ -29,6 +34,8 @@ class BlogArticle(models.Model):
 	category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True)
 	tags = models.CharField(max_length=255, default='')
 	text = models.TextField()
+
+	objects = BlogArticleManager()
 
 	def __unicode__(self):
 		return self.title
