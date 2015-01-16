@@ -38,3 +38,11 @@ class FTest(FunctionalTestCase):
 		time.sleep(1)
 		self.assertTransaction(transacserial)
 
+	def test_new_comment(self):
+		self.login('lawyer0')
+		self.nav("blogs:text", pk_text=5)
+		transacserial=self.transacserial_from('#frmComment')
+		self.find('#frmComment [name="txt_comment"]').send_keys('Nice')
+		self.find('#frmComment [type="submit"]').click()
+		time.sleep(1)
+		self.assertTransaction(transacserial)

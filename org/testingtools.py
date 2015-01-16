@@ -41,7 +41,10 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
-class FunctionalTestCase(StaticLiveServerTestCase, TestingToolsMixin): pass
+class FunctionalTestCase(StaticLiveServerTestCase, TestingToolsMixin):
+	"""
+	功能测试基类，多重继承测试工具
+	"""
 
 """
 Assertion methods:

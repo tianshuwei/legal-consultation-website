@@ -30,7 +30,7 @@ def delete_article_view(request, pk_text):
 			return response_auto(request, { 'success': False }, 'blogs:index', pk_lawyer=article.author.id)
 	else: raise Http404
 
-@login_required
+@login_required # [LiveTest]
 def edit_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if request.method=='POST': # [LiveTest]
@@ -49,7 +49,7 @@ def edit_article_view(request, pk_text):
 			article_edit=ArticleForm(instance=article),
 			article=article)	
 
-@login_required
+@login_required # [LiveTest]
 def new_article_view(request):
 	if request.method=='POST': # [LiveTest]
 		rec=recorded(request,'blogs:new_article')
@@ -118,15 +118,21 @@ def detail_view(request, pk_text):
 		article=article,
 		comments=article.blogcomment_set.order_by('-publish_date'))
 
-@login_required
+@login_required # [LiveTest]
 def new_comment_view(request, pk_text):
-	if request.method=='POST':
-		article=get_object_or_404(BlogArticle, pk=pk_text)
+	if request.method=='POST': # [LiveTest]
+		rec=recorded(request,'blogs:new_article')
+		try:
+			article=BlogArticle.objects.get(id=pk_text)
+		except BlogArticle.DoesNotExist, e:
+			rec.error(u'{0} 评论文章失败'.format(request.user.username))
+			raise Http404
 		BlogComment.objects.create( 
 			user=request.user, 
 			article=article,
 			text=request.POST['txt_comment']
 		).save()
+		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title))
 		return redirect('blogs:text', pk_text=article.id)
 	else: raise Http404
 
