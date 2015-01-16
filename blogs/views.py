@@ -118,13 +118,13 @@ def detail_view(request, pk_text):
 		article=article,
 		comments=article.blogcomment_set.order_by('-publish_date'))
 
-@login_required # [LiveTest]
+@login_required # [LiveTest] [UnitTest]
 def new_comment_view(request, pk_text):
 	if request.method=='POST':
 		rec=recorded(request,'blogs:new_article')
 		try:
 			article=BlogArticle.objects.get(id=pk_text)
-		except BlogArticle.DoesNotExist, e:
+		except BlogArticle.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 评论文章失败'.format(request.user.username))
 			raise Http404
 		BlogComment.objects.create( 
@@ -132,7 +132,7 @@ def new_comment_view(request, pk_text):
 			article=article,
 			text=request.POST['txt_comment']
 		).save()
-		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
+		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest] [UnitTest]
 		return redirect('blogs:text', pk_text=article.id)
 	else: raise Http404
 
@@ -141,20 +141,21 @@ def categories_view(request):
 	if request.method=='POST':
 		rec=recorded(request,'blogs:categories')
 		try: 
-			category=BlogCategory.objects.create(
-				lawyer=request.user.lawyer,
-				name=request.POST['name']
-			)
-			category.save()
-		except ObjectDoesNotExist, e: 
+			with transaction.atomic():
+				category=BlogCategory.objects.create(
+					lawyer=request.user.lawyer,
+					name=request.POST['name']
+				)
+				category.save()
+		except ObjectDoesNotExist, e: # [UnitTest]
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-		except: 
+		except: # [UnitTest]
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-		else: 
+		else: # [UnitTest]
 			messages.success(request, u'新分类创建成功')
 			rec.success(u'{0} 新分类 {1} 创建成功'.format(request.user.username,category.name)) # [UnitTest]
 			return response_auto(request, { 
@@ -171,25 +172,43 @@ def categories_view(request):
 				categories=request.user.lawyer.blogcategory_set.all())
 		except ObjectDoesNotExist, e: raise Http404
 
-@login_required
+@login_required # [UnitTest]
 def delete_category_view(request, pk_category):
-	category=get_object_or_404(BlogCategory, pk=pk_category)
-	if checkf(lambda: request.user.lawyer==category.lawyer):
-		category.remove()
-		messages.success(request, u'分类删除成功')
-		return response_auto(request, { 'success': True }, 'blogs:categories')
-	else:
-		messages.error(request, u'分类删除失败')
-		return response_auto(request, { 'success': False }, 'blogs:categories')
+	if request.method=='POST':
+		rec=recorded(request,'blogs:delete_category')
+		try:
+			category=BlogCategory.objects.get(id=pk_category)
+		except BlogCategory.DoesNotExist, e: # [UnitTest]
+			rec.error(u'{0} 删除分类失败，因为分类不存在'.format(request.user.username))
+			raise Http404
+		if checkf(lambda: request.user.lawyer==category.lawyer): # [UnitTest]
+			category.remove()
+			messages.success(request, u'分类删除成功') 
+			rec.success(u'{0} 删除分类 {1} 成功'.format(request.user.username,category.name))
+			return response_auto(request, { 'success': True }, 'blogs:categories')
+		else: # [UnitTest]
+			messages.error(request, u'分类删除失败')
+			rec.error(u'{0} 删除分类 {1} 失败，因为权限不足'.format(request.user.username,category.name))
+			return response_auto(request, { 'success': False }, 'blogs:categories')
+	else: raise Http404
 
-@login_required
+@login_required # [UnitTest]
 def rename_category_view(request, pk_category):
-	category=get_object_or_404(BlogCategory, pk=pk_category)
-	if checkf(lambda: request.user.lawyer==category.lawyer):
-		category.name=request.POST['name']
-		category.save()
-		messages.success(request, u'分类重命名成功')
-		return response_auto(request, { 'success': True, 'pk':category.id, 'name':category.name  }, 'blogs:categories')
-	else:
-		messages.error(request, u'分类重命名失败')
-		return response_auto(request, { 'success': False }, 'blogs:categories')
+	if request.method=='POST':
+		rec=recorded(request,'blogs:rename_category')
+		try:
+			category=BlogCategory.objects.get(id=pk_category)
+		except BlogCategory.DoesNotExist, e: # [UnitTest]
+			rec.error(u'{0} 重命名分类失败，因为分类不存在'.format(request.user.username))
+			raise Http404
+		if checkf(lambda: request.user.lawyer==category.lawyer): # [UnitTest]
+			category.name=request.POST['name']
+			category.save()
+			messages.success(request, u'分类重命名成功')
+			rec.success(u'{0} 重命名分类 {1} 成功'.format(request.user.username,category.name))
+			return response_auto(request, { 'success': True, 'pk':category.id, 'name':category.name  }, 'blogs:categories')
+		else: # [UnitTest]
+			messages.error(request, u'分类重命名失败')
+			rec.error(u'{0} 重命名分类 {1} 失败，因为权限不足'.format(request.user.username,category.name))
+			return response_auto(request, { 'success': False }, 'blogs:categories')
+	else: raise Http404
