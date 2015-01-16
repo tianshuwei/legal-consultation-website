@@ -21,10 +21,10 @@ def login_view(request):
 		rec=recorded(request,'login')
 		if user is not None:
 			login(request, user)
-			rec(u'{0}登入成功'.format(username))
+			rec.success(u'{0}登入成功'.format(username))
 			return HttpResponseRedirect(next_url)
 		else: 
-			rec(u'{0}登入失败'.format(username))
+			rec.error(u'{0}登入失败'.format(username))
 			return HttpResponseRedirect(next_url)
 	else:  return response(request, 'accounts/login.html')
 

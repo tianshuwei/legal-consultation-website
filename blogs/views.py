@@ -21,23 +21,28 @@ def delete_article_view(request, pk_text):
 		rec=recorded(request,'blogs:delete_article')
 		if checkf(lambda: request.user.lawyer==article.author):
 			article.remove()
-			messages.success(request, rec(u'文章删除成功'))
+			messages.success(request, u'文章删除成功')
+			rec.success(u'{0} 删除文章 {1} 成功'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': True }, 'blogs:index', pk_lawyer=article.author.id)
 		else:
-			messages.error(request, rec(u'文章删除失败'))
+			messages.error(request, u'文章删除失败')
+			rec.error(u'{0} 删除文章 {1} 失败'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': False }, 'blogs:index', pk_lawyer=article.author.id)
+	else: raise Http404
 
 @login_required
 def edit_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if request.method=='POST': # [LiveTest]
-		rec=recorded(request,'blogs:new_article')
+		rec=recorded(request,'blogs:edit_article')
 		if checkf(lambda: request.user.lawyer==article.author):
 			form=ArticleForm(request.POST, instance=article)
 			form.save()
-			messages.success(request, rec(u'文章编辑成功'))
+			messages.success(request, u'文章编辑成功')
+			rec.success(u'{0} 编辑文章 {1} 成功'.format(request.user.username, article.title))
 		else:
-			messages.error(request, rec(u'文章编辑失败'))
+			messages.error(request, u'文章编辑失败')
+			rec.success(u'{0} 编辑文章 {1} 失败'.format(request.user.username, article.title))
 		return redirect('blogs:index', pk_lawyer=article.author.id)
 	else: 
 		return response(request, 'blogs/edit.html', 
@@ -49,20 +54,27 @@ def new_article_view(request):
 	if request.method=='POST': # [LiveTest]
 		rec=recorded(request,'blogs:new_article')
 		try:
-			BlogArticle.objects.create(
+			article=BlogArticle.objects.create(
 				author=request.user.lawyer,
 				title=request.POST['title'],
 				category=BlogCategory.objects.get(id=request.POST['category']),
 				tags=request.POST['tags'],
 				text=request.POST['text']
-			).save()
+			)
+			article.save()
 		except BlogCategory.DoesNotExist, e: 
-			messages.error(request, rec(u'该分类不存在'))
+			messages.error(request, u'该分类不存在')
+			rec.success(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
 		except ObjectDoesNotExist, e: 
-			messages.error(request, rec(u'该律师不存在'))
+			messages.error(request, u'该律师不存在')
+			rec.success(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
 			return redirect('index:index')
-		except: messages.error(request, rec(u'文章创建失败'))
-		else: messages.success(request, rec(u'文章创建成功'))
+		except: 
+			messages.error(request, u'文章创建失败')
+			rec.success(u'{0} 创建文章失败'.format(request.user.username))
+		else: 
+			messages.success(request, u'文章创建成功')
+			rec.success(u'{0} 创建文章 {1} 成功'.format(request.user.username, article.title))
 		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	else: 
 		return response(request, 'blogs/new.html', 

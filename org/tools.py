@@ -9,8 +9,11 @@ from index.models import TransactionRecord
 from datetime import datetime
 import random
 
-# def debugonly(func):
-# 	return func if DEBUG else lambda:None
+class TransactionRecordException(Exception):
+	"""
+	事务日志错误：
+		没有找到transacserial等引起的无法记录事务日志问题。
+	"""
 
 def transacserial(transaction_name):
 	"""
@@ -52,20 +55,24 @@ def transacserial(transaction_name):
 TRANSACSERIAL='transacserial'
 def recorded(request, transaction_name):
 	"""
-	创建事务记录对象，返回值一定是恒等函数（语法糖，方便重复利用实参）。
+	创建事务记录对象。
 
 		transaction_name 事务名称
 
 	如果请求包含事务序列号，则建立事务日志，跟踪这个事务。
-	否则返回一个什么都不干的恒等函数。
 	"""
-	rec = TransactionRecord.objects.create(
-		title=transaction_name.lower(),
-		serial=request.POST['transacserial'],
-		result='unknown'
-	) if request.method=='POST' and TRANSACSERIAL in request.POST else lambda msg: msg
-	rec.save()
-	return rec
+	if request.method!='POST': 
+		raise TransactionRecordException(u'必须使用POST请求。')
+	if TRANSACSERIAL in request.POST:
+		rec = TransactionRecord.objects.create(
+			title=transaction_name.lower(),
+			serial=request.POST['transacserial'],
+			result='unknown'
+		)
+		rec.save()
+		return rec
+	else:
+		raise TransactionRecordException(u'POST请求中缺少transacserial')
 
 class Lazy(object):
 	def __init__(self, f):
