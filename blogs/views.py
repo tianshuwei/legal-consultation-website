@@ -136,9 +136,10 @@ def new_comment_view(request, pk_text):
 		return redirect('blogs:text', pk_text=article.id)
 	else: raise Http404
 
-@login_required
+@login_required # [UnitTest]
 def categories_view(request):
 	if request.method=='POST':
+		rec=recorded(request,'blogs:categories')
 		try: 
 			category=BlogCategory.objects.create(
 				lawyer=request.user.lawyer,
@@ -147,12 +148,15 @@ def categories_view(request):
 			category.save()
 		except ObjectDoesNotExist, e: 
 			messages.error(request, u'新分类创建失败')
+			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
 		except: 
 			messages.error(request, u'新分类创建失败')
+			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
 		else: 
 			messages.success(request, u'新分类创建成功')
+			rec.success(u'{0} 新分类 {1} 创建成功'.format(request.user.username,category.name)) # [UnitTest]
 			return response_auto(request, { 
 				'success': True, 
 				'pk': category.id, 

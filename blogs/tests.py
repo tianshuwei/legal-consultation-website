@@ -46,3 +46,19 @@ class FTest(FunctionalTestCase):
 		self.find('#frmComment [type="submit"]').click()
 		time.sleep(1)
 		self.assertTransaction(transacserial)
+
+class CategoryTest(UnitTestCase):
+	fixtures = [
+		'fixtures/accounts.json',
+		'fixtures/blogs.json',
+	]
+
+	def setUp(self):
+		self.client = Client()
+
+	def test_new_category(self):
+		self.login('lawyer0')
+		self.assertTransaction(self.post({
+			'name':'new category',
+		},'blogs:categories'))
+		
