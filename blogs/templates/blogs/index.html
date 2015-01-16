@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load transacserial %}
 {% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
 
 {% block head %}
@@ -182,7 +183,7 @@
                             {% endcomment %}
                             {% if is_master %}
                             <div id="add_cats" class="animated fadeInDown" style="display:none;">
-                                     {% csrf_token %}
+                                     {% csrf_token %} {{ "blogs:categories"|transacserial }}
                                     <div class="input-group">
                                       <input type="text" class="form-control" name="name" placeholder="input name here">
                                       <span class="input-group-addon" 

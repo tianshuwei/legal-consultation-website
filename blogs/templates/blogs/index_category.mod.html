@@ -1,3 +1,4 @@
+{% load transacserial %}
 {% for category in categories %}
 <li>
 	<div id="cats_{{ category.id }}" >
@@ -9,7 +10,7 @@
 	</div>
 	{% if is_master %}
 	<div id="cfg_cats_{{ category.id }}"  style="display:none;">
-		{% csrf_token %}
+		{% csrf_token %} {{ "blogs:rename_category"|transacserial }}
 		<div class="input-group">
 		  <input type="text" class="form-control" name="name" placeholder="input name here">
 		  <span class="input-group-addon" onclick="$submit(['cfg_cats',{{ category.id }}],'{% url 'blogs:rename_category' category.id %}',cfg_ctg)">
