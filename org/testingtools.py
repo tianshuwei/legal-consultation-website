@@ -4,7 +4,18 @@ from index.models import TransactionRecord
 from org.tools import transacserial, TRANSACSERIAL
 import traceback, time
 
-class FTestingToolsMixin(object):
+class TestingTools(object):
+	def query_transaction(self, serial):
+		try: 
+			rec=TransactionRecord.objects.get(serial=serial)
+			return rec.result=='success'
+		except TransactionRecord.DoesNotExist, e: 
+			return False
+
+	def assertTransaction(self, serial):
+		self.assertTrue(self.query_transaction(serial))
+
+class FTestingToolsMixin(TestingTools):
 	def reverse(self, url_ref, **kwargs):
 		return self.live_server_url+reverse(url_ref, kwargs=kwargs)
 
@@ -27,47 +38,17 @@ class FTestingToolsMixin(object):
 	def transacserial_from(self, selector):
 		return self.find(selector).find('input[name="transacserial"]').get_attribute('value')
 
-	def query_transaction(self, serial):
-		try: 
-			rec=TransactionRecord.objects.get(serial=serial)
-			return rec.result=='success'
-		except TransactionRecord.DoesNotExist, e: 
-			return False
-
-	def assertTransaction(self, serial):
-		self.assertTrue(self.query_transaction(serial))
-
-class UTestingToolsMixin(object):
+class UTestingToolsMixin(TestingTools):
 	def reverse(self, url_ref, **kwargs):
 		return reverse(url_ref, kwargs=kwargs)
 
-	def nav(self, url_ref, **kwargs):
-		self.client.get(self.reverse(url_ref,**kwargs))
-
 	def login(self, username, password='1234'):
-		self.client.post(self.reverse("accounts:login"), {
-			'username': username,
-			'password': password,
-			TRANSACSERIAL: transacserial('login'),
-		})
+		self.client.login(username=username,password=password)
 
 	def post(self, data, url_ref, **kwargs):
 		data[TRANSACSERIAL]=transacserial(url_ref)
 		self.client.post(self.reverse(url_ref, **kwargs), data)
-		return data[TRANSACSERIAL]
-
-	def transacserial(self, transaction_name):
-		return transacserial(transaction_name)
-
-	def query_transaction(self, serial):
-		try: 
-			rec=TransactionRecord.objects.get(serial=serial)
-			return rec.result=='success'
-		except TransactionRecord.DoesNotExist, e: 
-			return False
-
-	def assertTransaction(self, serial):
-		self.assertTrue(self.query_transaction(serial))
+		return self.query_transaction(data[TRANSACSERIAL])
 
 from django.test import TestCase #, LiveServerTestCase
 from django.test.client import Client
