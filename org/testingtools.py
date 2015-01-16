@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 from index.models import TransactionRecord
+from org.tools import transacserial, TRANSACSERIAL
 import traceback, time
 
-class TestingToolsMixin(object):
+class FTestingToolsMixin(object):
 	def reverse(self, url_ref, **kwargs):
 		return self.live_server_url+reverse(url_ref, kwargs=kwargs)
 
@@ -36,14 +37,52 @@ class TestingToolsMixin(object):
 	def assertTransaction(self, serial):
 		self.assertTrue(self.query_transaction(serial))
 
+class UTestingToolsMixin(object):
+	def reverse(self, url_ref, **kwargs):
+		return reverse(url_ref, kwargs=kwargs)
+
+	def nav(self, url_ref, **kwargs):
+		self.client.get(self.reverse(url_ref,**kwargs))
+
+	def login(self, username, password='1234'):
+		self.client.post(self.reverse("accounts:login"), {
+			'username': username,
+			'password': password,
+			TRANSACSERIAL: transacserial('login'),
+		})
+
+	def post(self, data, url_ref, **kwargs):
+		data[TRANSACSERIAL]=transacserial(url_ref)
+		self.client.post(self.reverse(url_ref, **kwargs), data)
+		return data[TRANSACSERIAL]
+
+	def transacserial(self, transaction_name):
+		return transacserial(transaction_name)
+
+	def query_transaction(self, serial):
+		try: 
+			rec=TransactionRecord.objects.get(serial=serial)
+			return rec.result=='success'
+		except TransactionRecord.DoesNotExist, e: 
+			return False
+
+	def assertTransaction(self, serial):
+		self.assertTrue(self.query_transaction(serial))
+
 from django.test import TestCase #, LiveServerTestCase
+from django.test.client import Client
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 
-class FunctionalTestCase(StaticLiveServerTestCase, TestingToolsMixin):
+class FunctionalTestCase(StaticLiveServerTestCase, FTestingToolsMixin):
 	"""
 	功能测试基类，多重继承测试工具
+	"""
+
+class UnitTestCase(TestCase, UTestingToolsMixin):
+	"""
+	单元测试基类，多重继承测试工具
 	"""
 
 """
