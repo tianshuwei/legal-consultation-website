@@ -23,22 +23,31 @@ class SmartContractTemplate(models.Model):
 	text = models.TextField()
 	state = models.IntegerField(default=0)
 
+	def __unicode__(self):
+		return self.template_type
+
 class SmartContractStep(models.Model):
 	contract = models.ForeignKey(SmartContract)
 	name = models.CharField(max_length=30, default='')
-	next = models.IntegerField(default=0)
+	next_name = models.CharField(max_length=30, default='')
 
 	def __unicode__(self):
-		return self.name	
+		return self.name
 
 class SmartContractVar(models.Model):
 	step = models.ForeignKey(SmartContractStep)
 	widget = models.IntegerField(default=0)
-	name = models.CharField(max_length=32, default='')
+	extra = models.TextField()
+	name = models.CharField(max_length=30, default='')
 	label = models.CharField(max_length=255, default='')
-	help = models.CharField(max_length=255, default='')
-	next = models.IntegerField(default=0)
+	help_text = models.CharField(max_length=255, default='')
+	next_name = models.CharField(max_length=30, default='')
 
 	def __unicode__(self):
 		return self.name
+
+class SmartContractInstance(models.Model):
+	contract = models.ForeignKey(SmartContract)
+	data = models.TextField()
+
 
