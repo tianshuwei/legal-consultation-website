@@ -40,7 +40,7 @@ INSTALLED_APPS = (
 	'products',
 	'accounts',
 	'blogs',
-	# 'smartcontract',
+	'smartcontract',
 )
 
 MIDDLEWARE_CLASSES = (

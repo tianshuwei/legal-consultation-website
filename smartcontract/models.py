@@ -48,6 +48,7 @@ class SmartContractVar(models.Model):
 
 class SmartContractInstance(models.Model):
 	contract = models.ForeignKey(SmartContract)
+	user = models.ForeignKey(User)
 	data = models.TextField()
 
 
