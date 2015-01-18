@@ -1,11 +1,11 @@
 {% extends 'blogs/index.html' %}
 {% load transacserial %}
-{% block title %}{{ request.user }}的律师博客 - {{ article.title }}{% endblock %}
+{% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
 
 {% block head %}
 <header class="main-header">
     <div class="container">
-        <h1 class="page-title">律师博客 -<strong>display error here</strong>> {{ lawyer.user.username }}</h1>
+        <h1 class="page-title">律师博客 - {{ article.author.user.username }}</h1>
 
 		{% if is_master %}
         <ol class="breadcrumb pull-right">
