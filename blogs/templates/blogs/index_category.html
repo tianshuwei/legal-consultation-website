@@ -1,8 +1,23 @@
-{% extends 'base.html' %}
+{% extends 'blogs/index.html' %}
 {% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
-{% block main %}
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">律师博客 -{{ lawyer.user.username }}</h1>
 
-<h1>律师博客 - {{ lawyer.user.username }} - {{ category.name }}</h1>
+		
+        <ol class="breadcrumb pull-right">
+        	<li><a href="{% url 'blogs:index' category.lawyer.id %}">主页</a></li>
+        	<li><a href="#">{{ category.name }}</a></li>
+		</ol>
+
+
+
+    </div>
+</header>
+{% endblock %}
+{% block contexts %}
+
 {% if is_master %}
 <a href="{% url 'blogs:index' category.lawyer.id %}">返回博客主页</a>
 <a href="{% url 'blogs:new_article' %}">写新文章</a>
