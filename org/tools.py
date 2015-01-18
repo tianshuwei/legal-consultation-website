@@ -4,6 +4,75 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from settings import DEBUG
+from index.models import TransactionRecord
+from datetime import datetime
+import random
+
+class TransactionRecordException(Exception):
+	"""
+	事务日志错误：
+		没有找到transacserial等引起的无法记录事务日志问题。
+	"""
+
+def transacserial(transaction_name):
+	"""
+	事务序列号
+
+		transaction_name 事务名称，可以任意取，建议与该事务对应的POST请求的URL的name相同。
+
+	形式：事务名称开头两位字母+日期时间+四位随机字母
+	用来唯一标识一个功能性事务，一方面功能测试框架可以根据事务日志跟踪一个操作的结果，
+	方便测试断言，解除测试与UI耦合；另一方面事务日志可作为网站的日志。
+
+	事务日志的关系模式定义在 index.models.TransactionRecord 类中。
+
+	首先，在模板里面用自定义filter（参数就是是事务名称），把事务序列号以hidden类型
+	input元素形式渲染进表单中：
+
+	{{ "login"|transacserial }}
+
+		渲染结果类似 <input name="transacserial" type="hidden" value="LO20150111004128XBLT">
+
+	处理POST请求的时候定义一个记录，recorded函数定义在tools.py中，它从request里面
+	读出事务序列号，创建新记录：
+
+	rec=recorded(request,'login')
+
+	处理成功后调用这个对象来记录事务：
+
+	rec(u'{0}登入成功'.format(username))
+
+	功能测试中可以从HTML文档中找到input元素，获得事务序列号。凭事务序列号调用
+	数据库API读取测试结果进行断言。
+	"""
+	return ''.join([
+		transaction_name[:2].upper(),
+		datetime.now().strftime("%Y%m%d%H%M%S"),
+		''.join(random.choice('QWERTYUIOPASDFGHJKLZXCVBNMZY') for i in xrange(4))
+	])
+
+TRANSACSERIAL='transacserial'
+def recorded(request, transaction_name):
+	"""
+	创建事务记录对象。
+
+		transaction_name 事务名称
+
+	如果请求包含事务序列号，则建立事务日志，跟踪这个事务。
+	"""
+	if request.method!='POST': 
+		raise TransactionRecordException(u'必须使用POST请求。')
+	if TRANSACSERIAL in request.POST:
+		rec = TransactionRecord.objects.create(
+			title=transaction_name.lower(),
+			serial=request.POST['transacserial'],
+			result='unknown'
+		)
+		rec.save()
+		return rec
+	else:
+		raise TransactionRecordException(u'POST请求中缺少transacserial')
 
 class Lazy(object):
 	def __init__(self, f):
@@ -53,12 +122,12 @@ def response_auto(request, o, url_ref, **kwargs):
 	"""
 	根据请求形式自动选择redirect或response_jquery来响应。适合两种情况都要响应的view。
 
-	若请求通过普通表单提交，则调用redirect(url_ref, **kwargs)；
-	若请求通过$submit提交，则调用response_jquery(o)。
-
 		o 				response_jquery的参数
 		url_ref 		redirect的参数
 		**kwargs 		redirect的参数
+
+	若请求通过普通表单提交，则调用redirect(url_ref, **kwargs)；
+	若请求通过$submit提交，则调用response_jquery(o)。
 	"""
 	return response_jquery(o) if JSSUBMITTEDMARK in request.POST and request.POST[JSSUBMITTEDMARK]=='$submit 2014' else redirect(url_ref, **kwargs)
 
@@ -118,5 +187,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from django import forms
 import traceback

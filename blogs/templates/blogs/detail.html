@@ -1,4 +1,5 @@
 {% extends 'blogs/index.html' %}
+{% load transacserial %}
 {% block title %}{{ request.user }}的律师博客 - {{ article.title }}{% endblock %}
 
 {% block head %}
@@ -128,8 +129,8 @@
 </section>
 <section class="comment-form">
     <h2 class="section-title">Leave a Comment</h2>
-    <form action="{% url 'blogs:new_comment' article.id %}" method="post" role="form">
-    {% csrf_token %}
+    <form id="frmComment" action="{% url 'blogs:new_comment' article.id %}" method="post" role="form">
+    {% csrf_token %} {{ "blogs:text"|transacserial }}
     {% if user.is_authenticated %}
         <div class="form-group">
             <label for="inputMessage">Mesagge</label>

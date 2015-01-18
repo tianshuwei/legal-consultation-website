@@ -18,10 +18,14 @@ def login_view(request):
 		username,password = request.POST['username'],request.POST['password']
 		next_url = request.GET['next'] if 'next' in request.GET else reverse('index:index')
 		user = authenticate(username=username, password=password)
+		rec=recorded(request,'login')
 		if user is not None:
 			login(request, user)
+			rec.success(u'{0}登入成功'.format(username))
 			return HttpResponseRedirect(next_url)
-		else: return HttpResponseRedirect(next_url)
+		else: 
+			rec.error(u'{0}登入失败'.format(username))
+			return HttpResponseRedirect(next_url)
 	else:  return response(request, 'accounts/login.html')
 
 def logout_view(request):
@@ -31,15 +35,16 @@ def logout_view(request):
 def register_view(request, role):
 	if request.method=='POST':
 		try:
-			user=User.objects.create_user(request.POST['username'], 
+			username,profile=request.POST['username'],dict(
 				password=request.POST['password'],
 				email=request.POST['email'],
 				last_name = request.POST['last_name'],
 				first_name = request.POST['first_name'],
 			)
-			user.save()
-			if role=='client': Client.objects.create(user=user).save()
-			elif role=='lawyer': Lawyer.objects.create(user=user).save()
+			if role=='client': 
+				Client.objects.register(username,**profile)
+			elif role=='lawyer': 
+				Lawyer.objects.register(username,**profile)
 		except: messages.success(request, u'注册失败')
 		else: messages.success(request, u'注册成功')
 		return redirect('accounts:login')

@@ -14,7 +14,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 site_join = lambda rpath: os.path.join(BASE_DIR, rpath).replace('\\','/')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 TEMPLATE_DIRS = (
 	site_join('templates'),
@@ -40,7 +40,7 @@ INSTALLED_APPS = (
 	'products',
 	'accounts',
 	'blogs',
-	# 'smartcontract',
+	'smartcontract',
 )
 
 MIDDLEWARE_CLASSES = (
