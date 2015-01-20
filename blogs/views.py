@@ -116,6 +116,8 @@ def detail_view(request, pk_text):
 	return response(request, 'blogs/detail.html', 
 		is_master=checkf(lambda: request.user.lawyer==article.author),
 		article=article,
+		lawyer=article.author,
+		categories=article.author.blogcategory_set.get_public_categories(),
 		comments=article.blogcomment_set.order_by('-publish_date'))
 
 @login_required # [LiveTest] [UnitTest]

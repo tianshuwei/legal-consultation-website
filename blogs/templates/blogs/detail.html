@@ -1,6 +1,6 @@
 {% extends 'blogs/index.html' %}
 {% load transacserial %}
-{% block title %}{{ request.user }}的律师博客 - {{ article.title }}{% endblock %}
+{% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
 
 {% block head %}
 <header class="main-header">
