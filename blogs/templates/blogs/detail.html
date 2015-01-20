@@ -5,7 +5,7 @@
 {% block head %}
 <header class="main-header">
     <div class="container">
-        <h1 class="page-title">律师博客 - {{ article.author.user.username }}</h1>
+        <h1 class="page-title">律师博客 -<strong>display error here</strong> {{ lawyer.user.username }}</h1>
 
 		{% if is_master %}
         <ol class="breadcrumb pull-right">
@@ -23,8 +23,8 @@
     <h2 class="page-header no-margin-top">{{ article.title }}
     {% if is_master %}
     <small>
-    	<a href="{% url 'blogs:edit_article' article.id %}">[编辑]</a>
-		<a href="{% url 'blogs:delete_article' article.id %}">[删除]</a>
+    	<a href="{% url 'blogs:edit_article' article.id %}" class="btn"><i class="fa fa-gear"></i>&nbsp;&nbsp;edit</a>
+		<a href="{% url 'blogs:delete_article' article.id %}" class="btn em-danger"><i class="fa fa-remove"></i>&nbsp;&nbsp;delete</a>
     </small>
 	{% endif %}
 	</h2>

@@ -145,16 +145,13 @@
             <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
             <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
             <li {% block lawyerlist %}{% endblock %}><a href="{% url 'accounts:lawyerlist' %}">lawyers</a></li>
-            <li {% block blogs %}{% endblock %}>
-            <a href=
             {% if user.is_authenticated %}
-                {% if is_lawyer %}
-                    "{% url 'blogs:home' %}"
-                {% endif %}
-            {% else %}
-                "{% url 'blogs:list' %}"
+              {% if is_lawyer %}
+              <li {% block blogs %}{% endblock %}>
+              <a href="{% url 'blogs:home' %}" >blogs</a></li>
+              {% endif %}
             {% endif %}
-            >blogs</a></li>
+
           </ul>
         {% if user.is_authenticated %}
 		<ul class="nav navbar-nav navbar-right">
@@ -375,7 +372,29 @@
             </div> <!-- row -->
         </div> <!-- container -->
     </aside>
+
+    <!--  modal -->
+    <div class="modal fade modal-md" id="md_template"tabindex="-1" role="dialog" style="display: none;">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title" id="md_title">Modal title</h4>
+          </div>
+          <div class="modal-body" id="md_content">
+            <p>One fine body…</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="btn_one">Close</button>
+            <button type="button" class="btn btn-primary" id="btn_another">Save changes</button>
+          </div>
+        </div>
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
     <footer id="footer">
     <p>© 2014 <a href="#">Team Superme</a>, inc. All rights reserved.</p>
 </footer>
 </body></html>
+

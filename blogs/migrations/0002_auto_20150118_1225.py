@@ -22,12 +22,10 @@ class Migration(migrations.Migration):
             model_name='blogarticle',
             name='author',
             field=models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to='accounts.Lawyer', null=True),
-            preserve_default=True,
         ),
         migrations.AlterField(
             model_name='blogarticle',
             name='category',
             field=models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to='blogs.BlogCategory', null=True),
-            preserve_default=True,
         ),
     ]

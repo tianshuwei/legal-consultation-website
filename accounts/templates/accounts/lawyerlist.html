@@ -15,17 +15,6 @@
 </header>
 {% endblock %}
 {% block main %}
-
-<h1>律师</h1>
-<table>
-	{% for lawyer in lawyers %}
-	<tr>
-		<td><a href="{% url 'accounts:profile' 'l' lawyer.id %}">{{ lawyer }}</a></td>
-		<td><a href="{% url 'blogs:index' lawyer.id %}">博客</a></td>
-		<td><a href="{% url 'accounts:remark' lawyer.id %}">评价</a></td>
-	</tr>
-	{% endfor %}
-</table>
 <div class="row">
 	<div class="col-md-8 wow fadeInUp animated" style="visibility: visible; -webkit-animation: fadeInUp;">
 	    <h2 class="right-line">说明</h2>
@@ -60,11 +49,6 @@
             <h2 class="right-line">律师名录</h2>
         </div>
         {% for lawyer in lawyers %}
-	<tr>
-		<td><a href="{% url 'accounts:profile' 'l' lawyer.id %}">{{ lawyer }}</a></td>
-		<td><a href="">博客</a></td>
-		<td><a href="{% url 'accounts:remark' lawyer.id %}">评价</a></td>
-	</tr>
 
 	<div class="col-md-6">
             <section>

@@ -85,3 +85,28 @@ function getUrlParam(name) {
         }
 
 
+
+/**
+init customed modal.
+usage: use this function in document ready function to create modals with id,then call $(modal_id).modal('show') in button action
+
+	modal_id	to figure out the modal
+	title 		info title
+	content 	other information
+	btn_one 	bottom left button text
+	btn_another	bottom right button text
+	fun_one 	function wehen click btn_one
+	fun_another	function when click btn_another
+*/
+function createModal(modal_id,title,content,btn_one,btn_another,fun_one,fun_another){
+	mod=$('#md_template').clone();
+	mod.attr('id',modal_id);
+	mod.find('#md_title').texttitle;
+	mod.find('#md_content').text(content);
+	mod.find('#btn_one').text(button_one);
+	mod.find('#btn_another').text(button_another);
+	mod.find('#btn_one').click(fun_one);
+	mod.find('#btn_another').click(fun_another);
+	mod.find('#md_main').modal('show');
+	$('#md_template').after(mod);
+}

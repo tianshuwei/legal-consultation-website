@@ -2,4 +2,3 @@
 org/deployment.py
 tmp/
 deployment/
-*/migrations/*
