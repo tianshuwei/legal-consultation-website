@@ -1,41 +1,47 @@
-{% extends 'blogs/index.html' %}
-{% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
-{% block head %}
-<header class="main-header">
-    <div class="container">
-        <h1 class="page-title">律师博客 -{{ lawyer.user.username }}</h1>
+{% extends 'blogs/blog_base.html' %}
+{% block title %}律师博客 - {{ lawyer.user.username }} {% endblock %}
 
-		
-        <ol class="breadcrumb pull-right">
+{% block head_name %}{{ category.name }}-文章列表{% endblock %}
+{% block pagedir%}
         	<li><a href="{% url 'blogs:index' category.lawyer.id %}">主页</a></li>
         	<li><a href="#">{{ category.name }}</a></li>
-		</ol>
-
-
-
-    </div>
-</header>
 {% endblock %}
+
+
 {% block contexts %}
 
-{% if is_master %}
-<a href="{% url 'blogs:index' category.lawyer.id %}">返回博客主页</a>
-<a href="{% url 'blogs:new_article' %}">写新文章</a>
-{% endif %}
 
-<ul>
+<div class="list-group animated fadeInLeft animation-delay-8">
 {% for article in latest_blogs_list %}
-	<li><a href="{% url 'blogs:text' article.id %}">{{ article.title }}</a></li>
+	<a class="list-group-item" href="{% url 'blogs:text' article.id %}">{{ article.title }}</a>
 {% empty %}
-	<li>目前没有文章。</li>
+	<h4>目前没有文章。</h4>
 {% endfor %}
-</ul>
-
-<div>
-	{% if latest_blogs_list.has_previous %}<a href="?page={{ latest_blogs_list.previous_page_number }}">previous</a>{% endif %}
-	<span>Page {{ latest_blogs_list.number }} of {{ latest_blogs_list.paginator.num_pages }}.</span>
-	{% if latest_blogs_list.has_next %}<a href="?page={{ latest_blogs_list.next_page_number }}">next</a>
-	{% endif %}
 </div>
+
+			<section>
+                <ul class="pagination animated fadeInLeft animation-delay-8">
+
+                     {% if latest_blogs_list.has_previous %}
+                     <li><a href="?page={{ latest_blogs_list.previous_page_number }}">«</a></li>
+                     {% else %}
+                     <li class="disabled"><a href="#">«</a></li>
+                     {% endif %}
+
+                    {% for i in  latest_blogs_list.page_range %}
+                    {% if i == latest_blogs_list.number %}
+                    <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
+                    {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if latest_blogs_list.has_next %}
+                     <li><a href="?page={{ latest_blogs_list.next_page_number }}">»</a></li>
+                     {% else %}
+                     <li class="disabled"><a href="#">»</a></li>
+                     {% endif %}
+                </ul>
+            </section>
 
 {% endblock %}

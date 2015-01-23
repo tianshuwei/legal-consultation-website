@@ -108,6 +108,7 @@ def index_category_view(request, pk_lawyer, pk_category):
 		lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		category=category,
+		categories=lawyer.blogcategory_set.get_public_categories(),
 		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_articles_from(category).order_by('-publish_date')))
 

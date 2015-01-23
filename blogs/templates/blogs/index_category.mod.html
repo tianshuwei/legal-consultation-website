@@ -17,8 +17,82 @@
 		  <i class="fa fa-check cfg-button-reverse"></i>
 		  </span>
 		</div>
+		</div>
 	{% endif %}
 </li>
 {% empty %}
 <li>目前没有分类。</li>
 {% endfor %}
+
+{% if is_master %}
+<script type="text/javascript">
+function edit_ctg(index){
+    $($id("cfg_cats",index)+" div input").attr("value",$($id("cats",index)+" a").text());
+    $($id("cfg_cats",index)).show();
+    $($id("cats",index)).hide();
+}
+
+function clone_ctg(data){
+    var template = $(".template").clone();
+    template.find("#cats_temp").attr("id",$id("cats",data.pk).slice(1))
+    template.find("a.cats").attr("href",data.href);  //todo
+    template.find("a.cats").text(data.name);
+    template.find("a.cats").next().attr("onclick","edit_ctg("+data.pk+")");
+
+    template.find(".fa-remove").attr("onclick",
+                "$submit(['cfg_cats',"+data.pk+"],'"+data.del_href+"',del_ctg)");
+
+    template.find("#cfg_cats div span").attr("onclick",
+                "$submit(['cfg_cats',"+data.pk+"],'"+data.edit_href+"',cfg_ctg)");
+    template.children("#cfg_cats").attr("id",$id("cfg_cats",data.pk).slice(1));
+    template.removeClass("template");
+    template.removeAttr("style");
+    return template;
+}
+
+function cfg_ctg(pk,data,status){
+    if (status!="success") {alert("failed");return;}
+    alert(data.name);
+    $($id("cats",pk)+" a").text(data.name);
+    $($id("cats",pk)).show();
+    $($id("cfg_cats",pk)).attr('style','display:none;');
+}
+function add_ctg(data,status){
+    $('#all_cats li').last().after(clone_ctg(data));
+    $('#add_cats div #txt').removeAttr("value");
+    $($id("cfg_cats",data.pk)).attr('style','display:none;');
+}
+
+function del_ctg(pk,data,status){
+    if (status!="success") {alert("failed");return;}
+
+    $($id("cats",pk)).parents("li").remove();
+}
+function cfg_cats () {
+    var cats=$('.cats');
+    for(var i=0;i<cats.length;i++)
+    {
+        $(cats[i]).siblings().show();
+        $('#cfgBtn').attr("onclick","finish_cfg()");
+        $('#add_cats').show();
+        // $('#all_cats').after("<div id="add_cats" style="visibility: hidden;">
+        // <div class="input-group">
+        //   <input type="text" class="form-control" placeholder="input name here">
+        //   <span class="input-group-addon" onclick="create_ctg()">
+        //   <i class="fa fa-check cfg-button-reverse" onclick="create_ctg()"></i>
+        //   </span>
+        // </div>
+        // </div>");
+    }
+}
+function finish_cfg () {
+    var cats=$('.cats');
+    for(var i=0;i<cats.length;i++)
+    {
+        $(cats[i]).siblings().hide();
+        $('#cfgBtn').attr("onclick","cfg_cats()");
+        $('#add_cats').hide();
+    }
+}
+</script>
+ {% endif %}
