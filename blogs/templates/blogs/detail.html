@@ -1,22 +1,16 @@
-{% extends 'blogs/index.html' %}
+{% extends 'blogs/blog_base.html' %}
 {% load transacserial %}
 {% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
 
-{% block head %}
-<header class="main-header">
-    <div class="container">
-        <h1 class="page-title">律师博客 -<strong>display error here</strong> {{ lawyer.user.username }}</h1>
 
-		{% if is_master %}
-        <ol class="breadcrumb pull-right">
+        
+        {% block pagedir%}
         	<li><a href="{% url 'blogs:index' article.author.id %}">主页</a></li>
         	<li><a href="{% url 'blogs:index_category' article.author.id article.category.id %}">{{ article.category.name }}</a></li>
 			<li><a href="#">{{ article.title }} - 正文</a></li>
-		</ol>
-		{% endif %}
-    </div>
-</header>
-{% endblock %}
+        {% endblock %}
+        
+
 
 {% block contexts %}
 <section>
