@@ -18,7 +18,7 @@
             <div class="row">
                 <!-- left, vertical navbar -->
 
-                <div class="col-md-3 col-sm-3 col-xs-3">
+                <div class="col-md-3 col-sm-3">
                 <div class="portfolio-menu">
                     <ul class="portfolio-cats">
                         <li ><a href="{% url 'accounts:profile_self' %}">
@@ -49,10 +49,62 @@
                 </div>
 
                 <!-- content -->
-                <div class="col-md-9 col-sm-9 col-xs-9">
-                    {% block main_col %}
-                    <h1>最近动态here</h1>
-                    {% endblock %}
+                <div class="col-md-9 col-sm-9">
+                {% block main_col %}
+
+                <!--order part-->
+                <div class="panel panel-border animated fadeInDown animation-delay-8" style="border-left-color: #eee;">
+                    <!--one order-->
+                    <div class="panel-body">
+                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
+                        <div class="clearfix"></div>
+
+                        <div class="row context  animated fadeInDown animation-delay-8">
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top">2014-12-31</p></div>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top">$369.99</p></div>
+                        </div>
+
+                        <div class="row context animated fadeInDown animation-delay-8 ">
+                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
+                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
+                        </div>
+                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
+                            <button class="btn btn-sm btn-danger col-md-offset-8 ">pay now!</button>
+                            <button class="btn btn-sm btn-warning">cancel</button>
+                            <button class="btn btn-sm btn-info">info</button>
+                        </div>
+                        </div>
+                    </div>
+
+                    <hr class="dashed">
+
+                    <!--anoter order-->
+                    <div class="panel-body">
+                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
+                        <div class="clearfix"></div>
+
+                        <div class="row context  animated fadeInDown animation-delay-8">
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top">2014-12-31</p></div>
+                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top">$369.99</p></div>
+                        </div>
+
+                        <div class="row context animated fadeInDown animation-delay-8 ">
+                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
+                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
+                        </div>
+                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
+                            <button class="btn btn-sm btn-danger col-md-offset-8 ">pay now!</button>
+                            <button class="btn btn-sm btn-warning">cancel</button>
+                            <button class="btn btn-sm btn-info">info</button>
+                        </div>
+                        </div>
+                    </div>
+
+                    <hr class="dashed">
+                </div>
+                <!--order part end-->
+                    
+                {% endblock %}
                 </div>
             </div>
         </div>
