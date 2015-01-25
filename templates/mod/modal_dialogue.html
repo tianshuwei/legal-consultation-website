@@ -1,0 +1,25 @@
+<div class="modal fade modal-md" tabindex="-1" role="dialog" style="display: none;">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body"><p>Content</p></div>
+      <div class="modal-footer"></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    function append_button (button) { // closure: mod, callback
+      var primary=false, submit=false;
+      if(button.match(/^\*/)){ primary=true; button=button.slice(1); }
+      if(button.match(/^\$/)){ primary=true; submit=true; button=button.slice(1); }
+      $(mod).find(".modal-footer").append('<button type="button" class="btn btn-ar" data-dismiss="modal"></button>');
+      var btn=$(mod).find(".modal-footer button").last();
+      $(btn).addClass(primary?"btn-primary":"btn-default");
+      $(btn).text(button);
+      if(submit) $(btn).click(function(){ callback($fetch(mod)); });
+      else $(btn).click(function(){ callback(button); });
+    }
+  </script>
+</div>

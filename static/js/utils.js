@@ -52,7 +52,7 @@ function $submit (obj, action, callback) {
 function $fetch (obj) {
 	var form = null;
 	switch(typeof obj){
-		case "object": form = obj.hasOwnProperty("length") ? $($id(obj[0], obj[1])) : obj; break;
+		case "object": form = obj.hasOwnProperty("length") ? (obj.length>1?$($id(obj[0], obj[1])):obj[0]) : obj; break;
 		case "string": form = $(obj); break;
 	}
 	var r={};
@@ -72,6 +72,16 @@ function $id (prefix, pk) {
 	return "#"+prefix+"_"+pk;
 }
 
+/**
+在浏览器控制台输出调试信息
+
+	o 			任意对象
+*/
+function $dbg (o) {
+	try{console.debug(o);}
+	catch(e){}
+}
+
 
 /**
 get param in url
@@ -79,34 +89,64 @@ get param in url
 	name 		查询串的名字
 */
 function getUrlParam(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-            if (r != null) return unescape(r[2]); return null;
-        }
-
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null;
+}
 
 
 /**
-init customed modal.
-usage: use this function in document ready function to create modals with id,then call $(modal_id).modal('show') in button action
+模态对话框，UI模板在 templates/mod/modal_dialogue.html
 
-	modal_id	to figure out the modal
-	title 		info title
-	content 	other information
-	btn_one 	bottom left button text
-	btn_another	bottom right button text
-	fun_one 	function wehen click btn_one
-	fun_another	function when click btn_another
+	title 		标题
+	content 	内容(HTML)
+	buttons 	按钮数组，例如["*Yes","No"]，默认按钮前标记"*"，次序与渲染结果一致
+	callback 	回调函数，例如function(r){}，形参r代表用户点击的按钮（所显示的文字）
 */
-function createModal(modal_id,title,content,btn_one,btn_another,fun_one,fun_another){
-	mod=$('#md_template').clone();
-	mod.attr('id',modal_id);
-	mod.find('#md_title').texttitle;
-	mod.find('#md_content').text(content);
-	mod.find('#btn_one').text(button_one);
-	mod.find('#btn_another').text(button_another);
-	mod.find('#btn_one').click(fun_one);
-	mod.find('#btn_another').click(fun_another);
-	mod.find('#md_main').modal('show');
-	$('#md_template').after(mod);
+function showModal (title, content, buttons, callback) {
+	$.get("/mod/modal_dialogue", function (template, status) {
+		if(status!="success"){ $dbg(template); $dbg(status); return; }
+		var mod=$(template);
+		$(mod).find('.modal-title').text(title);
+		$(mod).find('.modal-body').html(content);
+		eval($(mod).find('script').text()); // import append_button
+		for(var i=0;i<buttons.length;i++) append_button(buttons[i]);
+		$(mod).modal('show');
+	});
+}
+
+/**
+常用对话框
+*/
+var Dialogue={
+	alert: function(msg, title){
+		if(title==undefined)title=msg;
+		showModal(msg, msg, ["*确定"], function(r){});
+	},
+	confirm: function(msg, title, callback){
+		showModal(title, msg, ["取消","*确定"], callback);
+	},
+	prompt: function(msg, title, callback) {
+		showModal(title, 
+		'<div>'+msg+'</div><div><input name="user_input"/></div>', ["取消","$确定"],
+		function (r) {
+			if(typeof r=="object")callback(r.user_input);
+		});
+	}
+}
+
+function test_showModal () {
+	showModal("Alarm clock", "Get up!", ["Feeling lazy","*Dismiss"], $dbg);
+}
+
+function test_alert () {
+	Dialogue.alert("Success");
+}
+
+function test_confirm () {
+	Dialogue.confirm("Leaving so soon?","Quit",$dbg);
+}
+
+function test_prompt () {
+	Dialogue.prompt("Time zone","Install Ubuntu",$dbg);
 }
