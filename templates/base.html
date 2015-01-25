@@ -1,6 +1,6 @@
 {% load staticfiles %}
 {% load transacserial %}
-<!DOCTYPE HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html lang="en"><head>
     <meta charset="utf-8">
@@ -76,7 +76,7 @@
 
   <body ryt12699="1">
 
-    <nav class="navbar navbar-fixed-top navbar-default navbar-header-full navbar-dark" role="navigation">
+
     <header id="header-full-top" class="hidden-xs header-full" style="z-index:100">
     <div class="container">
         <div class="header-full-title">
@@ -147,23 +147,31 @@
             </div> <!-- dropdown -->
         </nav>
     </div> <!-- container -->
-</header>
+    </header>
+    <nav class="navbar navbar-static-top navbar-default navbar-header-full navbar-dark" role="navigation" id="header">
       <div class="container">
-        <div id="navbar" class="navbar-collapse collapse">
-  <ul class="nav navbar-nav">
-            <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
-            <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
-            <li {% block lawyerlist %}{% endblock %}><a href="{% url 'accounts:lawyerlist' %}">lawyers</a></li>
-            {% if user.is_authenticated %}
-              {% if is_lawyer %}
-              <li {% block blogs %}{% endblock %}>
-              <a href="{% url 'blogs:home' %}" >blogs</a></li>
-              {% endif %}
-            {% endif %}
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <i class="fa fa-bars"></i>
+          </button>
+          <a class="navbar-brand hidden-lg hidden-md hidden-sm" href="index.html">Artificial <span>Reason</span></a>
+        </div>
+        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false" style="height: 1px;">
+          <ul class="nav navbar-nav">
+                <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
+                <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
+                <li {% block lawyerlist %}{% endblock %}><a href="{% url 'accounts:lawyerlist' %}">lawyers</a></li>
+                {% if user.is_authenticated %}
+                  {% if is_lawyer %}
+                  <li {% block blogs %}{% endblock %}>
+                  <a href="{% url 'blogs:home' %}" >blogs</a></li>
+                  {% endif %}
+                {% endif %}
 
-          </ul>
+              </ul>
         {% if user.is_authenticated %}
-		<ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'accounts:logout' %}">LogOut</a></li>
             <li><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i>&nbsp;&nbsp;<strong>{{ user.username }}</strong>'s center</a></li>
             <!-- <li class="dropdown">
@@ -178,25 +186,25 @@
             </li>
           </ul>
 
-		{% else %}
-				<form class="navbar-form navbar-right"
+        {% else %}
+                <form class="navbar-form navbar-right"
          action="/accounts/login/?next={{ request.path|urlencode:"" }}%3F{{ request.META.QUERY_STRING|urlencode:"" }}" method="post" >
           {% csrf_token %} {{ "login"|transacserial }}
-		            <div class="form-group">
-		              <input type="text" name="username" placeholder="username" class="form-control">
-		            </div>
-		            <div class="form-group">
-		              <input type="password" name="password" placeholder="Password" class="form-control">
-		            </div>
-		            <button type="submit" class="btn btn-success" id="login" >Sign in</button>
+                    <div class="form-group">
+                      <input type="text" name="username" placeholder="username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <input type="password" name="password" placeholder="Password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success" id="login" >Sign in</button>
                 <a href="{% url 'accounts:register' 'client' %}"><button class="btn btn-primary">Sign up</button></a>
-		        </form>
-		{% endif %}
+                </form>
+        {% endif %}
+        </div>
 
         </div><!--/.navbar-collapse -->
-      </div>
     </nav>
-<div style="margin-bottom:151px"></div>
+<!-- <div style="margin-bottom:151px"></div> -->
     <!-- Main jumbotron for a primary marketing message or call to action -->
  {% block head %}
 

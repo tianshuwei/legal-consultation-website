@@ -14,7 +14,30 @@
 /* ---------------------------------------------------- */
 
 /*--------------custom---------------*/
+ul li{
+  list-style: none;
+}
 
+.radio-list li:hover{
+border:1px solid #e1e1e1;cursor:pointer;
+}
+
+.radio-list li{
+  float:left;
+  width:160px;
+  margin-right:5px;
+  margin-bottom:20px;
+  border:1px solid #fff;
+  padding-left:5px;
+  padding-top:5px;
+
+}
+
+.radio-list li.on{
+  border:1px solid #ccc;
+}
+
+.radio-list li input{float:left;margin-top:10px;}
 .portfolio-cats li a{
   text-decoration:none;
 }
@@ -1436,7 +1459,7 @@ hr.double {
   border-radius: 2px;
 }
 .main-header {
-  border-top: solid 5px #0088DB;
+  border-top: solid 2px #0088DB;
   background-color: #0088DB;
   color: #fff;
   padding: 20px 0;
@@ -3530,7 +3553,7 @@ a.thumbnail.active {
     margin-top: -1px;
     color: #000;
     font-family: "Lato";
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 400;
   }
   .navbar-default .navbar-nav > li.dropdown > a {
