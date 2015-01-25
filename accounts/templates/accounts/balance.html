@@ -1,7 +1,91 @@
 {% extends 'base.html' %}
-{% block title %}充值{% endblock %}
+{% load staticfiles %}
+{% block title %}pay{% endblock %}
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">pay for order</h1>
+    </div>
+</header>
+{% endblock %}
+
 {% block main %}
-<a href="{% url 'accounts:usercenter' %}">{% if is_lawyer %}律师中心{% else %}用户中心{% endif %}</a>
+
+<div class="row">
+    <div class="content-box box-default">
+        <div class="col-md-offset-2 col-md-4">
+            <i class="fa fa-check-circle-o fa-5x" style="margin-top:12px"></i>
+            <p>you have to pay <strong>$234</strong>.</p>
+        </div>
+        <div class="col-md-4">
+            <h4 class="content-box-title">1 click to finish!</h4>
+
+            <a href="#" class="btn btn-ar btn-primary">pay with balance</a>
+        </div>
+    </div>
+</div>
+<h5>other way:</h5>
+<form action="" row="form">
+<div class="row panel panel-primary">
+	<div class="panel-body">
+
+	<div class="row">
+		<div class="col-md-2">
+			<p><strong>支付平台</strong></p>
+					<p><small>(推荐使用支付宝支付)</small></p>
+		</div>
+		<div class="col-md-10 radio-list">
+			<ul class="radio-list">
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+			</ul>
+		</div>
+	</div>
+
+	<hr class="dashed">
+
+	<div class="row">
+		<div class="col-md-2">
+			<p><strong>网上银行</strong></p>
+					<p>Lorem ipsum dolor sit amet.</p>
+		</div>
+		<div class="col-md-10">
+			<ul class="radio-list">
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+			</ul>
+		</div>
+	</div>
+	</div>
+</div>
+<button class="btn btn-ar btn-primary" type="submit">next step</button>
+</form>
+
+<!-- 
+<div class="row">
+info style
+	<p>info box style</p>
+    <div class="col-md-offset-3 col-sm-offset-3 col-xs-offset-2 col-md-6 col-sm-6 col-xs-8 content-box box-default">
+        <div class="col-md-6">
+            <i class="fa fa-check-circle-o fa-5x"></i>
+            <p>you have to pay <strong>$234</strong>.</p>
+        </div>
+        <div class="col-md-6">
+            <h4 class="content-box-title">1 click to finish!</h4>
+
+            <a href="#" class="btn btn-ar btn-primary">pay with balance</a>
+        </div>
+    </div>
+</div>
+
+
 <h1>充值</h1>
 当前余额 ￥{{ role.balance }}
 <form method="post">
@@ -9,5 +93,16 @@
 	￥<input type="text" name="amount" />
 	<input type="submit" />
 </form>
+ -->
+
+<script type="text/javascript">
+$(function(){
+	$(".radio-list li").click(function(){
+		$(".radio-list li").removeClass("on");
+		$(this).addClass("on");
+		$(this).find(":radio").attr("checked","checked");
+	});
+});
+</script>
 {% endblock %}
 
