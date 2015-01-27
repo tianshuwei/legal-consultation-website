@@ -82,6 +82,24 @@ function $dbg (o) {
 	catch(e){}
 }
 
+/**
+UI模块URL缓冲
+*/
+var mods={};
+
+/**
+加载UI模块
+
+	id 			容器id
+	url 		UI模块URL，重新加载时可以省略
+*/
+function $load (id, url) {
+	if(url==undefined) url=mods[id];
+	$.get(url, function (data,status) {
+		if(status=="success"){ $("#"+id).html(data); }
+	});
+	mods[id]=url;
+}
 
 /**
 get param in url
@@ -161,24 +179,4 @@ function test_prompt () {
 function select_nav (suffix) {
 	$("#nav_ul>li").removeClass("active"); 
 	$("#nav_li_"+suffix).addClass("active");
-}
-
-/**
-导航栏项目下拉菜单中添加链接
-
-	suffix 		id后缀
-	label 		链接文本
-	url 		链接URL
-*/
-function nav_add_link (suffix, label, url) {
-	$("#nav_li_"+suffix+">ul").append("<li><a href=\""+url+"\">"+label+"</a></li>");
-}
-
-/**
-导航栏项目下拉菜单中添加分隔符
-
-	suffix 		id后缀
-*/
-function nav_add_sep(suffix){
-	$("#nav_li_"+suffix+">ul").append("<li class=\"divider\"></li>");
 }
