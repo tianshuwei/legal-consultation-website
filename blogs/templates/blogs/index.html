@@ -29,19 +29,17 @@
                     <img src="../assets/img/demo/7.jpg" class="img-post img-responsive" alt="Image">
                 </div>
                 <div class="col-lg-6 post-content">
-                    <p>{{ article.description }}</p>
-
-                    <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt voluptas sit aspernatur.</p>
+                    <p>{{ article.text|truncatewords_html:60 }}</p>
                 </div>
             </div>
         </div>
         <div class="panel-footer post-info-b">
             <div class="row">
                 <div class="col-lg-10 col-md-9 col-sm-8">
-                    <i class="fa fa-clock-o"></i> Sep 29, 2013 <i class="fa fa-user"> </i>Patrick <i class="fa fa-folder-open"></i> <a href="#">Portfolio</a>, <a href="#">Design</a>.
+                    <i class="fa fa-clock-o"></i>{{article.publish_date}} <i class="fa fa-user"> </i>{{article.author}} <i class="fa fa-folder-open"></i> <a href="{% url 'blogs:index_category' article.category.id %}">{{article.category}}</a>
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <a href="#" class="pull-right">Read more »</a>
+                    <a href="{% url 'blogs:text' article.id %}" class="pull-right">Read more »</a>
                 </div>
             </div>
         </div>
