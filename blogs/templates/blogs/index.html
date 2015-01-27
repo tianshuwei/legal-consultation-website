@@ -7,15 +7,10 @@
 <script type="text/javascript">
   $(function () {
     page_title("律师博客 - {{ lawyer.user.username }}");
-    load_categories("{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
+    $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
+    $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}")
   });
 </script>
-{% endblock %}
-
-{% block category_items %}
-{% with categories=lawyer.blogcategory_set.get_public_categories %}
-{% include 'blogs/index_category.mod.html' %}
-{% endwith %}
 {% endblock %}
 
 {% block contexts %}

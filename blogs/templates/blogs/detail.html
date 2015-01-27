@@ -10,15 +10,12 @@
     breadcrumb("主页","{% url 'blogs:index' article.author.id %}");
     breadcrumb("{{ article.category.name }}","{% url 'blogs:index_category' article.category.id %}");
     breadcrumb("{{ article.title }} - 正文","#");
-    load_categories("{% url 'blogs:categories_mod' article.author.id %}?e={{is_master}}");
+{% with lawyer=article.author %}
+    $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
+    $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}");
+{% endwith %}
   });
 </script>
-{% endblock %}
-
-{% block category_items %}
-{% with categories=article.author.blogcategory_set.get_public_categories %}
-{% include 'blogs/index_category.mod.html' %}
-{% endwith %}
 {% endblock %}
 
 {% block contexts %}
@@ -70,6 +67,7 @@
 {% empty %}
 <div>没有评论。</div>
 {% endfor %}
+{%comment%}
         <li class="comment">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -128,6 +126,7 @@
                 </div>
             </div>
         </li>
+{%endcomment%}
     </ul>
 </section>
 <section class="comment-form">

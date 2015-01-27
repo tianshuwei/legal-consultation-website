@@ -90,7 +90,7 @@ def list_view(request):
 
 def categories_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	return response(request, 'blogs/index_category.mod.html',
+	return response(request, 'blogs/category.mod.html',
 		is_master=checkf(lambda: request.GET['e']=='True'),
 		categories=lawyer.blogcategory_set.get_public_categories())
 
@@ -135,6 +135,11 @@ def new_comment_view(request, pk_text):
 		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest] [UnitTest]
 		return redirect('blogs:text', pk_text=article.id)
 	else: raise Http404
+
+def recent_comments_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/recent_comments.mod.html',
+		recent_comments=BlogComment.objects.get_recent_comments())
 
 @login_required # [UnitTest]
 def categories_view(request):

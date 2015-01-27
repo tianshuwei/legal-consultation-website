@@ -98,11 +98,19 @@ class BlogArticle(models.Model):
 		self.category=None
 		self.save()
 
+class BlogCommentManager(models.Manager):
+	use_for_related_fields = True
+
+	def get_recent_comments(self):
+		return self.order_by('-publish_date')[:6]
+
 class BlogComment(models.Model):
 	user = models.ForeignKey(User)
 	publish_date = models.DateTimeField('date published', auto_now=True)
 	article = models.ForeignKey(BlogArticle)
 	text = models.TextField()
+
+	objects=BlogCommentManager()
 
 	def __unicode__(self):
 		return self.text[:20]
