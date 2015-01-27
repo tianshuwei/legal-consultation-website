@@ -1,6 +1,6 @@
 {% extends 'blogs/blog_base.html' %}
 {% block title %}律师博客 - {{ category.lawyer.user.username }} {% endblock %}
-{% block head_name %}{{ category.name }}-文章列表{% endblock %}
+{% block head_name %}{{ category.name }} - 文章列表{% endblock %}
 
 {% block pagedir%}
 <li><a href="{% url 'blogs:index' category.lawyer.id %}">主页</a></li>

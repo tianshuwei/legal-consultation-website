@@ -110,7 +110,6 @@ def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	return response(request, 'blogs/detail.html', article=article,
 		is_master=checkf(lambda: request.user.lawyer==article.author),
-		lawyer=article.author,
 		comments=article.blogcomment_set.order_by('-publish_date'))
 
 @login_required # [LiveTest] [UnitTest]

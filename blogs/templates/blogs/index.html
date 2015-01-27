@@ -1,6 +1,7 @@
 {% extends 'blogs/blog_base.html' %}
 {% load transacserial %}
 {% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
+{% block head_name %}律师博客 - {{ lawyer.user.username }}{% endblock %}
 
 {% block category_items %}
 {% with categories=lawyer.blogcategory_set.get_public_categories %}
