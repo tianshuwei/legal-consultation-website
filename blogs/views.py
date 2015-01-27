@@ -110,7 +110,7 @@ def index_category_view(request, pk_category):
 	return response(request, 'blogs/index_category.html', category=category,
 		is_master=checkf(lambda: request.user.lawyer==category.lawyer),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
-			category.lawyer.blogarticle_set.get_articles_from(category).order_by('-publish_date')))
+			category.blogarticle_set.get_public_articles()))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
@@ -166,12 +166,7 @@ def categories_view(request):
 				'edit_href': url_of('blogs:rename_category', pk_category=category.id),
 				'del_href': url_of('blogs:delete_category', pk_category=category.id),
 			}, 'blogs:categories')
-	else:
-		raise Http404
-		# try: 
-		# 	return response(request, 'blogs/categories.html', 
-		# 		categories=request.user.lawyer.blogcategory_set.all())
-		# except ObjectDoesNotExist, e: raise Http404
+	else: raise Http404
 
 @login_required # [UnitTest]
 def delete_category_view(request, pk_category):
