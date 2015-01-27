@@ -2,3 +2,4 @@
 org/deployment.py
 tmp/
 deployment/
+templates/mod/*test.html
