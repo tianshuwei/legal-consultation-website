@@ -92,33 +92,25 @@ def index_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
 	if blogsettings.state==1: raise Http404 # Blog disabled
-	return response(request, 'blogs/index.html', 
-		lawyer=lawyer,
+	return response(request, 'blogs/index.html', lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=lawyer.blogcategory_set.get_public_categories(),
-		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_public_articles()))
 
-def index_category_view(request, pk_lawyer, pk_category):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+def index_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
+	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=category.lawyer)
 	if blogsettings.state==1: raise Http404 # Blog disabled
-	return response(request, 'blogs/index_category.html', 
-		lawyer=lawyer,
-		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		category=category,
-		categories=lawyer.blogcategory_set.get_public_categories(),
-		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
-			lawyer.blogarticle_set.get_articles_from(category).order_by('-publish_date')))
+	return response(request, 'blogs/index_category.html', category=category,
+		is_master=checkf(lambda: request.user.lawyer==category.lawyer),
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+			category.lawyer.blogarticle_set.get_articles_from(category).order_by('-publish_date')))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
-	return response(request, 'blogs/detail.html', 
+	return response(request, 'blogs/detail.html', article=article,
 		is_master=checkf(lambda: request.user.lawyer==article.author),
-		article=article,
 		lawyer=article.author,
-		categories=article.author.blogcategory_set.get_public_categories(),
 		comments=article.blogcomment_set.order_by('-publish_date'))
 
 @login_required # [LiveTest] [UnitTest]
@@ -170,10 +162,11 @@ def categories_view(request):
 				'del_href': url_of('blogs:delete_category', pk_category=category.id),
 			}, 'blogs:categories')
 	else:
-		try: 
-			return response(request, 'blogs/categories.html', 
-				categories=request.user.lawyer.blogcategory_set.all())
-		except ObjectDoesNotExist, e: raise Http404
+		raise Http404
+		# try: 
+		# 	return response(request, 'blogs/categories.html', 
+		# 		categories=request.user.lawyer.blogcategory_set.all())
+		# except ObjectDoesNotExist, e: raise Http404
 
 @login_required # [UnitTest]
 def delete_category_view(request, pk_category):

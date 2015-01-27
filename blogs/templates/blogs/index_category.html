@@ -1,47 +1,48 @@
 {% extends 'blogs/blog_base.html' %}
-{% block title %}律师博客 - {{ lawyer.user.username }} {% endblock %}
-
+{% block title %}律师博客 - {{ category.lawyer.user.username }} {% endblock %}
 {% block head_name %}{{ category.name }}-文章列表{% endblock %}
+
 {% block pagedir%}
-        	<li><a href="{% url 'blogs:index' category.lawyer.id %}">主页</a></li>
-        	<li><a href="#">{{ category.name }}</a></li>
+<li><a href="{% url 'blogs:index' category.lawyer.id %}">主页</a></li>
+<li><a href="#">{{ category.name }}</a></li>
 {% endblock %}
 
+{% block category_items %}
+{% with categories=category.lawyer.blogcategory_set.get_public_categories %}
+{% include 'blogs/index_category.mod.html' %}
+{% endwith %}
+{% endblock %}
 
 {% block contexts %}
-
-
 <div class="list-group animated fadeInLeft animation-delay-8">
-{% for article in latest_blogs_list %}
-	<a class="list-group-item" href="{% url 'blogs:text' article.id %}">{{ article.title }}</a>
-{% empty %}
-	<h4>目前没有文章。</h4>
-{% endfor %}
+    {% for article in articles %}
+    <a class="list-group-item" href="{% url 'blogs:text' article.id %}">{{ article.title }}</a>
+    {% empty %}
+    <h4>目前没有文章。</h4>
+    {% endfor %}
 </div>
 
-			<section>
-                <ul class="pagination animated fadeInLeft animation-delay-8">
+<section>
+    <ul class="pagination animated fadeInLeft animation-delay-8">
+         {% if articles.has_previous %}
+         <li><a href="?page={{ articles.previous_page_number }}">«</a></li>
+         {% else %}
+         <li class="disabled"><a href="#">«</a></li>
+         {% endif %}
 
-                     {% if latest_blogs_list.has_previous %}
-                     <li><a href="?page={{ latest_blogs_list.previous_page_number }}">«</a></li>
-                     {% else %}
-                     <li class="disabled"><a href="#">«</a></li>
-                     {% endif %}
+        {% for i in articles.page_range %}
+        {% if i == articles.number %}
+        <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
+        {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
 
-                    {% for i in  latest_blogs_list.page_range %}
-                    {% if i == latest_blogs_list.number %}
-                    <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
-                    {% else %}
-                    <li><a href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                    {% endfor %}
-
-                    {% if latest_blogs_list.has_next %}
-                     <li><a href="?page={{ latest_blogs_list.next_page_number }}">»</a></li>
-                     {% else %}
-                     <li class="disabled"><a href="#">»</a></li>
-                     {% endif %}
-                </ul>
-            </section>
-
+        {% if articles.has_next %}
+         <li><a href="?page={{ articles.next_page_number }}">»</a></li>
+         {% else %}
+         <li class="disabled"><a href="#">»</a></li>
+         {% endif %}
+    </ul>
+</section>
 {% endblock %}

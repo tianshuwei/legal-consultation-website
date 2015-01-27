@@ -6,7 +6,7 @@ class BlogCategoryManager(models.Manager):
 	use_for_related_fields = True
 
 	def get_public_categories(self):
-		return self.get_queryset().filter(state__lte=0)
+		return self.filter(state__lte=0).annotate(articles_count=models.Count('blogarticle')).order_by('name')
 
 	def get_default_category(self, lawyer):
 		default_category, created=BlogCategory.objects.get_or_create(lawyer=lawyer,name=u"默认")
@@ -22,6 +22,9 @@ class BlogCategory(models.Model):
 
 	objects = BlogCategoryManager()
 
+	class Meta:
+		verbose_name_plural = 'blog categories'
+
 	def __unicode__(self):
 		return self.name
 
@@ -30,6 +33,9 @@ class BlogCategory(models.Model):
 		if self.state<0: return
 		self.blogarticle_set.all().update(category=BlogCategory.objects.get_default_category(self.lawyer))
 		self.delete()
+
+	def get_recommended(self):
+		return self.blogarticle_set.defer('text').order_by('-publish_date')[:6]
 
 class BlogArticleManager(models.Manager):
 	use_for_related_fields = True
