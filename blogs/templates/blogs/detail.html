@@ -1,16 +1,19 @@
 {% extends 'blogs/blog_base.html' %}
 {% load transacserial %}
 {% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
+{% block head_name %}律师博客 - {{ article.author.user.username }}{% endblock %}
 
+{% block pagedir%}
+	<li><a href="{% url 'blogs:index' article.author.id %}">主页</a></li>
+	<li><a href="{% url 'blogs:index_category' article.category.id %}">{{ article.category.name }}</a></li>
+	<li><a href="#">{{ article.title }} - 正文</a></li>
+{% endblock %}
 
-        
-        {% block pagedir%}
-        	<li><a href="{% url 'blogs:index' article.author.id %}">主页</a></li>
-        	<li><a href="{% url 'blogs:index_category' article.author.id article.category.id %}">{{ article.category.name }}</a></li>
-			<li><a href="#">{{ article.title }} - 正文</a></li>
-        {% endblock %}
-        
-
+{% block category_items %}
+{% with categories=article.author.blogcategory_set.get_public_categories %}
+{% include 'blogs/index_category.mod.html' %}
+{% endwith %}
+{% endblock %}
 
 {% block contexts %}
 <section>

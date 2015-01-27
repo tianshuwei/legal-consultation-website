@@ -1,28 +1,20 @@
 {% extends 'base.html' %}
 {% load transacserial %}
-{% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
 
-
-    {%block toolbar %}
-    {% if is_master %}
-    <li><a href="{% url 'blogs:new_article' %}" class="animated fadeIn animation-delay-6 rss"><i class="fa fa-align-justify"></i>&nbsp;&nbsp;写新文章</a></li>
-    {{ block.super }}
-    {% endif %}
-    {% endblock %}
-
-
+{%block toolbar %}
+{% if is_master %}
+<li><a href="{% url 'blogs:new_article' %}" class="animated fadeIn animation-delay-6 rss"><i class="fa fa-align-justify"></i>&nbsp;&nbsp;写新文章</a></li>
+{{ block.super }}
+{% endif %}
+{% endblock %}
 
 {% block head %}
 <header class="main-header">
     <div class="container">
-        <h1 class="page-title">{% block head_name %}律师博客 - {{ lawyer.user.username }} {% endblock %}</h1>
-        
+        <h1 class="page-title">{% block head_name %}律师博客{% endblock %}</h1>
         <ol class="breadcrumb pull-right">
-         {% block pagedir%}
-        {% endblock %}
+        {% block pagedir%}{% endblock %}
         </ol>
-
-		
     </div>
 </header>
 {% endblock %}
@@ -106,8 +98,9 @@
                                 {% endif %}
                              </h3>
                             <ul class="simple" id="all_cats">
-                            
+                            {% block category_items %}
                             {% include 'blogs/index_category.mod.html' %}
+                            {% endblock %}
                             
                             {% if is_master %}
                             <div id="add_cats" class="animated fadeInDown" style="display:none;">
@@ -220,7 +213,7 @@
 
     <li class="template" style="display:none;">
     <div id="cats_temp" >
-    <a class="cats" href="{# {% url 'blogs:index_category' lawyer.id category.id %} #}">__________//</a>
+    <a class="cats" href="{# {% url 'blogs:index_category' category.id %} #}">__________//</a>
     {% if is_master %}
     <i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({# {{ category.id }} #})" style="display: none;"></i>
     <i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="remove_ctg()" style="display: none;"></i>
@@ -308,6 +301,6 @@ function finish_cfg () {
         $('#add_cats').hide();
     }
 }
-</script>>
+</script>
  {% endif %}
 {% endblock %}

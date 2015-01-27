@@ -1,8 +1,9 @@
+{# closure: categories, is_master #}
 {% load transacserial %}
 {% for category in categories %}
 <li>
 	<div id="cats_{{ category.id }}" >
-	<a class="cats" href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a>
+	<a class="cats" href="{% url 'blogs:index_category' category.id %}">{{ category.name }}</a>
 	{% if is_master %}
 	<i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({{ category.id }})" style="display: none;"></i>
 	<i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="$submit(['cfg_cats',{{ category.id }}],'{% url 'blogs:delete_category' category.id %}',del_ctg)" style="display: none;"></i>

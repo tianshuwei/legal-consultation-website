@@ -29,7 +29,7 @@
 <h3>文章分类</h3>
 <ul>
 {% for category in categories %}
-	<li><a href="{% url 'blogs:index_category' lawyer.id category.id %}">{{ category.name }}</a></li>
+	<li><a href="{% url 'blogs:index_category' category.id %}">{{ category.name }}</a></li>
 {% empty %}
 	<li>目前没有分类。</li>
 {% endfor %}
