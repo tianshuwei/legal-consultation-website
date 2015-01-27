@@ -1,10 +1,15 @@
 {% extends 'blogs/blog_base.html' %}
 {% block title %}律师博客 - {{ category.lawyer.user.username }} {% endblock %}
-{% block head_name %}{{ category.name }} - 文章列表{% endblock %}
-
-{% block pagedir%}
-<li><a href="{% url 'blogs:index' category.lawyer.id %}">主页</a></li>
-<li><a href="#">{{ category.name }}</a></li>
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    page_title("{{ category.name }} - 文章列表");
+    breadcrumb("主页","{% url 'blogs:index' category.lawyer.id %}");
+    breadcrumb("{{ category.name }}","#");
+    load_categories("{% url 'blogs:categories_mod' category.lawyer.id %}?e={{is_master}}");
+  });
+</script>
 {% endblock %}
 
 {% block category_items %}

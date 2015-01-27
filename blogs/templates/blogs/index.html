@@ -1,7 +1,16 @@
 {% extends 'blogs/blog_base.html' %}
 {% load transacserial %}
 {% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
-{% block head_name %}律师博客 - {{ lawyer.user.username }}{% endblock %}
+
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    page_title("律师博客 - {{ lawyer.user.username }}");
+    load_categories("{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
+  });
+</script>
+{% endblock %}
 
 {% block category_items %}
 {% with categories=lawyer.blogcategory_set.get_public_categories %}

@@ -88,6 +88,12 @@ def list_view(request):
 	return response(request, 'blogs/list.html',
 		lawyers=Lawyer.objects.all())
 
+def categories_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/index_category.mod.html',
+		is_master=checkf(lambda: request.GET['e']=='True'),
+		categories=lawyer.blogcategory_set.get_public_categories())
+
 def index_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)

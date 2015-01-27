@@ -1,12 +1,18 @@
 {% extends 'blogs/blog_base.html' %}
 {% load transacserial %}
 {% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
-{% block head_name %}律师博客 - {{ article.author.user.username }}{% endblock %}
 
-{% block pagedir%}
-	<li><a href="{% url 'blogs:index' article.author.id %}">主页</a></li>
-	<li><a href="{% url 'blogs:index_category' article.category.id %}">{{ article.category.name }}</a></li>
-	<li><a href="#">{{ article.title }} - 正文</a></li>
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    page_title("律师博客 - {{ article.author.user.username }}");
+    breadcrumb("主页","{% url 'blogs:index' article.author.id %}");
+    breadcrumb("{{ article.category.name }}","{% url 'blogs:index_category' article.category.id %}");
+    breadcrumb("{{ article.title }} - 正文","#");
+    load_categories("{% url 'blogs:categories_mod' article.author.id %}?e={{is_master}}");
+  });
+</script>
 {% endblock %}
 
 {% block category_items %}
