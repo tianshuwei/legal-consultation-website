@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 {% load transacserial %}
 
+{% block headextra %}
+<script type="text/javascript">
+  $(function () {
+    select_nav("Blog");
+  });
+</script>
+{% endblock %}
+
 {%block toolbar %}
 {% if is_master %}
 <li><a href="{% url 'blogs:new_article' %}" class="animated fadeIn animation-delay-6 rss"><i class="fa fa-align-justify"></i>&nbsp;&nbsp;写新文章</a></li>

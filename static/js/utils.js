@@ -150,3 +150,35 @@ function test_confirm () {
 function test_prompt () {
 	Dialogue.prompt("Time zone","Install Ubuntu",$dbg);
 }
+
+/**
+高亮导航栏 li
+
+	suffix 		id后缀
+
+	li元素id命名规则 "#nav_li_"+suffix
+*/
+function select_nav (suffix) {
+	$("#nav_ul>li").removeClass("active"); 
+	$("#nav_li_"+suffix).addClass("active");
+}
+
+/**
+导航栏项目下拉菜单中添加链接
+
+	suffix 		id后缀
+	label 		链接文本
+	url 		链接URL
+*/
+function nav_add_link (suffix, label, url) {
+	$("#nav_li_"+suffix+">ul").append("<li><a href=\""+url+"\">"+label+"</a></li>");
+}
+
+/**
+导航栏项目下拉菜单中添加分隔符
+
+	suffix 		id后缀
+*/
+function nav_add_sep(suffix){
+	$("#nav_li_"+suffix+">ul").append("<li class=\"divider\"></li>");
+}

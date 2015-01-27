@@ -1,6 +1,12 @@
 {% extends 'base.html'%}
 {% block title %}Products{% endblock %}
-{% block products %}class="active" {% endblock %}
+{% block headextra %}
+<script type="text/javascript">
+  $(function () {
+    select_nav("Product");
+  });
+</script>
+{% endblock %}
 
 {% block jumbotron %}
     <div class="jumbotron">

@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}律师{% endblock %}
-{% block lawyerlist %}class="active"{% endblock %}
+{% block headextra %}
+<script type="text/javascript">
+  $(function () {
+    select_nav("LawyerList");
+  });
+</script>
+{% endblock %}
 {% block head %}
 <header class="main-header">
     <div class="container">
