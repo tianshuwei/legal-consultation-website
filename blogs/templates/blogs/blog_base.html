@@ -11,17 +11,6 @@
     $("header.main-header .breadcrumb").append('<li><a href="'+url+'">'+label+'</a></li>');
   }
 
-  var categories_mod_url="";
-  function load_categories (url) {
-    if(url==undefined) url=categories_mod_url;
-    $.get(url, function (data,status) {
-        if(status=="success"){
-            $("#all_cats").html(data);
-        }
-    });
-    categories_mod_url=url;
-  }
-
   $(function () {
     select_nav("Blog");
   });
@@ -190,33 +179,7 @@
                 <div class="panel panel-primary animated fadeInDown animation-delay-6">
                     <div class="panel-heading"><i class="fa fa-comments"></i> Recent Comments</div>
                     <div class="panel-body">
-                        <ul class="comments-sidebar">
-                            <li>
-                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client2.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client6.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client4.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client5.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                        </ul>
+                        <ul id="recent_comments" class="comments-sidebar"></ul>
                     </div>
                 </div>
 
