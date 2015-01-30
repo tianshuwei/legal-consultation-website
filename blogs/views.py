@@ -112,6 +112,14 @@ def index_category_view(request, pk_category):
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			category.blogarticle_set.get_public_articles()))
 
+def index_tag_view(request, pk_lawyer, tag):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
+	if blogsettings.state==1: raise Http404 # Blog disabled
+	return response(request, 'blogs/index_tag.html', lawyer=lawyer, tag=tag,
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+			lawyer.blogarticle_set.get_public_articles_tagged(tag)))
+
 def search_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
@@ -149,6 +157,11 @@ def recent_comments_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	return response(request, 'blogs/recent_comments.mod.html',
 		recent_comments=BlogComment.objects.get_recent_comments(lawyer))
+
+def tags_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/tags.mod.html', lawyer=lawyer,
+		tags=lawyer.blogarticle_set.get_tags())
 
 @login_required # [UnitTest]
 def categories_view(request):
