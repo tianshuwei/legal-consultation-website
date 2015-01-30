@@ -1,28 +1,7 @@
 {% for comment in recent_comments %}
-<li>{{comment.text}}</li>
-{% endfor %}
 <li>
     <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
-    <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-    <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
+    <h4><a href="#">{{comment.user}}</a> {{comment.publish_date}}</h4>
+    <p>{{comment.text}}</p>
 </li>
-<li>
-    <img src="../assets/img/demo/client2.jpg" class="img-responsive" alt="Image">
-    <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-    <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-</li>
-<li>
-    <img src="../assets/img/demo/client6.jpg" class="img-responsive" alt="Image">
-    <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-    <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-</li>
-<li>
-    <img src="../assets/img/demo/client4.jpg" class="img-responsive" alt="Image">
-    <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-    <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-</li>
-<li>
-    <img src="../assets/img/demo/client5.jpg" class="img-responsive" alt="Image">
-    <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-    <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-</li>
+{% endfor %}
