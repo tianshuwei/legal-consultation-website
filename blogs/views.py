@@ -139,7 +139,7 @@ def new_comment_view(request, pk_text):
 def recent_comments_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	return response(request, 'blogs/recent_comments.mod.html',
-		recent_comments=BlogComment.objects.get_recent_comments())
+		recent_comments=BlogComment.objects.get_recent_comments(lawyer))
 
 @login_required # [UnitTest]
 def categories_view(request):

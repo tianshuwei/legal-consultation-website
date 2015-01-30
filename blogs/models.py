@@ -120,8 +120,8 @@ class BlogArticle(models.Model):
 class BlogCommentManager(models.Manager):
 	use_for_related_fields = True
 
-	def get_recent_comments(self):
-		return self.order_by('-publish_date')[:6]
+	def get_recent_comments(self, lawyer):
+		return self.filter(article__author=lawyer).order_by('-publish_date')[:6]
 
 class BlogComment(models.Model):
 	user = models.ForeignKey(User)
