@@ -14,6 +14,10 @@
   $(function () {
     select_nav("Blog");
   });
+
+  function search_action (url) {
+    $("#frmSearch").attr("action",url);
+  }
 </script>
 {% endblock %}
 
@@ -52,12 +56,14 @@
         <div class="col-md-4 col-md-pull-8">
             <aside class="sidebar">
                 <div class="block animated fadeInDown animation-delay-12">
+                <form id="frmSearch">
                     <div class="input-group">
-                      <input type="text" placeholder="Search..." class="form-control">
+                      <input name="q" type="text" placeholder="Search..." class="form-control" value="{{query}}">
                       <span class="input-group-btn">
-                        <button class="btn btn-ar btn-primary" type="button"><i class="fa fa-search no-margin-right"></i></button>
+                        <button class="btn btn-ar btn-primary" type="submit"><i class="fa fa-search no-margin-right"></i></button>
                       </span>
                     </div><!-- /input-group -->
+                </form>
                 </div>
 
                 <div class="block animated fadeInDown animation-delay-10">

@@ -8,7 +8,8 @@
   $(function () {
     page_title("律师博客 - {{ lawyer.user.username }}");
     $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
-    $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}")
+    $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}");
+    search_action("{% url 'blogs:search' lawyer.id %}");
   });
 </script>
 {% endblock %}

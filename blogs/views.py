@@ -112,6 +112,15 @@ def index_category_view(request, pk_category):
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			category.blogarticle_set.get_public_articles()))
 
+def search_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
+	if blogsettings.state==1: raise Http404 # Blog disabled
+	if 'q' not in request.GET: raise Http404
+	else: query=request.GET['q']
+	return response(request, 'blogs/search.html', lawyer=lawyer, query=query, 
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, lawyer.blogarticle_set.search(query)))
+
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	return response(request, 'blogs/detail.html', article=article,

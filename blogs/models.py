@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models, transaction
+from django.db.models import Q
 from django.contrib.auth.models import User
 from org.settings import DATABASES
 
@@ -83,7 +84,7 @@ class BlogArticleManager(models.Manager):
 		if POSTGRESQL:
 			return self.extra(where=["tags||' '||title @@ %s or text@@%s"], params=[query,query]).order_by('-publish_date')
 		else:
-			pass
+			return self.filter(Q(tags__contains=query)|Q(title__contains=query)|Q(text__contains=query)).order_by('-publish_date')
 
 class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)
