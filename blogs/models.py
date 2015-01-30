@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.db import models, transaction
 from django.contrib.auth.models import User
+from org.settings import DATABASES
+
+POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
 
 class BlogCategoryManager(models.Manager):
 	use_for_related_fields = True
@@ -48,30 +51,46 @@ class BlogArticleManager(models.Manager):
 
 	def get_tags(self):
 		r=dict()
-		for article in self.get_queryset().defer('text'):
+		for article in self.defer('text'):
 			for tag in article.get_tags():
 				if tag in r: r[tag]+=1
 				else: r[tag]=1
 		return [{'name': tag, 'count': count} for tag,count in ((t,r[t]) for t in r) if count]
 
+	def tagged_one(self, tag):
+		if POSTGRESQL:
+			return self.extra(where=["regexp_split_to_array(tags,',\x20*')@>array[%s]"],params=[tag])
+		else:
+			pass
+
 	def tagged(self, *taglist):
-		r=self.defer('text')
-		for tag in taglist:
-			r=r.filter(tags__regex=''.join([r'\m',tag,r'\M']))
-		return r
+		if POSTGRESQL:
+			return self.extra(where=["regexp_split_to_array(tags,',\x20*')@>regexp_split_to_array(%s, ',')"],params=[','.join(taglist)]) if len(taglist)>1 else self.tagged_one(taglist[0])
+		else:
+			r=self.defer('text')
+			for tag in taglist:
+				r=r.filter(tags__regex=''.join([r'\m',tag,r'\M']))
+			return r
 
 	def tagged_any(self, *taglist):
-		tags=''.join(['(','|'.join(taglist),')'])
-		return self.defer('text').filter(tags__regex=''.join([r'\m',tags,r'\M']))
+		if POSTGRESQL:
+			return self.extra(where=["regexp_split_to_array(tags,',\x20*')&&regexp_split_to_array(%s, ',')"],params=[','.join(taglist)]) if len(taglist)>1 else self.tagged_one(taglist[0])
+		else:
+			tags=''.join(['(','|'.join(taglist),')'])
+			return self.defer('text').filter(tags__regex=''.join([r'\m',tags,r'\M']))
 
 	def search(self, query):
-		# TODO search
-		return self.extra(where=["tags||' '||title @@ %s or text@@%s"], params=[query,query]).order_by('-publish_date')
+		if POSTGRESQL:
+			return self.extra(where=["tags||' '||title @@ %s or text@@%s"], params=[query,query]).order_by('-publish_date')
+		else:
+			pass
 
 class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)
 	title = models.CharField(max_length=255, default='')
-	publish_date = models.DateTimeField('date published', auto_now=True)
+	modify_date = models.DateTimeField(auto_now=True, null=True)
+	publish_date = models.DateTimeField()
+	clicks = models.IntegerField(default=0)
 	category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True)
 	tags = models.CharField(max_length=255, default='')
 	text = models.TextField()
