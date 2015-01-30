@@ -176,7 +176,7 @@ def categories_view(request):
 				'success': True, 
 				'pk': category.id, 
 				'name':category.name, 
-				'href': url_of('blogs:index_category', pk_lawyer=category.lawyer.id, pk_category=category.id),
+				'href': url_of('blogs:index_category', pk_category=category.id),
 				'edit_href': url_of('blogs:rename_category', pk_category=category.id),
 				'del_href': url_of('blogs:delete_category', pk_category=category.id),
 			}, 'blogs:categories')
