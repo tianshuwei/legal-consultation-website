@@ -1,7 +1,6 @@
 {% load staticfiles %}
-{% load transacserial %}
+{% load tagtools %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html lang="en"><head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,74 +8,37 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-
     <title>{% block title %}Index{% endblock %}</title>
-
-
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-
     <!-- 可选的Bootstrap主题文件（一般不用引入） -->
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
-
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="{% static "js/bootstrap.js"%}"></script>
     <script src="{% static "js/utils.js"%}"></script>
     <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
-
     <link rel="stylesheet" href="{% static "css/style.css" %}">
-
     <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
-
     <link rel="stylesheet" href="{% static "css/animate.min.css" %}">
-
     <script src="{% static "js/wow.min.js" %}"></script>
-
     <script src="{% static "js/jquery.cookie.js" %}"></script>
-
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     <!-- http://bootstrap-table.wenzhixin.net.cn/getting-started/ -->
     <link rel="stylesheet" href="{% static "css/bootstrap-table.css" %}">
     <script src="{% static "js/bootstrap-table.js" %}"></script>
     <script src="{% static "js/locale/bootstrap-table-zh-CN.js" %}"></script>
-
-
-   <!--  <h1>Index</h1>
-<h2>User</h2>
-{% if user.is_authenticated %}
-<p>Welcome, {{ user.username }}. (<a href="{% url 'accounts:logout' %}">Logout</a>)</p>
-
-{% else %}
-<p>Welcome, there. Please <a href="{% url 'accounts:login' %}">login</a>
-  or <a href="{% url 'accounts:register' 'client' %}">sign up</a>.</p>
-{% endif %}
-
-<h2>Products</h2>
-{% if latest_products_list %}
-<ul>
-{% for product in latest_products_list %}
-  <li><a href="/products/{{ product.id }}/">{{ product.name }}</a></li>
-{% endfor %}
-</ul>
-{% else %}
-<p>No products are available.</p>
-{% endif %} -->
-
+    {% block headextra %}{% endblock %}
   </head>
 
   <body ryt12699="1">
-
-
     <header id="header-full-top" class="hidden-xs header-full" style="z-index:100">
     <div class="container">
         <div class="header-full-title">
@@ -148,63 +110,7 @@
         </nav>
     </div> <!-- container -->
     </header>
-    <nav class="navbar navbar-static-top navbar-default navbar-header-full navbar-dark" role="navigation" id="header">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <i class="fa fa-bars"></i>
-          </button>
-          <a class="navbar-brand hidden-lg hidden-md hidden-sm" href="index.html">Artificial <span>Reason</span></a>
-        </div>
-        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false" style="height: 1px;">
-          <ul class="nav navbar-nav">
-                <li {% block home %}{% endblock %}><a href="{% url 'index:index' %}">Home</a></li>
-                <li {% block products %}{% endblock %}><a href="{% url 'products:index' %}">products</a></li>
-                <li {% block lawyerlist %}{% endblock %}><a href="{% url 'accounts:lawyerlist' %}">lawyers</a></li>
-                {% if user.is_authenticated %}
-                  {% if is_lawyer %}
-                  <li {% block blogs %}{% endblock %}>
-                  <a href="{% url 'blogs:home' %}" >blogs</a></li>
-                  {% endif %}
-                {% endif %}
-
-              </ul>
-        {% if user.is_authenticated %}
-        <ul class="nav navbar-nav navbar-right">
-            <li><a href="{% url 'accounts:logout' %}">LogOut</a></li>
-            <li><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i>&nbsp;&nbsp;<strong>{{ user.username }}</strong>'s center</a></li>
-            <!-- <li class="dropdown">
-              <a href="{% url 'accounts:usercenter' %}" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}'s center</a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Separated link</a></li>
-              </ul> -->
-            </li>
-          </ul>
-
-        {% else %}
-                <form class="navbar-form navbar-right"
-         action="/accounts/login/?next={{ request.path|urlencode:"" }}%3F{{ request.META.QUERY_STRING|urlencode:"" }}" method="post" >
-          {% csrf_token %} {{ "login"|transacserial }}
-                    <div class="form-group">
-                      <input type="text" name="username" placeholder="username" class="form-control">
-                    </div>
-                    <div class="form-group">
-                      <input type="password" name="password" placeholder="Password" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-success" id="login" >Sign in</button>
-                <a href="{% url 'accounts:register' 'client' %}"><button class="btn btn-primary">Sign up</button></a>
-                </form>
-        {% endif %}
-        </div>
-
-        </div><!--/.navbar-collapse -->
-    </nav>
-<!-- <div style="margin-bottom:151px"></div> -->
+    {% include 'nav.html' %}
     <!-- Main jumbotron for a primary marketing message or call to action -->
  {% block head %}
 
@@ -309,26 +215,6 @@
             </div> <!-- row -->
         </div> <!-- container -->
     </aside>
-
-    <!--  modal -->
-    <div class="modal fade modal-md" id="md_template"tabindex="-1" role="dialog" style="display: none;">
-      <div class="modal-dialog modal-md">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-            <h4 class="modal-title" id="md_title">Modal title</h4>
-          </div>
-          <div class="modal-body" id="md_content">
-            <p>One fine body…</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-ar btn-default" data-dismiss="modal" id="btn_one">Close</button>
-            <button type="button" class="btn btn-ar btn-primary" id="btn_another">Save changes</button>
-          </div>
-        </div>
-      </div><!-- /.modal-dialog -->
-    </div>
-
 
     <footer id="footer">
     <p>© 2014 <a href="#">Team Superme</a>, inc. All rights reserved.</p>

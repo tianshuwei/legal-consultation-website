@@ -1,0 +1,55 @@
+{% load tagtools %}
+<nav class="navbar navbar-static-top navbar-default navbar-header-full navbar-dark" role="navigation" id="header">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <i class="fa fa-bars"></i>
+      </button>
+      <a class="navbar-brand hidden-lg hidden-md hidden-sm" href="index.html">Artificial <span>Reason</span></a>
+    </div>
+    <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false" style="height: 1px;">
+      <ul class="nav navbar-nav">
+            <li id="nav_li_Home"><a href="{% url 'index:index' %}">Home</a></li>
+            <li id="nav_li_Product"><a href="{% url 'products:index' %}">products</a></li>
+            <li id="nav_li_LawyerList"><a href="{% url 'accounts:lawyerlist' %}">lawyers</a></li>
+              {% if is_lawyer %}
+              <li id="nav_li_Blog">
+              <a href="{% url 'blogs:home' %}" >blogs</a></li>
+              {% endif %}
+          </ul>
+    {% if user.is_authenticated %}
+    <ul class="nav navbar-nav navbar-right">
+        <li><a href="{% url 'accounts:logout' %}">LogOut</a></li>
+        <li><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i>&nbsp;&nbsp;<strong>{{ user.username }}</strong>'s center</a></li>
+        <!-- <li class="dropdown">
+          <a href="{% url 'accounts:usercenter' %}" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}'s center</a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul> -->
+        </li>
+      </ul>
+
+    {% else %}
+            <form class="navbar-form navbar-right"
+     action="/accounts/login/?next={{ request.path|urlencode:"" }}%3F{{ request.META.QUERY_STRING|urlencode:"" }}" method="post" >
+      {% csrf_token %} {{ "login"|transacserial }}
+                <div class="form-group">
+                  <input type="text" name="username" placeholder="username" class="form-control">
+                </div>
+                <div class="form-group">
+                  <input type="password" name="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-ar btn-success" id="login" >Sign in</button>
+            <a href="{% url 'accounts:register' 'client' %}"><button class="btn btn-ar btn-primary">Sign up</button></a>
+            </form>
+    {% endif %}
+    </div>
+
+    </div><!--/.navbar-collapse -->
+</nav>
+<!-- <div style="margin-bottom:151px"></div> -->

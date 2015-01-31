@@ -16,3 +16,8 @@ def transaction_record_view(request):
 	return response(request, 'index/transaction_record.html',
 		records=TransactionRecord.objects.all()
 	)
+
+def mod_view(request, name):
+	"""templates/mod下的*.html文件允许访问，URL是 /mod/*/"""
+	try: return response(request, 'mod/{0}.html'.format(name))
+	except: raise Http404

@@ -1,0 +1,7 @@
+{% for comment in recent_comments %}
+<li>
+    <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
+    <h4><a href="#">{{comment.user}}</a> {{comment.publish_date}}</h4>
+    <p>{{comment.text}}</p>
+</li>
+{% endfor %}

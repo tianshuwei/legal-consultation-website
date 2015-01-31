@@ -88,37 +88,43 @@ def list_view(request):
 	return response(request, 'blogs/list.html',
 		lawyers=Lawyer.objects.all())
 
+def categories_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/category.mod.html',
+		is_master=checkf(lambda: request.GET['e']=='True'),
+		categories=lawyer.blogcategory_set.get_public_categories())
+
 def index_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
 	if blogsettings.state==1: raise Http404 # Blog disabled
-	return response(request, 'blogs/index.html', 
-		lawyer=lawyer,
+	return response(request, 'blogs/index.html', lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		categories=lawyer.blogcategory_set.get_public_categories(),
-		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_public_articles()))
 
-def index_category_view(request, pk_lawyer, pk_category):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+def index_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
+	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=category.lawyer)
+	if blogsettings.state==1: raise Http404 # Blog disabled
+	return response(request, 'blogs/index_category.html', category=category,
+		is_master=checkf(lambda: request.user.lawyer==category.lawyer),
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+			category.blogarticle_set.get_public_articles()))
+
+def search_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
 	if blogsettings.state==1: raise Http404 # Blog disabled
-	return response(request, 'blogs/index_category.html', 
-		lawyer=lawyer,
-		is_master=checkf(lambda: request.user.lawyer==lawyer),
-		category=category,
-		categories=lawyer.blogcategory_set.get_public_categories(),
-		latest_blogs_list=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
-			lawyer.blogarticle_set.get_articles_from(category).order_by('-publish_date')))
+	if 'q' not in request.GET: raise Http404
+	else: query=request.GET['q']
+	return response(request, 'blogs/search.html', lawyer=lawyer, query=query, 
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, lawyer.blogarticle_set.search(query)))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
-	return response(request, 'blogs/detail.html', 
+	return response(request, 'blogs/detail.html', article=article,
 		is_master=checkf(lambda: request.user.lawyer==article.author),
-		article=article,
-		lawyer=article.author,
-		categories=article.author.blogcategory_set.get_public_categories(),
 		comments=article.blogcomment_set.order_by('-publish_date'))
 
 @login_required # [LiveTest] [UnitTest]
@@ -138,6 +144,11 @@ def new_comment_view(request, pk_text):
 		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest] [UnitTest]
 		return redirect('blogs:text', pk_text=article.id)
 	else: raise Http404
+
+def recent_comments_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/recent_comments.mod.html',
+		recent_comments=BlogComment.objects.get_recent_comments(lawyer))
 
 @login_required # [UnitTest]
 def categories_view(request):
@@ -169,11 +180,7 @@ def categories_view(request):
 				'edit_href': url_of('blogs:rename_category', pk_category=category.id),
 				'del_href': url_of('blogs:delete_category', pk_category=category.id),
 			}, 'blogs:categories')
-	else:
-		try: 
-			return response(request, 'blogs/categories.html', 
-				categories=request.user.lawyer.blogcategory_set.all())
-		except ObjectDoesNotExist, e: raise Http404
+	else: raise Http404
 
 @login_required # [UnitTest]
 def delete_category_view(request, pk_category):

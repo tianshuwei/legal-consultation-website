@@ -1,28 +1,39 @@
 {% extends 'base.html' %}
-{% load transacserial %}
-{% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
+{% load tagtools %}
 
+{% block headextra %}
+<script type="text/javascript">
+  function page_title (title) {
+    $("header.main-header .page-title").text(title);
+  }
 
-    {%block toolbar %}
-    {% if is_master %}
-    <li><a href="{% url 'blogs:new_article' %}" class="animated fadeIn animation-delay-6 rss"><i class="fa fa-align-justify"></i>&nbsp;&nbsp;写新文章</a></li>
-    {{ block.super }}
-    {% endif %}
-    {% endblock %}
+  function breadcrumb (label, url) {
+    $("header.main-header .breadcrumb").append('<li><a href="'+url+'">'+label+'</a></li>');
+  }
 
+  $(function () {
+    select_nav("Blog");
+  });
 
+  function search_action (url) {
+    $("#frmSearch").attr("action",url);
+  }
+</script>
+{% endblock %}
+
+{%block toolbar %}
+{% if is_master %}
+<li><a href="{% url 'blogs:new_article' %}" class="animated fadeIn animation-delay-6 rss"><i class="fa fa-align-justify"></i>&nbsp;&nbsp;写新文章</a></li>
+{{ block.super }}
+{% endif %}
+{% endblock %}
 
 {% block head %}
 <header class="main-header">
     <div class="container">
-        <h1 class="page-title">{% block head_name %}律师博客 - {{ lawyer.user.username }} {% endblock %}</h1>
-        
+        <h1 class="page-title">律师博客</h1>
         <ol class="breadcrumb pull-right">
-         {% block pagedir%}
-        {% endblock %}
         </ol>
-
-		
     </div>
 </header>
 {% endblock %}
@@ -45,12 +56,14 @@
         <div class="col-md-4 col-md-pull-8">
             <aside class="sidebar">
                 <div class="block animated fadeInDown animation-delay-12">
+                <form id="frmSearch">
                     <div class="input-group">
-                      <input type="text" placeholder="Search..." class="form-control">
+                      <input name="q" type="text" placeholder="Search..." class="form-control" value="{{query}}">
                       <span class="input-group-btn">
-                        <button class="btn btn-ar btn-primary" type="button"><i class="fa fa-search no-margin-right"></i></button>
+                        <button class="btn btn-ar btn-primary" type="submit"><i class="fa fa-search no-margin-right"></i></button>
                       </span>
                     </div><!-- /input-group -->
+                </form>
                 </div>
 
                 <div class="block animated fadeInDown animation-delay-10">
@@ -106,9 +119,16 @@
                                 {% endif %}
                              </h3>
                             <ul class="simple" id="all_cats">
-                            
-                            {% include 'blogs/index_category.mod.html' %}
-                            
+                                <!-- <li><a href="#">Game Programming</a></li>
+                                <li><a href="#">Artificial Intelligence</a>
+                                    <ul>
+                                        <li><a href="#">Artificial Life</a></li>
+                                        <li><a href="#">Neural Networks</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="#">Resources</a></li>
+                                <li><a href="#">Web Developer</a></li> -->
+                            </ul>
                             {% if is_master %}
                             <div id="add_cats" class="animated fadeInDown" style="display:none;">
                                      {% csrf_token %} {{ "blogs:categories"|transacserial }}
@@ -121,16 +141,6 @@
                                     </div>
                             </div>
                             {% endif %}
-                                <!-- <li><a href="#">Game Programming</a></li>
-                                <li><a href="#">Artificial Intelligence</a>
-                                    <ul>
-                                        <li><a href="#">Artificial Life</a></li>
-                                        <li><a href="#">Neural Networks</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Resources</a></li>
-                                <li><a href="#">Web Developer</a></li> -->
-                            </ul>
                         </div>
 
                         <div class="tab-pane" id="tags">
@@ -175,33 +185,7 @@
                 <div class="panel panel-primary animated fadeInDown animation-delay-6">
                     <div class="panel-heading"><i class="fa fa-comments"></i> Recent Comments</div>
                     <div class="panel-body">
-                        <ul class="comments-sidebar">
-                            <li>
-                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client2.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client6.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client4.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                            <li>
-                                <img src="../assets/img/demo/client5.jpg" class="img-responsive" alt="Image">
-                                <h4><a href="#">Andrew</a> in <a href="#">Lorem ipsum Fugiat elit occaecat aute nisi</a></h4>
-                                <p>Lorem ipsum Occaecat ut esse amet ut eiusmod laborum cillum voluptate do laboris dolor ut elit aliquip velit ut nulla anim ...</p>
-                            </li>
-                        </ul>
+                        <ul id="recent_comments" class="comments-sidebar"></ul>
                     </div>
                 </div>
 
@@ -220,7 +204,7 @@
 
     <li class="template" style="display:none;">
     <div id="cats_temp" >
-    <a class="cats" href="{# {% url 'blogs:index_category' lawyer.id category.id %} #}">__________//</a>
+    <a class="cats" href="{# {% url 'blogs:index_category' category.id %} #}">__________//</a>
     {% if is_master %}
     <i class="fa fa-pencil cfg-btn animated fadeInLeft " onclick="edit_ctg({# {{ category.id }} #})" style="display: none;"></i>
     <i class="fa fa-remove cfg-btn animated fadeInLeft " onclick="remove_ctg()" style="display: none;"></i>
@@ -308,6 +292,6 @@ function finish_cfg () {
         $('#add_cats').hide();
     }
 }
-</script>>
+</script>
  {% endif %}
 {% endblock %}

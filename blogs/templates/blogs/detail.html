@@ -1,16 +1,23 @@
 {% extends 'blogs/blog_base.html' %}
-{% load transacserial %}
+{% load tagtools %}
 {% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
 
-
-        
-        {% block pagedir%}
-        	<li><a href="{% url 'blogs:index' article.author.id %}">主页</a></li>
-        	<li><a href="{% url 'blogs:index_category' article.author.id article.category.id %}">{{ article.category.name }}</a></li>
-			<li><a href="#">{{ article.title }} - 正文</a></li>
-        {% endblock %}
-        
-
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    page_title("律师博客 - {{ article.author.user.username }}");
+    breadcrumb("主页","{% url 'blogs:index' article.author.id %}");
+    breadcrumb("{{ article.category.name }}","{% url 'blogs:index_category' article.category.id %}");
+    breadcrumb("{{ article.title }} - 正文","#");
+{% with lawyer=article.author %}
+    $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
+    $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}");
+    search_action("{% url 'blogs:search' lawyer.id %}");
+{% endwith %}
+  });
+</script>
+{% endblock %}
 
 {% block contexts %}
 <section>
@@ -61,6 +68,7 @@
 {% empty %}
 <div>没有评论。</div>
 {% endfor %}
+{%comment%}
         <li class="comment">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -119,6 +127,7 @@
                 </div>
             </div>
         </li>
+{%endcomment%}
     </ul>
 </section>
 <section class="comment-form">

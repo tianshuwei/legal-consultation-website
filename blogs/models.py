@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from django.db import models, transaction
+from django.db.models import Q
 from django.contrib.auth.models import User
+from org.settings import DATABASES
+
+POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
 
 class BlogCategoryManager(models.Manager):
 	use_for_related_fields = True
 
 	def get_public_categories(self):
-		return self.get_queryset().filter(state__lte=0)
+		return self.filter(state__lte=0).annotate(articles_count=models.Count('blogarticle')).order_by('name')
 
 	def get_default_category(self, lawyer):
 		default_category, created=BlogCategory.objects.get_or_create(lawyer=lawyer,name=u"默认")
@@ -22,6 +26,9 @@ class BlogCategory(models.Model):
 
 	objects = BlogCategoryManager()
 
+	class Meta:
+		verbose_name_plural = 'blog categories'
+
 	def __unicode__(self):
 		return self.name
 
@@ -31,19 +38,60 @@ class BlogCategory(models.Model):
 		self.blogarticle_set.all().update(category=BlogCategory.objects.get_default_category(self.lawyer))
 		self.delete()
 
+	def get_recommended(self):
+		return self.blogarticle_set.defer('text').order_by('-publish_date')[:6]
+
 class BlogArticleManager(models.Manager):
 	use_for_related_fields = True
 
 	def get_public_articles(self):
-		return self.get_queryset().filter(category__isnull=False).order_by('-publish_date')
+		return self.filter(category__isnull=False).order_by('-publish_date')
 
-	def get_articles_from(self,category):
-		return self.get_queryset().filter(category=category).order_by('-publish_date')
+	def get_public_articles_tagged(self, *taglist):
+		return self.tagged(*taglist).filter(category__isnull=False).order_by('-publish_date')
+
+	def get_tags(self):
+		r=dict()
+		for article in self.defer('text'):
+			for tag in article.get_tags():
+				if tag in r: r[tag]+=1
+				else: r[tag]=1
+		return [{'name': tag, 'count': count} for tag,count in ((t,r[t]) for t in r) if count]
+
+	def tagged_one(self, tag):
+		if POSTGRESQL:
+			return self.extra(where=["regexp_split_to_array(tags,',\x20*')@>array[%s]"],params=[tag])
+		else:
+			pass
+
+	def tagged(self, *taglist):
+		if POSTGRESQL:
+			return self.extra(where=["regexp_split_to_array(tags,',\x20*')@>regexp_split_to_array(%s, ',')"],params=[','.join(taglist)]) if len(taglist)>1 else self.tagged_one(taglist[0])
+		else:
+			r=self.defer('text')
+			for tag in taglist:
+				r=r.filter(tags__regex=''.join([r'\m',tag,r'\M']))
+			return r
+
+	def tagged_any(self, *taglist):
+		if POSTGRESQL:
+			return self.extra(where=["regexp_split_to_array(tags,',\x20*')&&regexp_split_to_array(%s, ',')"],params=[','.join(taglist)]) if len(taglist)>1 else self.tagged_one(taglist[0])
+		else:
+			tags=''.join(['(','|'.join(taglist),')'])
+			return self.defer('text').filter(tags__regex=''.join([r'\m',tags,r'\M']))
+
+	def search(self, query):
+		if POSTGRESQL:
+			return self.extra(where=["tags||' '||title @@ %s or text@@%s"], params=[query,query]).order_by('-publish_date')
+		else:
+			return self.filter(Q(tags__contains=query)|Q(title__contains=query)|Q(text__contains=query)).order_by('-publish_date')
 
 class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)
 	title = models.CharField(max_length=255, default='')
-	publish_date = models.DateTimeField('date published', auto_now=True)
+	modify_date = models.DateTimeField(auto_now=True, null=True)
+	publish_date = models.DateTimeField()
+	clicks = models.IntegerField(default=0)
 	category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True)
 	tags = models.CharField(max_length=255, default='')
 	text = models.TextField()
@@ -53,15 +101,36 @@ class BlogArticle(models.Model):
 	def __unicode__(self):
 		return self.title
 
+	def get_tags(self):
+		z=[i.strip() for i in self.tags.split(',')]
+		return list() if len(z)==1 and z[0]=='' else z
+
+	def get_tags_along_with_recommended(self):
+		return [{
+			'name':tag, 
+			'recommended': self.author.blogarticle_set.tagged(tag).filter(category__isnull=False).order_by('-publish_date')[:6]
+		} for tag in self.get_tags()]
+
+	def get_other_related_articles(self):
+		return BlogArticle.objects.tagged_any(*self.get_tags()).filter(category__isnull=False).order_by('-publish_date')[:6]
+
 	def remove(self):
 		self.category=None
 		self.save()
+
+class BlogCommentManager(models.Manager):
+	use_for_related_fields = True
+
+	def get_recent_comments(self, lawyer):
+		return self.filter(article__author=lawyer).order_by('-publish_date')[:6]
 
 class BlogComment(models.Model):
 	user = models.ForeignKey(User)
 	publish_date = models.DateTimeField('date published', auto_now=True)
 	article = models.ForeignKey(BlogArticle)
 	text = models.TextField()
+
+	objects=BlogCommentManager()
 
 	def __unicode__(self):
 		return self.text[:20]
