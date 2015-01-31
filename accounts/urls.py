@@ -17,5 +17,6 @@ urlpatterns = patterns('',
 	url(r'^remarks/(?P<pk_lawyer>\d+)/$', views.remark_view, name='remark'),
 	url(r'^usercenter/$', views.usercenter_view, name='usercenter'),
 	url(r'^questions/(?P<pk_question>\d+)/new_text/$', views.new_question_text_view, name='new_question_text'),
+	url(r'^questions/(?P<pk_question>\d+)/satisfied/$',views.question_satisfied,name='satisfied'),
 )
 

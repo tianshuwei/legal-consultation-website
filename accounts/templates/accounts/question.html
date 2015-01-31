@@ -24,6 +24,12 @@
 	<input type="submit"/>
 </form>
 
+{% if question.state %}
+<div>已满意</div>
+{% else %}
+<a href="{% url 'accounts:satisfied' question.id %}"><button>满意</button></a>
+{% endif %}
+
 <a href="{% url 'accounts:usercenter' %}">返回用户中心</a>
 {% endblock %}
 

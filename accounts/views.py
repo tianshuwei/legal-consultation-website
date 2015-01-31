@@ -179,6 +179,8 @@ def new_question_view(request):
 				description=request.POST['description']
 			)
 			qu.save()
+			cl=get_object_or_404(Client,pk=request.user.client.id)
+			cl.minus_points()
 		except ObjectDoesNotExist,e: raise Http404
 		except : messages.error(request, u'问题创建失败')
 		else: messages.success(request, u'问题创建成功')
@@ -193,3 +195,11 @@ def new_question_text_view(request, pk_question):
 	q_text = Question_text.objects.create(text=request.POST['txt_question'], user_flag=1 if get_role(request.user).is_client else 0, question=q)
 	q_text.save()
 	return redirect('accounts:question', pk_question=q.id)
+
+@login_required
+def question_satisfied(request, pk_question):
+	qu = get_object_or_404(Question, pk=pk_question)
+	qu.finish()
+	la = get_object_or_404(Lawyer, pk=qu.lawyer_id)
+	la.plus_score()
+	return redirect('accounts:question', pk_question=qu.id)
