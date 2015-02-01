@@ -9,6 +9,7 @@
     page_title("律师博客 - {{ lawyer.user.username }}");
     $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
     $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}");
+    $load("tags_cloud","{% url 'blogs:tags_mod' lawyer.id %}");
     search_action("{% url 'blogs:search' lawyer.id %}");
   });
 </script>
@@ -33,6 +34,11 @@
             <div class="row">
                 <div class="col-lg-10 col-md-9 col-sm-8">
                     <i class="fa fa-clock-o"></i>{{article.publish_date}} <i class="fa fa-user"> </i>{{article.author}} <i class="fa fa-folder-open"></i> <a href="{% url 'blogs:index_category' article.category.id %}">{{article.category}}</a>
+                    <i class="fa fa-tags">
+                    {% for tag in article.get_tags %}
+                    <a href="{% url 'blogs:index_tag' article.author.id tag %}">{{tag}}</a>
+                    {% endfor %}
+                    </i> 
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
                     <a href="{% url 'blogs:text' article.id %}" class="pull-right">Read more »</a>

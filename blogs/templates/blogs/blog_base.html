@@ -38,11 +38,8 @@
 </header>
 {% endblock %}
 
-{% block blogs %}class="active"{% endblock %}
 {% block main %}
-
 <h1></h1>
-
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-push-4">
@@ -50,7 +47,6 @@
         {% block contexts %}
         <h1>contexts here</h1>
         {% endblock %}
-
 
         </div> <!-- col-md-8 -->
         <div class="col-md-4 col-md-pull-8">
@@ -119,6 +115,7 @@
                                 {% endif %}
                              </h3>
                             <ul class="simple" id="all_cats">
+                            {# see blogs/category.mod.html #}{%comment%}
                                 <!-- <li><a href="#">Game Programming</a></li>
                                 <li><a href="#">Artificial Intelligence</a>
                                     <ul>
@@ -127,7 +124,7 @@
                                     </ul>
                                 </li>
                                 <li><a href="#">Resources</a></li>
-                                <li><a href="#">Web Developer</a></li> -->
+                                <li><a href="#">Web Developer</a></li> -->{%endcomment%}
                             </ul>
                             {% if is_master %}
                             <div id="add_cats" class="animated fadeInDown" style="display:none;">
@@ -145,57 +142,33 @@
 
                         <div class="tab-pane" id="tags">
                              <h3 class="post-title">Tags</h3>
-                            <div class="tags-cloud">
-                                <a href="#" class="tag">Web</a>
-                                <a href="#" class="tag">Artificial Intelligence</a>
-                                <a href="#" class="tag">Programing</a>
-                                <a href="#" class="tag">Design</a>
-                                <a href="#" class="tag">3D</a>
-                                <a href="#" class="tag">Games</a>
-                                <a href="#" class="tag">Resources</a>
-                                <a href="#" class="tag">2D</a>
-                                <a href="#" class="tag">C++</a>
-                                <a href="#" class="tag">Jquery</a>
-                                <a href="#" class="tag">Javascript</a>
-                                <a href="#" class="tag">Library</a>
-                                <a href="#" class="tag">Windows</a>
-                                <a href="#" class="tag">Linux</a>
-                                <a href="#" class="tag">Cloud</a>
-                                <a href="#" class="tag">Game developer</a>
-                                <a href="#" class="tag">Server</a>
-                                <a href="#" class="tag">Google</a>
-                                <a href="#" class="tag">Bootstrap</a>
-                                <a href="#" class="tag">Less</a>
-                                <a href="#" class="tag">Sass</a>
-                                <a href="#" class="tag">Engine</a>
-                                <a href="#" class="tag">Node.js</a>
-                            </div>
+                            <div class="tags-cloud" id="tags_cloud">{# see blogs/tags.mod.html #}</div>
                         </div>
                     </div> <!-- tab-content -->
                 </div>
-
-                <div class="panel panel-primary animated fadeInDown animation-delay-8">
+{%comment%}
+                <!-- <div class="panel panel-primary animated fadeInDown animation-delay-8">
                     <div class="panel-heading"><i class="fa fa-play-circle"></i>Featured video</div>
                     <div class="video">
                         <iframe src="http://player.vimeo.com/video/21081887?title=0&amp;byline=0&amp;portrait=0"></iframe>
 
                     </div>
-                </div>
-
+                </div> -->
+{%endcomment%}
                 <div class="panel panel-primary animated fadeInDown animation-delay-6">
                     <div class="panel-heading"><i class="fa fa-comments"></i> Recent Comments</div>
                     <div class="panel-body">
-                        <ul id="recent_comments" class="comments-sidebar"></ul>
+                        <ul id="recent_comments" class="comments-sidebar">{# see blogs/recent_comments.mod.html #}</ul>
                     </div>
                 </div>
-
-                <div class="panel panel-primary animated fadeInDown animation-delay-4">
+{%comment%}
+                <!-- <div class="panel panel-primary animated fadeInDown animation-delay-4">
                     <div class="panel-heading"><i class="fa fa-align-left"></i> Widget Text</div>
                     <div class="panel-body">
                         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atomus, appellat dedocendi omnes quoddam atomos. Vestra. Corrupti sensum multa dissentiet uberius displicet medeam, efficiatur quaeque saluto sollicitare arbitraretur conectitur chaere, deorum consiliisque arbitrer doctrina nasci. Odia malis, scipio, libido. Iudico graviter seditione hoc. Venustate.</p>
                     </div>
-                </div>
-
+                </div> -->
+{%endcomment%}
             </aside> <!-- Sidebar -->
         </div>
     </div> <!-- row -->

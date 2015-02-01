@@ -1,0 +1,3 @@
+{% for tag in tags %}
+<a href="{% url 'blogs:index_tag' lawyer.id tag.name %}" class="tag">{{tag.name}}</a>
+{% endfor %}

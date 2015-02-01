@@ -60,9 +60,10 @@ class BlogArticleManager(models.Manager):
 
 	def tagged_one(self, tag):
 		if POSTGRESQL:
+			# return self.filter(tags__regex=''.join([r'\m',tag,r'\M'])) # word boundary used in psql
 			return self.extra(where=["regexp_split_to_array(tags,',\x20*')@>array[%s]"],params=[tag])
 		else:
-			pass
+			return self.filter(tags__regex=''.join([r'[[:<:]]',tag,r'[[:>:]]'])) # word boundary used in psql
 
 	def tagged(self, *taglist):
 		if POSTGRESQL:
@@ -70,7 +71,7 @@ class BlogArticleManager(models.Manager):
 		else:
 			r=self.defer('text')
 			for tag in taglist:
-				r=r.filter(tags__regex=''.join([r'\m',tag,r'\M']))
+				r=r.filter(tags__regex=''.join([r'[[:<:]]',tag,r'[[:>:]]']))
 			return r
 
 	def tagged_any(self, *taglist):
@@ -78,7 +79,7 @@ class BlogArticleManager(models.Manager):
 			return self.extra(where=["regexp_split_to_array(tags,',\x20*')&&regexp_split_to_array(%s, ',')"],params=[','.join(taglist)]) if len(taglist)>1 else self.tagged_one(taglist[0])
 		else:
 			tags=''.join(['(','|'.join(taglist),')'])
-			return self.defer('text').filter(tags__regex=''.join([r'\m',tags,r'\M']))
+			return self.defer('text').filter(tags__regex=''.join([r'[[:<:]]',tags,r'[[:>:]]']))
 
 	def search(self, query):
 		if POSTGRESQL:
