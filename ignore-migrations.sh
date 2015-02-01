@@ -22,6 +22,7 @@ if [ ! -n "`git status -s`" ]; then
         rm blogs/migrations/t.test
         git checkout master
         git merge ignore-migrations
+        git branch -d ignore-migrations
         echo "Everything fine. Better git-push ASAP!"
     else
         echo "ERROR"
