@@ -2,7 +2,35 @@
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
 <title>{% block title %}{% endblock %}</title>
-<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" />
+{#ALX <link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}" /> #}
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% static "css/style.css" %}{% endblock %}" />
+{#ALX#}
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="{% static "js/bootstrap.js"%}"></script>
+<script src="{% static "js/utils.js"%}"></script>
+<link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+<link rel="stylesheet" href="{% static "css/style.css" %}">
+<link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+<link rel="stylesheet" href="{% static "css/animate.min.css" %}">
+<script src="{% static "js/wow.min.js" %}"></script>
+<script src="{% static "js/jquery.cookie.js" %}"></script>
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+  <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<!-- http://bootstrap-table.wenzhixin.net.cn/getting-started/ -->
+<link rel="stylesheet" href="{% static "css/bootstrap-table.css" %}">
+<script src="{% static "js/bootstrap-table.js" %}"></script>
+<script src="{% static "js/locale/bootstrap-table-zh-CN.js" %}"></script>
+</head><body>
+{#ENDALX#}
 {% block extrastyle %}{% endblock %}
 <!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% static "admin/css/ie.css" %}{% endblock %}" /><![endif]-->
 {% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}" />{% endif %}
@@ -21,7 +49,8 @@
     {% if not is_popup %}
     <!-- Header -->
     <div id="header">
-        <div id="branding">
+        {#ALX#}{%comment%}
+        <!-- <div id="branding">
         {% block branding %}{% endblock %}
         </div>
         {% if user.is_active and user.is_staff %}
@@ -40,11 +69,37 @@
                 {% endif %}
                 <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
             {% endblock %}
-        </div>
+        </div> -->
         {% endif %}
+        {%endcomment%}
         {% block nav-global %}{% endblock %}
     </div>
     <!-- END Header -->
+    {#ALX#}
+    {% include 'header.html' %}
+    {%include 'nav.html'%}
+    {%comment%}
+    <script type="text/javascript">
+    select_nav("Admin");
+/*
+    nav_add_link("Admin","Index","{% url 'admin:index' %}");
+{% if app_list %}
+    {% for app in app_list %}
+        nav_add_sep("Admin");
+        {% for model in app.models %}
+            {% if model.admin_url %}
+                nav_add_link("Admin","{{ model.name }}","{{ model.admin_url }}");
+            {% else %}
+                nav_add_link("Admin","{{ model.name }}","#");
+            {% endif %}
+        {% endfor %}
+        
+    {% endfor %}
+{% endif %}
+*/
+    </script>
+    {%endcomment%}
+    {#ENDALX#}
     {% block breadcrumbs %}
     <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
@@ -77,6 +132,10 @@
     {% block footer %}<div id="footer"></div>{% endblock %}
 </div>
 <!-- END Container -->
-
+{#ALX#}
+<footer id="footer">
+    <p>© 2014 <a href="#">Team Superme</a>, inc. All rights reserved.</p>
+</footer>
+{#ENDALX#}
 </body>
 </html>

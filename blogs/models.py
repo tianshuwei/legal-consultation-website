@@ -27,7 +27,8 @@ class BlogCategory(models.Model):
 	objects = BlogCategoryManager()
 
 	class Meta:
-		verbose_name_plural = 'blog categories'
+		verbose_name = u'博客分类'
+		verbose_name_plural = u'博客分类'
 
 	def __unicode__(self):
 		return self.name
@@ -98,6 +99,10 @@ class BlogArticle(models.Model):
 	text = models.TextField()
 
 	objects = BlogArticleManager()
+
+	class Meta:
+		verbose_name = u'博客文章'
+		verbose_name_plural = u'博客文章'
 
 	def __unicode__(self):
 		return self.title
