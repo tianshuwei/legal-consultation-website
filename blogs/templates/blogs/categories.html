@@ -1,0 +1,31 @@
+{% extends 'blogs/blog_base.html' %}
+{% block title %}文章分类{% endblock %}
+{% block main %}
+<h1>文章分类</h1>
+<a href="{% url 'blogs:index' request.user.lawyer.id %}">返回博客主页</a>
+
+<ul>
+{% for category in categories %}
+	<li>
+		<a href="{% url 'blogs:index_category' category.id %}">{{ category.name }}</a>
+
+		<form action="{% url 'blogs:rename_category' category.id %}" method="post">
+			{% csrf_token %}
+			<input type="text" name="name" />
+			<input type="submit" value="重命名" />
+		</form>
+		<a href="{% url 'blogs:delete_category' category.id %}">删除</a>
+	</li>
+{% empty %}
+<li>No categories are available.</li>
+{% endfor %}
+</ul>
+
+<h3>新分类</h3>
+<form method="post">
+	{% csrf_token %}
+	<input type="text" name="name" />
+	<input type="submit"/>
+</form>
+{% endblock %}
+
