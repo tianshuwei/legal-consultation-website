@@ -45,7 +45,37 @@
         <div class="col-md-8 col-md-push-4">
 
         {% block contexts %}
-        <h1>contexts here</h1>
+        <div class="list-group animated fadeInLeft animation-delay-8">
+            {% for article in articles %}
+            <a class="list-group-item" href="{% url 'blogs:text' article.id %}">{{ article.title }}</a>
+            {% empty %}
+            <h4>目前没有文章。</h4>
+            {% endfor %}
+        </div>
+
+        <section>
+            <ul class="pagination animated fadeInLeft animation-delay-8">
+                 {% if articles.has_previous %}
+                 <li><a href="?{% query_assign request 'page' articles.previous_page_number %}">«</a></li>
+                 {% else %}
+                 <li class="disabled"><a href="#">«</a></li>
+                 {% endif %}
+
+                {% for i in articles.page_range %}
+                {% if i == articles.number %}
+                <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
+                {% else %}
+                <li><a href="?{% query_assign request 'page' i %}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if articles.has_next %}
+                 <li><a href="?{% query_assign request 'page' articles.next_page_number %}">»</a></li>
+                 {% else %}
+                 <li class="disabled"><a href="#">»</a></li>
+                 {% endif %}
+            </ul>
+        </section>
         {% endblock %}
 
         </div> <!-- col-md-8 -->
@@ -99,13 +129,7 @@
                         </div>
                         <div class="tab-pane" id="archive">
                              <h3 class="post-title no-margin-top">存档</h3>
-                            <ul class="simple">
-                                <li><a href="#">December 2012</a></li>
-                                <li><a href="#">January 2013</a></li>
-                                <li><a href="#">February 2013</a></li>
-                                <li><a href="#">March 2013</a></li>
-                                <li><a href="#">April 2013</a></li>
-                            </ul>
+                            <ul id="archives" class="simple">{# see archives.mod.html #}</ul>
                         </div>
 
                         <div class="tab-pane" id="categories">

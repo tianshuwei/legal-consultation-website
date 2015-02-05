@@ -4,9 +4,9 @@
 {{ block.super }}
 <script type="text/javascript">
   $(function () {
-    page_title("搜索 - {{ query }}");
+    page_title("存档 - {{publish_date|date:'Y F'}}");
     breadcrumb("主页","{% url 'blogs:index' lawyer.id %}");
-    breadcrumb("搜索 - {{ query }}","#");
+    breadcrumb("存档 - {{publish_date|date:'Y F'}}","#");
     {% include 'blogs/common_mods.js' %}
   });
 </script>

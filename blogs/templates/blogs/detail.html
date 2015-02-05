@@ -12,7 +12,6 @@
     breadcrumb("{{ article.title }} - 正文","#");
 {% with lawyer=article.author %}
     {% include 'blogs/common_mods.js' %}
-    search_action("{% url 'blogs:search' lawyer.id %}");
 {% endwith %}
   });
 </script>

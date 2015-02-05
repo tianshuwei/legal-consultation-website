@@ -8,7 +8,6 @@
   $(function () {
     page_title("律师博客 - {{ lawyer.user.username }}");
     {% include 'blogs/common_mods.js' %}
-    search_action("{% url 'blogs:search' lawyer.id %}");
   });
 </script>
 {% endblock %}

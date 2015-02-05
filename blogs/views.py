@@ -125,6 +125,15 @@ def index_tag_view(request, pk_lawyer, tag):
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_public_articles_tagged(tag)))
 
+def index_archive_view(request, pk_lawyer, year, month):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
+	if blogsettings.state==1: raise Http404 # Blog disabled
+	return response(request, 'blogs/index_archive.html', lawyer=lawyer, 
+		publish_date=datetime(int(year), int(month), 1),
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+			lawyer.blogarticle_set.get_public_articles_tagged('test')))
+
 def search_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
@@ -168,6 +177,11 @@ def tags_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	return response(request, 'blogs/tags.mod.html', lawyer=lawyer,
 		tags=BlogArticle.objects.get_tags(pk_lawyer))
+
+def archives_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/archives.mod.html', lawyer=lawyer,
+		archives=BlogArticle.objects.get_archived_articles(pk_lawyer))
 
 @login_required # [UnitTest]
 def categories_view(request):
