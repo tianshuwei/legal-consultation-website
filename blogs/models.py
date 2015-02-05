@@ -49,16 +49,49 @@ class BlogArticleManager(models.Manager):
 	def get_public_articles(self):
 		return self.filter(category__isnull=False).order_by('-publish_date')
 
+	def get_favourite_articles(self):
+		return self.filter(category__isnull=False).order_by('-clicks')[:6]
+
+	def get_archived_articles(self, pk_lawyer=None):
+		def compatible_way(dataset):
+			z = [datetime(article.publish_date.year,article.publish_date.month,1) for article in dataset]
+			return [{'publish_date': d, 'count': z.count(d)} for d in reversed(sorted(set(z)))]
+		if pk_lawyer==None:
+			return compatible_way(self.defer('text'))
+		elif POSTGRESQL:
+			return self.raw(
+			"""SELECT 
+					date_trunc('month',publish_date) AS publish_date, 
+					COUNT(*) AS count 
+				FROM blogs_blogarticle 
+				WHERE author_id = %s
+				GROUP BY date_trunc('month',publish_date)
+				ORDER BY date_trunc('month',publish_date) DESC;""", 
+			params=[pk_lawyer])
+		else:
+			return compatible_way(self.defer('text').filter(author__id=pk_lawyer))
+
 	def get_public_articles_tagged(self, *taglist):
 		return self.tagged(*taglist).filter(category__isnull=False).order_by('-publish_date')
 
-	def get_tags(self):
-		r=dict()
-		for article in self.defer('text'):
-			for tag in article.get_tags():
-				if tag in r: r[tag]+=1
-				else: r[tag]=1
-		return [{'name': tag, 'count': count} for tag,count in ((t,r[t]) for t in r) if count]
+	def get_tags(self, pk_lawyer=None):
+		def compatible_way(dataset):
+			z = [tag for article in dataset for tag in article.get_tags()]
+			return [{'name': tag, 'count': z.count(tag)} for tag in sorted(set(z))]
+		if pk_lawyer==None:
+			return compatible_way(self.defer('text'))
+		elif POSTGRESQL:
+			return self.raw(
+			"""SELECT 
+					regexp_split_to_table(tags::text, ', *'::text) AS name, 
+					COUNT(*) AS count
+				FROM blogs_blogarticle
+				WHERE author_id = %s
+				GROUP BY regexp_split_to_table(tags::text, ', *'::text)
+				ORDER BY regexp_split_to_table(tags::text, ', *'::text);""",
+			params=[pk_lawyer])
+		else:
+			return compatible_way(self.defer('text').filter(author__id=pk_lawyer))
 
 	def tagged_one(self, tag):
 		if POSTGRESQL:
@@ -123,6 +156,10 @@ class BlogArticle(models.Model):
 
 	def remove(self):
 		self.category=None
+		self.save()
+
+	def touch(self):
+		self.clicks+=1
 		self.save()
 
 class BlogCommentManager(models.Manager):

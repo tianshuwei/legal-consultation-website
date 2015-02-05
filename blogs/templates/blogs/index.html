@@ -7,6 +7,7 @@
 <script type="text/javascript">
   $(function () {
     page_title("律师博客 - {{ lawyer.user.username }}");
+    $load("favourite_posts","{% url 'blogs:favourite_posts_mod' lawyer.id %}");
     $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
     $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}");
     $load("tags_cloud","{% url 'blogs:tags_mod' lawyer.id %}");
@@ -41,7 +42,7 @@
                     </i> 
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-4">
-                    <a href="{% url 'blogs:text' article.id %}" class="pull-right">Read more »</a>
+                    <a href="{% url 'blogs:text' article.id %}" class="pull-right">阅读全文 »</a>
                 </div>
             </div>
         </div>

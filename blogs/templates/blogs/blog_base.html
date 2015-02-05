@@ -54,7 +54,7 @@
                 <div class="block animated fadeInDown animation-delay-12">
                 <form id="frmSearch">
                     <div class="input-group">
-                      <input name="q" type="text" placeholder="Search..." class="form-control" value="{{query}}">
+                      <input name="q" type="text" placeholder="搜索..." class="form-control" value="{{query}}">
                       <span class="input-group-btn">
                         <button class="btn btn-ar btn-primary" type="submit"><i class="fa fa-search no-margin-right"></i></button>
                       </span>
@@ -71,9 +71,10 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="fav">
-                            <h3 class="post-title no-margin-top">Favorite Post</h3>
-                            <ul class="media-list">
-                                <li class="media">
+                            <h3 class="post-title no-margin-top">热门文章</h3>
+                            <ul id="favourite_posts" class="media-list">
+                            {# see favourite_posts.mod.html #}{%comment%}
+                                <!-- <li class="media">
                                     <a class="pull-left" href="#"><img class="media-object" src="../assets/img/demo/m2.jpg" width="80" height="80" alt="image"></a>
                                     <div class="media-body">
                                         <p class="media-heading"><a href="#">Lorem ipsum dolor sit amet aut consectetur adipisicing elitl libero</a></p>
@@ -93,11 +94,11 @@
                                         <p class="media-heading"><a href="#">Sit amet consectetur adipisicing elit incidunt minus</a></p>
                                         <small>Dec, 30 2013</small>
                                     </div>
-                                </li>
+                                </li> -->{%endcomment%}
                             </ul>
                         </div>
                         <div class="tab-pane" id="archive">
-                             <h3 class="post-title no-margin-top">Archives</h3>
+                             <h3 class="post-title no-margin-top">存档</h3>
                             <ul class="simple">
                                 <li><a href="#">December 2012</a></li>
                                 <li><a href="#">January 2013</a></li>
@@ -109,7 +110,7 @@
 
                         <div class="tab-pane" id="categories">
                              <h3 class="post-title no-margin-top">
-                             Categories
+                             分类
                                 {% if is_master %}
                                        <i class="fa fa-cogs cfg-btn" onclick="cfg_cats()" id="cfgBtn"></i>
                                 {% endif %}
@@ -141,7 +142,7 @@
                         </div>
 
                         <div class="tab-pane" id="tags">
-                             <h3 class="post-title">Tags</h3>
+                             <h3 class="post-title">标签</h3>
                             <div class="tags-cloud" id="tags_cloud">{# see blogs/tags.mod.html #}</div>
                         </div>
                     </div> <!-- tab-content -->
@@ -156,9 +157,26 @@
                 </div> -->
 {%endcomment%}
                 <div class="panel panel-primary animated fadeInDown animation-delay-6">
-                    <div class="panel-heading"><i class="fa fa-comments"></i> Recent Comments</div>
+                    <div class="panel-heading"><i class="fa fa-comments"></i> 最新评论</div>
                     <div class="panel-body">
-                        <ul id="recent_comments" class="comments-sidebar">{# see blogs/recent_comments.mod.html #}</ul>
+                        <ul id="recent_comments" class="comments-sidebar">
+                        {# see blogs/recent_comments.mod.html #}{%comment%}
+                            <!-- <li>
+                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
+                                <h4><a href="#">Fitzpatrick</a> in <a href="#">Lorem ipsum</a> 11 Jan. 2012</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atomus, appellat dedocendi omnes quoddam atomos.</p>
+                            </li>
+                            <li>
+                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
+                                <h4><a href="#">Fitzpatrick</a> in <a href="#">Lorem ipsum</a> 11 Jan. 2012</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atomus, appellat dedocendi omnes quoddam atomos.</p>
+                            </li>
+                            <li>
+                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
+                                <h4><a href="#">Fitzpatrick</a> in <a href="#">Lorem ipsum</a> 11 Jan. 2012</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atomus, appellat dedocendi omnes quoddam atomos.</p>
+                            </li> -->{%endcomment%}
+                        </ul>
                     </div>
                 </div>
 {%comment%}

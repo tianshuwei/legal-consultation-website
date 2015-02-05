@@ -94,6 +94,11 @@ def categories_mod_view(request, pk_lawyer):
 		is_master=checkf(lambda: request.GET['e']=='True'),
 		categories=lawyer.blogcategory_set.get_public_categories())
 
+def favourite_posts_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/favourite_posts.mod.html',
+		articles=lawyer.blogarticle_set.get_favourite_articles())
+
 def index_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
@@ -131,6 +136,7 @@ def search_view(request, pk_lawyer):
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
+	article.touch()
 	return response(request, 'blogs/detail.html', article=article,
 		is_master=checkf(lambda: request.user.lawyer==article.author),
 		comments=article.blogcomment_set.order_by('-publish_date'))
