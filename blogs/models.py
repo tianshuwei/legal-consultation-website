@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from org.settings import DATABASES
 
 POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
+EN_FULLTEXTSEARCH = False
 
 class BlogCategoryManager(models.Manager):
 	use_for_related_fields = True
@@ -83,7 +84,7 @@ class BlogArticleManager(models.Manager):
 			return self.defer('text').filter(tags__regex=''.join([r'[[:<:]]',tags,r'[[:>:]]']))
 
 	def search(self, query):
-		if POSTGRESQL:
+		if EN_FULLTEXTSEARCH and POSTGRESQL:
 			return self.extra(where=["tags||' '||title @@ %s or text@@%s"], params=[query,query]).order_by('-publish_date')
 		else:
 			return self.filter(Q(tags__contains=query)|Q(title__contains=query)|Q(text__contains=query)).order_by('-publish_date')
