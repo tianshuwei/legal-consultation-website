@@ -57,11 +57,13 @@ def lawyerlist_view(request):
 @login_required
 def usercenter_view(request):
 	u = get_role(request.user)
-	return response(request, 'accounts/usercenter.html',
-		orders=paginated(lambda: request.GET.get('po'), 10, 
-			u.order_set.order_by('-publish_date')),
-		questions=paginated(lambda: request.GET.get('pq'), 10, 
-			u.question_set.order_by('-publish_date')))
+	if type(u) is Client or type(u) is Lawyer:
+		return response(request, 'accounts/usercenter.html',
+			orders=paginated(lambda: request.GET.get('po'), 10, 
+				u.order_set.order_by('-publish_date')),
+			questions=paginated(lambda: request.GET.get('pq'), 10, 
+				u.question_set.order_by('-publish_date')))
+	else: raise Http404
 
 class ProfileEditForm(forms.ModelForm):
 	class Meta:
@@ -81,11 +83,12 @@ def profile_self_view(request):
 		is_master=True,
 		profile_edit=ProfileEditForm(instance=request.user))
 
-def profile_view(request, role, pk):
-	if role=='c': u = get_object_or_404(Client,pk=pk)
-	elif role=='l': u = get_object_or_404(Lawyer,pk=pk)
+def profile_view(request, pk_user):
+	user = get_object_or_404(User, pk=pk_user)
+	u = get_role(user)
+	if type(u) is Client or type(u) is Lawyer:
+		return response(request, 'accounts/profile.html', role=u)
 	else: raise Http404
-	return response(request, 'accounts/profile.html', role=u)
 
 @login_required
 def question_view(request, pk_question):
