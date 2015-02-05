@@ -2,8 +2,8 @@
 {% block title %}提问{% endblock %}
 {% block main %}
 <h1>提问</h1>
-<div>客户 <a href="{% url 'accounts:profile' 'c' question.client.id %}">{{ question.client.user.username }}</a></div>
-<div>律师 <a href="{% url 'accounts:profile' 'l' question.lawyer.id %}">{{ question.lawyer.user.username }}</a></div>
+<div>客户 <a href="{% url 'accounts:profile' question.client.user.id %}">{{ question.client.user.username }}</a></div>
+<div>律师 <a href="{% url 'accounts:profile' question.lawyer.user.id %}">{{ question.lawyer.user.username }}</a></div>
 <div>标题 {{ question.title }}</div>
 <div>描述 {{ question.description }}</div>
 <div>日期 {{ question.publish_date }}</div>
