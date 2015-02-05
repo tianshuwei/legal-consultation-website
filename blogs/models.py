@@ -3,6 +3,7 @@ from django.db import models, transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
 from org.settings import DATABASES
+from org.dbtools import rawsql
 
 POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
 EN_FULLTEXTSEARCH = False
@@ -59,10 +60,8 @@ class BlogArticleManager(models.Manager):
 		if pk_lawyer==None:
 			return compatible_way(self.defer('text'))
 		elif POSTGRESQL:
-			return self.raw(
-			"""SELECT 
-					date_trunc('month',publish_date) AS publish_date, 
-					COUNT(*) AS count 
+			return rawsql(['publish_date','count'],
+			"""SELECT date_trunc('month',publish_date), COUNT(*) 
 				FROM blogs_blogarticle 
 				WHERE author_id = %s
 				GROUP BY date_trunc('month',publish_date)
@@ -81,10 +80,8 @@ class BlogArticleManager(models.Manager):
 		if pk_lawyer==None:
 			return compatible_way(self.defer('text'))
 		elif POSTGRESQL:
-			return self.raw(
-			"""SELECT 
-					regexp_split_to_table(tags::text, ', *'::text) AS name, 
-					COUNT(*) AS count
+			return rawsql(['name','count'],
+			"""SELECT regexp_split_to_table(tags::text, ', *'::text), COUNT(*)
 				FROM blogs_blogarticle
 				WHERE author_id = %s
 				GROUP BY regexp_split_to_table(tags::text, ', *'::text)

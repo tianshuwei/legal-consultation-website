@@ -167,7 +167,7 @@ def recent_comments_mod_view(request, pk_lawyer):
 def tags_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	return response(request, 'blogs/tags.mod.html', lawyer=lawyer,
-		tags=lawyer.blogarticle_set.get_tags())
+		tags=BlogArticle.objects.get_tags(pk_lawyer))
 
 @login_required # [UnitTest]
 def categories_view(request):
