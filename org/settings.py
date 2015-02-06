@@ -30,6 +30,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 INSTALLED_APPS = (
+	'django_admin_bootstrapped.bootstrap3',
+	'django_admin_bootstrapped',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
@@ -59,11 +61,11 @@ WSGI_APPLICATION = 'org.wsgi.application'
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-cn'
 TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+# USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/

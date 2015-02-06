@@ -1,51 +1,5 @@
 from org.testingtools import *
-
-class FTest(FunctionalTestCase):
-	fixtures = [
-		'fixtures/accounts.json',
-		'fixtures/blogs.json',
-	]
-
-	@classmethod
-	def setUpClass(cls):
-		cls.selenium = WebDriver()
-		cls.selenium.maximize_window()
-		super(FTest, cls).setUpClass()
-
-	@classmethod
-	def tearDownClass(cls):
-		cls.selenium.quit()
-		super(FTest, cls).tearDownClass()
-
-	def test_new_article(self):
-		self.login('lawyer0')
-		self.nav("blogs:new_article")
-		transacserial=self.transacserial_from('#frmArticle')
-		self.find('#frmArticle [name="title"]').send_keys('New Article')
-		Select(self.find('#frmArticle [name="category"]')).select_by_index(1)
-		self.find('#frmArticle [name="tags"]').send_keys('test')
-		self.find('#frmArticle [name="text"]').send_keys('New Article Text')
-		self.find('#frmArticle [type="submit"]').click()
-		time.sleep(1)
-		self.assertTransaction(transacserial)
-
-	def test_edit_article(self):
-		self.login('lawyer0')
-		self.nav("blogs:edit_article", pk_text=5)
-		transacserial=self.transacserial_from('#frmArticle')
-		self.find('#frmArticle [name="text"]').send_keys('Edit Test')
-		self.find('#frmArticle [type="submit"]').click()
-		time.sleep(1)
-		self.assertTransaction(transacserial)
-
-	def test_new_comment(self):
-		self.login('lawyer0')
-		self.nav("blogs:text", pk_text=5)
-		transacserial=self.transacserial_from('#frmComment')
-		self.find('#frmComment [name="txt_comment"]').send_keys('Nice')
-		self.find('#frmComment [type="submit"]').click()
-		time.sleep(1)
-		self.assertTransaction(transacserial)
+# from blogs.optional_tests import FTest
 
 class CategoryTest(UnitTestCase):
 	fixtures = [
@@ -82,12 +36,17 @@ class CategoryTest(UnitTestCase):
 		self.assertTrue(self.post({
 		},'blogs:delete_category', pk_category=1))
 
-	def test_delete_category_not_exist_attempt(self):
+	def test_delete_category_that_doesnt_exist_attempt(self):
 		self.login('lawyer0')
 		self.assertFalse(self.post({
 		},'blogs:delete_category', pk_category=100))
 
 	def test_delete_category_unauthorized_attempt(self):
+		self.login('lawyer1')
+		self.assertFalse(self.post({
+		},'blogs:delete_category', pk_category=1))
+
+	def test_delete_category_unauthorized_attempt2(self):
 		self.login('client0')
 		self.assertFalse(self.post({
 		},'blogs:delete_category', pk_category=1))
@@ -98,17 +57,22 @@ class CategoryTest(UnitTestCase):
 			'name':'new name',
 		},'blogs:rename_category', pk_category=1))
 
-	def test_rename_category_not_exist_attempt(self):
+	def test_rename_category_that_doesnt_exist_attempt(self):
 		self.login('lawyer0')
 		self.assertFalse(self.post({
 			'name':'new name',
 		},'blogs:rename_category', pk_category=100))
 
 	def test_rename_category_unauthorized_attempt(self):
-		self.login('client0')
+		self.login('lawyer1')
 		self.assertFalse(self.post({
 			'name':'new name',
 		},'blogs:rename_category', pk_category=1))
+
+	def test_delete_category_unauthorized_attempt2(self):
+		self.login('client0')
+		self.assertFalse(self.post({
+		},'blogs:delete_category', pk_category=1))
 
 class CommentTest(UnitTestCase):
 	fixtures = [
@@ -131,8 +95,102 @@ class CommentTest(UnitTestCase):
 			'txt_comment':'Nice',
 		},'blogs:new_comment',pk_text=5))
 
-	def test_new_comment_on_article_not_exist(self):
+	def test_new_comment_on_article_that_doesnt_exist_attempt(self):
 		self.login('lawyer0')
 		self.assertFalse(self.post({
 			'txt_comment':'Nice',
 		},'blogs:new_comment',pk_text=500))
+
+class ArticleTest(UnitTestCase):
+	fixtures = [
+		'fixtures/accounts.json',
+		'fixtures/blogs.json',
+	]
+
+	sample_text="""Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
+	Atomus, appellat dedocendi omnes quoddam atomos."""
+
+	def setUp(self):
+		self.client = Client()
+
+	def test_new_article(self):
+		self.login('lawyer0')
+		self.assertTrue(self.post({
+			'title': 'New Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:new_article'))
+
+	def test_new_article_by_client_attempt(self):
+		self.login('client0')
+		self.assertFalse(self.post({
+			'title': 'New Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:new_article'))
+
+	def test_new_article_in_category_that_doesnt_exist_attempt(self):
+		self.login('lawyer0')
+		self.assertFalse(self.post({
+			'title': 'New Article',
+			'category': 100,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:new_article'))
+
+	def test_edit_article(self):
+		self.login('lawyer0')
+		self.assertTrue(self.post({
+			'title': 'Edit Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:edit_article', pk_text=5))
+
+	def test_edit_article_unauthorized_attempt(self):
+		self.login('lawyer1')
+		self.assertFalse(self.post({
+			'title': 'Edit Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:edit_article', pk_text=5))
+
+	def test_edit_article_unauthorized_attempt2(self):
+		self.login('client1')
+		self.assertFalse(self.post({
+			'title': 'Edit Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:edit_article', pk_text=5))
+
+	def test_delete_article(self):
+		self.login('lawyer0')
+		self.assertTrue(self.post({
+			'title': 'Edit Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:edit_article', pk_text=5))
+
+	def test_delete_article_unauthorized_attempt(self):
+		self.login('lawyer1')
+		self.assertFalse(self.post({
+			'title': 'Edit Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:edit_article', pk_text=5))
+
+	def test_delete_article_unauthorized_attempt2(self):
+		self.login('client1')
+		self.assertFalse(self.post({
+			'title': 'Edit Article',
+			'category': 1,
+			'tags': 'test',
+			'text': ArticleTest.sample_text
+		},'blogs:edit_article', pk_text=5))
+

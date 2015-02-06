@@ -1,4 +1,4 @@
-{% extends 'blogs/blog_base.html' %}
+{% extends 'blogs/base.html' %}
 {% load tagtools %}
 {% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
 
@@ -11,10 +11,7 @@
     breadcrumb("{{ article.category.name }}","{% url 'blogs:index_category' article.category.id %}");
     breadcrumb("{{ article.title }} - 正文","#");
 {% with lawyer=article.author %}
-    $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
-    $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}");
-    $load("tags_cloud","{% url 'blogs:tags_mod' lawyer.id %}");
-    search_action("{% url 'blogs:search' lawyer.id %}");
+    {% include 'blogs/common_mods.js' %}
 {% endwith %}
   });
 </script>

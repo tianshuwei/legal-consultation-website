@@ -5,7 +5,7 @@
 <table>
 	{% for lawyer in lawyers %}
 	<tr>
-		<td><a href="{% url 'accounts:profile' 'l' lawyer.id %}">{{ lawyer }}</a></td>
+		<td><a href="{% url 'accounts:profile' lawyer.user.id %}">{{ lawyer }}</a></td>
 		<td><a href="{% url 'blogs:index' lawyer.id %}">博客</a></td>
 		<td><a href="{% url 'accounts:remark' lawyer.id %}">评价</a></td>
 	</tr>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.core.paginator import Paginator, EmptyPage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.shortcuts import render
@@ -141,6 +141,10 @@ def checkf(exp, default=None):
 	try: return exp()
 	except: return default
 
+def or404(exp):
+	try: return exp()
+	except: raise Http404
+
 def paginated(pagenumf, items_per_page, dataset):
 	"""
 	结果集分页
@@ -182,7 +186,6 @@ for funcname in __messages_override:
 			return __messages[funcname](request,message)
 	setattr(messages,funcname,foo)
 
-from django.http import Http404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required

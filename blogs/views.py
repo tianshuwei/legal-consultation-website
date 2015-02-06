@@ -14,23 +14,23 @@ class ArticleForm(forms.ModelForm):
 			'text' : u'正文',
 		}
 
-@login_required
+@login_required # [UnitTest]
 def delete_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if request.method=='POST':
 		rec=recorded(request,'blogs:delete_article')
 		if checkf(lambda: request.user.lawyer==article.author):
 			article.remove()
-			messages.success(request, u'文章删除成功')
+			messages.success(request, u'文章删除成功') # [UnitTest]
 			rec.success(u'{0} 删除文章 {1} 成功'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': True }, 'blogs:index', pk_lawyer=article.author.id)
 		else:
-			messages.error(request, u'文章删除失败')
+			messages.error(request, u'文章删除失败') # [UnitTest]
 			rec.error(u'{0} 删除文章 {1} 失败'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': False }, 'blogs:index', pk_lawyer=article.author.id)
 	else: raise Http404
 
-@login_required # [LiveTest]
+@login_required # [LiveTest] [UnitTest]
 def edit_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if request.method=='POST': 
@@ -38,10 +38,10 @@ def edit_article_view(request, pk_text):
 		if checkf(lambda: request.user.lawyer==article.author):
 			form=ArticleForm(request.POST, instance=article)
 			form.save()
-			messages.success(request, u'文章编辑成功')
-			rec.success(u'{0} 编辑文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
+			messages.success(request, u'文章编辑成功') # [LiveTest] [UnitTest]
+			rec.success(u'{0} 编辑文章 {1} 成功'.format(request.user.username, article.title))
 		else:
-			messages.error(request, u'文章编辑失败')
+			messages.error(request, u'文章编辑失败') # [UnitTest]
 			rec.error(u'{0} 编辑文章 {1} 失败'.format(request.user.username, article.title))
 		return redirect('blogs:index', pk_lawyer=article.author.id)
 	else: 
@@ -49,31 +49,33 @@ def edit_article_view(request, pk_text):
 			article_edit=ArticleForm(instance=article),
 			article=article)	
 
-@login_required # [LiveTest]
+@login_required # [LiveTest] [UnitTest]
 def new_article_view(request):
-	if request.method=='POST': # [LiveTest]
+	if request.method=='POST':
 		rec=recorded(request,'blogs:new_article')
 		try:
-			article=BlogArticle.objects.create(
-				author=request.user.lawyer,
-				title=request.POST['title'],
-				category=BlogCategory.objects.get(id=request.POST['category']),
-				tags=request.POST['tags'],
-				text=request.POST['text']
-			)
-			article.save()
+			with transaction.atomic():
+				article=BlogArticle.objects.create(
+					author=request.user.lawyer,
+					title=request.POST['title'],
+					category=BlogCategory.objects.get(id=request.POST['category']),
+					publish_date=datetime.now(),
+					tags=request.POST['tags'],
+					text=request.POST['text']
+				)
+				article.save()
 		except BlogCategory.DoesNotExist, e: 
-			messages.error(request, u'该分类不存在')
+			messages.error(request, u'该分类不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
 		except ObjectDoesNotExist, e: 
-			messages.error(request, u'该律师不存在')
+			messages.error(request, u'该律师不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
 			return redirect('index:index')
-		except: 
+		except: # Untestable! 
 			messages.error(request, u'文章创建失败')
 			rec.error(u'{0} 创建文章失败'.format(request.user.username))
 		else: 
-			messages.success(request, u'文章创建成功')
+			messages.success(request, u'文章创建成功') # [LiveTest] [UnitTest]
 			rec.success(u'{0} 创建文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
 		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	else: 
@@ -94,10 +96,17 @@ def categories_mod_view(request, pk_lawyer):
 		is_master=checkf(lambda: request.GET['e']=='True'),
 		categories=lawyer.blogcategory_set.get_public_categories())
 
-def index_view(request, pk_lawyer):
+def favourite_posts_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	return response(request, 'blogs/favourite_posts.mod.html',
+		articles=lawyer.blogarticle_set.get_favourite_articles())
+
+chez = lambda pk_lawyer: \
+	(get_object_or_404(Lawyer, pk=pk_lawyer), 
+	or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer)))
+
+def index_view(request, pk_lawyer):
+	lawyer, blogsettings=chez(pk_lawyer)
 	return response(request, 'blogs/index.html', lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
@@ -105,32 +114,34 @@ def index_view(request, pk_lawyer):
 
 def index_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=category.lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	blogsettings=or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer))
 	return response(request, 'blogs/index_category.html', category=category,
 		is_master=checkf(lambda: request.user.lawyer==category.lawyer),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			category.blogarticle_set.get_public_articles()))
 
 def index_tag_view(request, pk_lawyer, tag):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	lawyer, blogsettings=chez(pk_lawyer)
 	return response(request, 'blogs/index_tag.html', lawyer=lawyer, tag=tag,
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_public_articles_tagged(tag)))
 
-def search_view(request, pk_lawyer):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
-	if 'q' not in request.GET: raise Http404
-	else: query=request.GET['q']
+def index_archive_view(request, pk_lawyer, year, month):
+	lawyer, blogsettings=chez(pk_lawyer)
+	return response(request, 'blogs/index_archive.html', lawyer=lawyer, 
+		publish_date=datetime(int(year), int(month), 1),
+		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
+			lawyer.blogarticle_set.get_archived_articles(year, month)))
+
+def search_view(request, pk_lawyer, query=None):
+	lawyer, blogsettings=chez(pk_lawyer)
+	if query==None: query=or404(lambda: request.GET['q'])
 	return response(request, 'blogs/search.html', lawyer=lawyer, query=query, 
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, lawyer.blogarticle_set.search(query)))
 
 def detail_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
+	article.touch()
 	return response(request, 'blogs/detail.html', article=article,
 		is_master=checkf(lambda: request.user.lawyer==article.author),
 		comments=article.blogcomment_set.order_by('-publish_date'))
@@ -161,7 +172,12 @@ def recent_comments_mod_view(request, pk_lawyer):
 def tags_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	return response(request, 'blogs/tags.mod.html', lawyer=lawyer,
-		tags=lawyer.blogarticle_set.get_tags())
+		tags=BlogArticle.objects.get_tags(pk_lawyer))
+
+def archives_mod_view(request, pk_lawyer):
+	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
+	return response(request, 'blogs/archives.mod.html', lawyer=lawyer,
+		archives=BlogArticle.objects.get_archives(pk_lawyer))
 
 @login_required # [UnitTest]
 def categories_view(request):
@@ -178,7 +194,7 @@ def categories_view(request):
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-		except: # [UnitTest]
+		except: # Could be violation of integrity [UnitTest]
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')

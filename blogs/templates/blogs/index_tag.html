@@ -1,5 +1,4 @@
-{% extends 'blogs/blog_base.html' %}
-{% load tagtools %}
+{% extends 'blogs/base.html' %}
 {% block title %}律师博客 - {{ lawyer.user.username }} {% endblock %}
 {% block headextra %}
 {{ block.super }}
@@ -8,43 +7,7 @@
     page_title("标签 - {{ tag }}");
     breadcrumb("主页","{% url 'blogs:index' lawyer.id %}");
     breadcrumb("标签 - {{ tag }}","#");
-    $load("all_cats","{% url 'blogs:categories_mod' lawyer.id %}?e={{is_master}}");
-    $load("recent_comments","{% url 'blogs:recent_comments_mod' lawyer.id %}");
-    $load("tags_cloud","{% url 'blogs:tags_mod' lawyer.id %}");
+    {% include 'blogs/common_mods.js' %}
   });
 </script>
-{% endblock %}
-
-{% block contexts %}
-<div class="list-group animated fadeInLeft animation-delay-8">
-    {% for article in articles %}
-    <a class="list-group-item" href="{% url 'blogs:text' article.id %}">{{ article.title }}</a>
-    {% empty %}
-    <h4>目前没有文章。</h4>
-    {% endfor %}
-</div>
-
-<section>
-    <ul class="pagination animated fadeInLeft animation-delay-8">
-         {% if articles.has_previous %}
-         <li><a href="?{% query_assign request 'page' articles.previous_page_number %}">«</a></li>
-         {% else %}
-         <li class="disabled"><a href="#">«</a></li>
-         {% endif %}
-
-        {% for i in articles.page_range %}
-        {% if i == articles.number %}
-        <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
-        {% else %}
-        <li><a href="?{% query_assign request 'page' i %}">{{ i }}</a></li>
-        {% endif %}
-        {% endfor %}
-
-        {% if articles.has_next %}
-         <li><a href="?{% query_assign request 'page' articles.next_page_number %}">»</a></li>
-         {% else %}
-         <li class="disabled"><a href="#">»</a></li>
-         {% endif %}
-    </ul>
-</section>
 {% endblock %}

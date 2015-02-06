@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head><title>org.docxrenderer test</title></head>
+<body>
+<h1>org.docxrenderer 演示</h1>
+<form enctype="multipart/form-data" method="post">
+	<div>1.上传Word（docx）文件作为模板，模板变量形式：@+varname/</div>{% csrf_token %}
+	<div><input name="docxtemplate" type="file" accept=".docx" /></div>
+	<div style="margin-top:20px;">2.选择测试项目</div>
+	<div><select name="test">
+		<option value="scan">扫描变量</option>
+		<option value="render">默认内容渲染</option>
+	</select></div>
+	<div style="margin-top:20px;"><input type="submit" value="运行测试" /></div>
+</form>
+{% if variables %}
+<hr/>
+<table>
+<thead><th>变量</th><th>计数</th></thead>
+<tbody>
+{% for var in variables %}
+<tr><td>{{var.name}}</td><td>{{var.count}}</td></tr>
+{% endfor %}
+</tbody></table>
+{% endif %}
+</body>
+</html>
