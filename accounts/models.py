@@ -36,6 +36,13 @@ class Client(models.Model):
 		if self.points<=0: return -1
 		self.points-=1
 		self.save()
+		return 1
+	@transaction.atomic
+	def minus_balance(self,count): 
+		if self.balance<count: return -1
+		self.balance-=count
+		self.save()
+		return 1
 
 
 class LawyerManager(models.Manager):

@@ -16,18 +16,33 @@ Product detail -- {{ product.name }}
             <script type="text/javascript">
 			function new_order()
 			{
-				if(confirm("确认订购"))
-				{
-					  $.post("{% url 'products:new_order' product.id %}",
-						  {
-							text:"", 
-							csrfmiddlewaretoken:$.cookie('csrftoken')
-						  },
-						  function(data,status){
-                            alert(data.success);
-							window.location.reload();
-						  });
-				}
+				showModal(
+                    "确认订购",
+                    "{% csrf_token %}"+
+                    '<select name="lawyer_id">'+
+                    {% for lawyer in lawyers %}
+                    '<option value="{{lawyer.id}}">{{lawyer.user.username}}</option>'+
+                    {% endfor %}
+                    '</select>'+
+                    '备注：<input name="text" placeholder="无">',
+                    ["取消","$确定"],
+                    function (r) {
+                        if(typeof r=="object"){ 
+                            $.post(
+                                "{% url 'products:new_order' product.id %}",
+                                {
+                                    lawyer_id:r.lawyer_id,
+                                    text:r.text,
+                                    csrfmiddlewaretoken:$.cookie('csrftoken')
+                                },
+                                function(data,status){
+                                    alert(data.success);
+                                    window.location.reload();
+                                }
+                            );
+                        }
+                    }
+                );
 			}
 			</script>
 			{% endif %}
