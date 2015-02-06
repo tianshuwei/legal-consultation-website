@@ -14,23 +14,23 @@ class ArticleForm(forms.ModelForm):
 			'text' : u'正文',
 		}
 
-@login_required
+@login_required # [UnitTest]
 def delete_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if request.method=='POST':
 		rec=recorded(request,'blogs:delete_article')
 		if checkf(lambda: request.user.lawyer==article.author):
 			article.remove()
-			messages.success(request, u'文章删除成功')
+			messages.success(request, u'文章删除成功') # [UnitTest]
 			rec.success(u'{0} 删除文章 {1} 成功'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': True }, 'blogs:index', pk_lawyer=article.author.id)
 		else:
-			messages.error(request, u'文章删除失败')
+			messages.error(request, u'文章删除失败') # [UnitTest]
 			rec.error(u'{0} 删除文章 {1} 失败'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': False }, 'blogs:index', pk_lawyer=article.author.id)
 	else: raise Http404
 
-@login_required # [LiveTest]
+@login_required # [LiveTest] [UnitTest]
 def edit_article_view(request, pk_text):
 	article=get_object_or_404(BlogArticle, pk=pk_text)
 	if request.method=='POST': 
@@ -38,10 +38,10 @@ def edit_article_view(request, pk_text):
 		if checkf(lambda: request.user.lawyer==article.author):
 			form=ArticleForm(request.POST, instance=article)
 			form.save()
-			messages.success(request, u'文章编辑成功')
-			rec.success(u'{0} 编辑文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
+			messages.success(request, u'文章编辑成功') # [LiveTest] [UnitTest]
+			rec.success(u'{0} 编辑文章 {1} 成功'.format(request.user.username, article.title))
 		else:
-			messages.error(request, u'文章编辑失败')
+			messages.error(request, u'文章编辑失败') # [UnitTest]
 			rec.error(u'{0} 编辑文章 {1} 失败'.format(request.user.username, article.title))
 		return redirect('blogs:index', pk_lawyer=article.author.id)
 	else: 
@@ -49,31 +49,33 @@ def edit_article_view(request, pk_text):
 			article_edit=ArticleForm(instance=article),
 			article=article)	
 
-@login_required # [LiveTest]
+@login_required # [LiveTest] [UnitTest]
 def new_article_view(request):
-	if request.method=='POST': # [LiveTest]
+	if request.method=='POST':
 		rec=recorded(request,'blogs:new_article')
 		try:
-			article=BlogArticle.objects.create(
-				author=request.user.lawyer,
-				title=request.POST['title'],
-				category=BlogCategory.objects.get(id=request.POST['category']),
-				tags=request.POST['tags'],
-				text=request.POST['text']
-			)
-			article.save()
+			with transaction.atomic():
+				article=BlogArticle.objects.create(
+					author=request.user.lawyer,
+					title=request.POST['title'],
+					category=BlogCategory.objects.get(id=request.POST['category']),
+					publish_date=datetime.now(),
+					tags=request.POST['tags'],
+					text=request.POST['text']
+				)
+				article.save()
 		except BlogCategory.DoesNotExist, e: 
-			messages.error(request, u'该分类不存在')
+			messages.error(request, u'该分类不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
 		except ObjectDoesNotExist, e: 
-			messages.error(request, u'该律师不存在')
+			messages.error(request, u'该律师不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
 			return redirect('index:index')
-		except: 
+		except: # Untestable! 
 			messages.error(request, u'文章创建失败')
 			rec.error(u'{0} 创建文章失败'.format(request.user.username))
 		else: 
-			messages.success(request, u'文章创建成功')
+			messages.success(request, u'文章创建成功') # [LiveTest] [UnitTest]
 			rec.success(u'{0} 创建文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
 		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
 	else: 
@@ -192,7 +194,7 @@ def categories_view(request):
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-		except: # [UnitTest]
+		except: # Could be violation of integrity [UnitTest]
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
