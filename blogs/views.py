@@ -131,10 +131,9 @@ def index_archive_view(request, pk_lawyer, year, month):
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_archived_articles(year, month)))
 
-def search_view(request, pk_lawyer):
+def search_view(request, pk_lawyer, query=None):
 	lawyer, blogsettings=chez(pk_lawyer)
-	if 'q' not in request.GET: raise Http404
-	else: query=request.GET['q']
+	if query==None: query=or404(lambda: request.GET['q'])
 	return response(request, 'blogs/search.html', lawyer=lawyer, query=query, 
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, lawyer.blogarticle_set.search(query)))
 
