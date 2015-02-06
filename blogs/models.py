@@ -15,11 +15,11 @@ class BlogCategoryManager(models.Manager):
 		return self.filter(state__lte=0).annotate(articles_count=models.Count('blogarticle')).order_by('name')
 
 	def get_default_category(self, lawyer):
-		default_category, created=BlogCategory.objects.get_or_create(lawyer=lawyer,name=u"默认")
+		r, created=BlogCategory.objects.get_or_create(lawyer=lawyer,name=u"默认")
 		if created: 
-			default_category.state=-1
-			default_category.save()
-		return default_category
+			r.state=-1
+			r.save()
+		return r
 
 class BlogCategory(models.Model):
 	lawyer = models.ForeignKey("accounts.Lawyer")
@@ -179,10 +179,18 @@ class BlogComment(models.Model):
 	def __unicode__(self):
 		return self.text[:20]
 
+class BlogSettingsManager(models.Manager):
+	def get_blogsettings(self, pk_lawyer):
+		r, created=self.get_or_create(lawyer__id=pk_lawyer)
+		if r.state==1: raise Exception('Blog disabled')
+		return r
+
 class BlogSettings(models.Model):
 	lawyer=models.OneToOneField("accounts.Lawyer")
-	state=models.IntegerField(default=0)
+	state=models.IntegerField(default=0) # 0=PUBLIC 1=DISABLE
 	items_per_page=models.IntegerField(default=15)
+
+	objects=BlogSettingsManager()
 
 	def __unicode__(self):
 		return self.lawyer.user.username

@@ -99,10 +99,12 @@ def favourite_posts_mod_view(request, pk_lawyer):
 	return response(request, 'blogs/favourite_posts.mod.html',
 		articles=lawyer.blogarticle_set.get_favourite_articles())
 
+chez = lambda pk_lawyer: \
+	(get_object_or_404(Lawyer, pk=pk_lawyer), 
+	or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer)))
+
 def index_view(request, pk_lawyer):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	lawyer, blogsettings=chez(pk_lawyer)
 	return response(request, 'blogs/index.html', lawyer=lawyer,
 		is_master=checkf(lambda: request.user.lawyer==lawyer),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
@@ -110,34 +112,27 @@ def index_view(request, pk_lawyer):
 
 def index_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=category.lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	blogsettings=or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer))
 	return response(request, 'blogs/index_category.html', category=category,
 		is_master=checkf(lambda: request.user.lawyer==category.lawyer),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			category.blogarticle_set.get_public_articles()))
 
 def index_tag_view(request, pk_lawyer, tag):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	lawyer, blogsettings=chez(pk_lawyer)
 	return response(request, 'blogs/index_tag.html', lawyer=lawyer, tag=tag,
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_public_articles_tagged(tag)))
 
 def index_archive_view(request, pk_lawyer, year, month):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	lawyer, blogsettings=chez(pk_lawyer)
 	return response(request, 'blogs/index_archive.html', lawyer=lawyer, 
 		publish_date=datetime(int(year), int(month), 1),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
 			lawyer.blogarticle_set.get_archived_articles(year, month)))
 
 def search_view(request, pk_lawyer):
-	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
-	blogsettings, created=BlogSettings.objects.get_or_create(lawyer=lawyer)
-	if blogsettings.state==1: raise Http404 # Blog disabled
+	lawyer, blogsettings=chez(pk_lawyer)
 	if 'q' not in request.GET: raise Http404
 	else: query=request.GET['q']
 	return response(request, 'blogs/search.html', lawyer=lawyer, query=query, 
