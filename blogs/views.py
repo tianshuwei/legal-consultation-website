@@ -132,7 +132,7 @@ def index_archive_view(request, pk_lawyer, year, month):
 	return response(request, 'blogs/index_archive.html', lawyer=lawyer, 
 		publish_date=datetime(int(year), int(month), 1),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
-			lawyer.blogarticle_set.get_public_articles_tagged('test')))
+			lawyer.blogarticle_set.get_archived_articles(year, month)))
 
 def search_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
@@ -181,7 +181,7 @@ def tags_mod_view(request, pk_lawyer):
 def archives_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
 	return response(request, 'blogs/archives.mod.html', lawyer=lawyer,
-		archives=BlogArticle.objects.get_archived_articles(pk_lawyer))
+		archives=BlogArticle.objects.get_archives(pk_lawyer))
 
 @login_required # [UnitTest]
 def categories_view(request):

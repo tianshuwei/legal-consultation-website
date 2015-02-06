@@ -53,7 +53,10 @@ class BlogArticleManager(models.Manager):
 	def get_favourite_articles(self):
 		return self.filter(category__isnull=False).order_by('-clicks')[:6]
 
-	def get_archived_articles(self, pk_lawyer=None):
+	def get_archived_articles(self, year, month):
+		return self.filter(publish_date__year=year, publish_date__month=month).order_by('-publish_date')
+
+	def get_archives(self, pk_lawyer=None):
 		def compatible_way(dataset):
 			z = [datetime(article.publish_date.year,article.publish_date.month,1) for article in dataset]
 			return [{'publish_date': d, 'count': z.count(d)} for d in reversed(sorted(set(z)))]
