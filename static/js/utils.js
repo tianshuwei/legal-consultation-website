@@ -177,6 +177,6 @@ function test_prompt () {
 	li元素id命名规则 "#nav_li_"+suffix
 */
 function select_nav (suffix) {
-	$("#nav_ul>li").removeClass("active"); 
+	// $("#nav_ul>li").removeClass("active"); 
 	$("#nav_li_"+suffix).addClass("active");
 }
