@@ -13,7 +13,7 @@ class RegisterForm(forms.Form):
 	password = forms.CharField(label="密码", widget=forms.PasswordInput)
 	password_confirm = forms.CharField(label="密码确认", widget=forms.PasswordInput)
 
-def login_view(request):
+def login_view(request): # [UnitTest]
 	if request.method=='POST':
 		username,password = request.POST['username'],request.POST['password']
 		next_url = request.GET['next'] if 'next' in request.GET else reverse('index:index')
@@ -21,10 +21,10 @@ def login_view(request):
 		rec=recorded(request,'login')
 		if user is not None:
 			login(request, user)
-			rec.success(u'{0}登入成功'.format(username))
+			rec.success(u'{0}登入成功'.format(username))  # [UnitTest]
 			return HttpResponseRedirect(next_url)
 		else: 
-			rec.error(u'{0}登入失败'.format(username))
+			rec.error(u'{0}登入失败'.format(username))  # [UnitTest]
 			return HttpResponseRedirect(next_url)
 	else:  return response(request, 'accounts/login.html')
 
@@ -32,8 +32,9 @@ def logout_view(request):
 	logout(request)
 	return redirect('index:index')
 
-def register_view(request, role):
+def register_view(request, role): # [UnitTest]
 	if request.method=='POST':
+		rec=recorded(request,'accounts:register')
 		try:
 			username,profile=request.POST['username'],dict(
 				password=request.POST['password'],
@@ -45,8 +46,12 @@ def register_view(request, role):
 				Client.objects.register(username,**profile)
 			elif role=='lawyer': 
 				Lawyer.objects.register(username,**profile)
-		except: messages.success(request, u'注册失败')
-		else: messages.success(request, u'注册成功')
+		except: 
+			messages.error(request, u'注册失败') # [UnitTest]
+			rec.error(u'{0}注册失败'.format(username))
+		else: 
+			messages.success(request, u'注册成功')
+			rec.success(u'{0}注册成功'.format(username)) # [UnitTest]
 		return redirect('accounts:login')
 	else: return response(request, 'accounts/register.html', register_form=RegisterForm())
 
