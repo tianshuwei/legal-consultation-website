@@ -15,7 +15,7 @@
             <li id="nav_li_LawyerList"><a href="{% url 'accounts:lawyerlist' %}">律师</a></li>
               {% if is_lawyer %}
               <li id="nav_li_Blog">
-              <a href="{% url 'blogs:home' %}" >blogs</a></li>
+              <a href="{% url 'blogs:home' %}" >博客</a></li>
               {% endif %}
           </ul>
     {% if user.is_authenticated %}

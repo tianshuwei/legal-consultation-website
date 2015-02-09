@@ -14,6 +14,21 @@
     {% include 'blogs/common_mods.js' %}
 {% endwith %}
   });
+
+  function delete_article () {
+    Dialogue.confirm_danger("确定删除这篇文章吗？","删除文章",function (r) {
+      // {% url 'blogs:delete_article' article.id %}
+      if(r=='确定'){
+        $.post("{% url 'blogs:delete_article' article.id %}",
+        $fetch("#frmDel"),
+        function(data,status) {
+          if(status=="success"){
+            window.location.href="{% url 'blogs:index' article.author.id %}";
+          }
+        });
+      }
+    });
+  }
 </script>
 {% endblock %}
 
@@ -22,8 +37,8 @@
     <h2 class="page-header no-margin-top">{{ article.title }}
     {% if is_master %}
     <small>
-    	<a href="{% url 'blogs:edit_article' article.id %}" class="btn"><i class="fa fa-gear"></i>&nbsp;&nbsp;edit</a>
-		<a href="{% url 'blogs:delete_article' article.id %}" class="btn em-danger"><i class="fa fa-remove"></i>&nbsp;&nbsp;delete</a>
+    	<a href="{% url 'blogs:edit_article' article.id %}" class="btn"><i class="fa fa-gear"></i>&nbsp;&nbsp;编辑</a>
+		<a onclick="delete_article()" class="btn em-danger"><i class="fa fa-remove"></i>&nbsp;&nbsp;删除</a><form id="frmDel">{%csrf_token%}{{'blogs:delete_article'|transacserial }}</form>
     </small>
 	{% endif %}
 	</h2>

@@ -170,27 +170,15 @@ class ArticleTest(UnitTestCase):
 	def test_delete_article(self):
 		self.login('lawyer0')
 		self.assertTrue(self.post({
-			'title': 'Edit Article',
-			'category': 1,
-			'tags': 'test',
-			'text': ArticleTest.sample_text
-		},'blogs:edit_article', pk_text=5))
+		},'blogs:delete_article', pk_text=5))
 
 	def test_delete_article_unauthorized_attempt(self):
 		self.login('lawyer1')
 		self.assertFalse(self.post({
-			'title': 'Edit Article',
-			'category': 1,
-			'tags': 'test',
-			'text': ArticleTest.sample_text
-		},'blogs:edit_article', pk_text=5))
+		},'blogs:delete_article', pk_text=5))
 
 	def test_delete_article_unauthorized_attempt2(self):
 		self.login('client1')
 		self.assertFalse(self.post({
-			'title': 'Edit Article',
-			'category': 1,
-			'tags': 'test',
-			'text': ArticleTest.sample_text
-		},'blogs:edit_article', pk_text=5))
+		},'blogs:delete_article', pk_text=5))
 
