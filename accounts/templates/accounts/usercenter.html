@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
-
-{% block title %}
-{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}
+{% block title %}{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}{% endblock %}
+{% block headextra %}
+<script type="text/javascript">
+  $(function () {
+    select_nav("UserCenter");
+  });
+</script>
 {% endblock %}
 {% block head %}
 <header class="main-header">

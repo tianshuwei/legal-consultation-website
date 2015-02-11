@@ -2,8 +2,8 @@
 {% block title %}订单{% endblock %}
 {% block main %}
 <h1>订单</h1>
-<div>客户 <a href="{% url 'accounts:profile' 'c' order.client.id %}">{{ order.client.user.username }}</a></div>
-<div>律师 <a href="{% url 'accounts:profile' 'l' order.lawyer.id %}">{{ order.lawyer.user.username }}</a></div>
+<div>客户 <a href="{% url 'accounts:profile' order.client.user.id %}">{{ order.client.user.username }}</a></div>
+<div>律师 <a href="{% url 'accounts:profile' order.lawyer.user.id %}">{{ order.lawyer.user.username }}</a></div>
 <div>产品 <a href="{% url 'products:detail' order.product.id %}">{{ order.product.name }}</a></div>
 <div>日期 {{ order.publish_date }}</div>
 <div>状态 {{ order.state }}</div>

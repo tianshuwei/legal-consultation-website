@@ -13,7 +13,7 @@ class RegisterForm(forms.Form):
 	password = forms.CharField(label="密码", widget=forms.PasswordInput)
 	password_confirm = forms.CharField(label="密码确认", widget=forms.PasswordInput)
 
-def login_view(request):
+def login_view(request): # [UnitTest]
 	if request.method=='POST':
 		username,password = request.POST['username'],request.POST['password']
 		next_url = request.GET['next'] if 'next' in request.GET else reverse('index:index')
@@ -21,10 +21,10 @@ def login_view(request):
 		rec=recorded(request,'login')
 		if user is not None:
 			login(request, user)
-			rec.success(u'{0}登入成功'.format(username))
+			rec.success(u'{0}登入成功'.format(username))  # [UnitTest]
 			return HttpResponseRedirect(next_url)
 		else: 
-			rec.error(u'{0}登入失败'.format(username))
+			rec.error(u'{0}登入失败'.format(username))  # [UnitTest]
 			return HttpResponseRedirect(next_url)
 	else:  return response(request, 'accounts/login.html')
 
@@ -32,8 +32,9 @@ def logout_view(request):
 	logout(request)
 	return redirect('index:index')
 
-def register_view(request, role):
+def register_view(request, role): # [UnitTest]
 	if request.method=='POST':
+		rec=recorded(request,'accounts:register')
 		try:
 			username,profile=request.POST['username'],dict(
 				password=request.POST['password'],
@@ -45,8 +46,12 @@ def register_view(request, role):
 				Client.objects.register(username,**profile)
 			elif role=='lawyer': 
 				Lawyer.objects.register(username,**profile)
-		except: messages.success(request, u'注册失败')
-		else: messages.success(request, u'注册成功')
+		except: 
+			messages.error(request, u'注册失败') # [UnitTest]
+			rec.error(u'{0}注册失败'.format(username))
+		else: 
+			messages.success(request, u'注册成功')
+			rec.success(u'{0}注册成功'.format(username)) # [UnitTest]
 		return redirect('accounts:login')
 	else: return response(request, 'accounts/register.html', register_form=RegisterForm())
 
@@ -57,11 +62,13 @@ def lawyerlist_view(request):
 @login_required
 def usercenter_view(request):
 	u = get_role(request.user)
-	return response(request, 'accounts/usercenter.html',
-		orders=paginated(lambda: request.GET.get('po'), 10, 
-			u.order_set.order_by('-publish_date')),
-		questions=paginated(lambda: request.GET.get('pq'), 10, 
-			u.question_set.order_by('-publish_date')))
+	if type(u) is Client or type(u) is Lawyer:
+		return response(request, 'accounts/usercenter.html',
+			orders=paginated(lambda: request.GET.get('po'), 10, 
+				u.order_set.order_by('-publish_date')),
+			questions=paginated(lambda: request.GET.get('pq'), 10, 
+				u.question_set.order_by('-publish_date')))
+	else: raise Http404
 
 class ProfileEditForm(forms.ModelForm):
 	class Meta:
@@ -81,11 +88,12 @@ def profile_self_view(request):
 		is_master=True,
 		profile_edit=ProfileEditForm(instance=request.user))
 
-def profile_view(request, role, pk):
-	if role=='c': u = get_object_or_404(Client,pk=pk)
-	elif role=='l': u = get_object_or_404(Lawyer,pk=pk)
+def profile_view(request, pk_user):
+	user = get_object_or_404(User, pk=pk_user)
+	u = get_role(user)
+	if type(u) is Client or type(u) is Lawyer:
+		return response(request, 'accounts/profile.html', role=u)
 	else: raise Http404
-	return response(request, 'accounts/profile.html', role=u)
 
 @login_required
 def question_view(request, pk_question):
@@ -179,6 +187,8 @@ def new_question_view(request):
 				description=request.POST['description']
 			)
 			qu.save()
+			cl=get_object_or_404(Client,pk=request.user.client.id)
+			cl.minus_points()
 		except ObjectDoesNotExist,e: raise Http404
 		except : messages.error(request, u'问题创建失败')
 		else: messages.success(request, u'问题创建成功')
@@ -193,3 +203,11 @@ def new_question_text_view(request, pk_question):
 	q_text = Question_text.objects.create(text=request.POST['txt_question'], user_flag=1 if get_role(request.user).is_client else 0, question=q)
 	q_text.save()
 	return redirect('accounts:question', pk_question=q.id)
+
+@login_required
+def question_satisfied(request, pk_question):
+	qu = get_object_or_404(Question, pk=pk_question)
+	qu.finish()
+	la = get_object_or_404(Lawyer, pk=qu.lawyer_id)
+	la.plus_score()
+	return redirect('accounts:question', pk_question=qu.id)

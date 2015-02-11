@@ -10,16 +10,13 @@
     </div>
   </div>
   <script type="text/javascript">
-    function append_button (button) { // closure: mod, callback
-      var primary=false, submit=false;
-      if(button.match(/^\*/)){ primary=true; button=button.slice(1); }
-      if(button.match(/^\$/)){ primary=true; submit=true; button=button.slice(1); }
+    function append_button (b) { // closure: mod, callback
       $(mod).find(".modal-footer").append('<button type="button" class="btn btn-ar" data-dismiss="modal"></button>');
       var btn=$(mod).find(".modal-footer button").last();
-      $(btn).addClass(primary?"btn-primary":"btn-default");
-      $(btn).text(button);
-      if(submit) $(btn).click(function(){ callback($fetch(mod)); });
-      else $(btn).click(function(){ callback(button); });
+      $(btn).addClass(b.style);
+      $(btn).text(b.text);
+      if(b.submit) $(btn).click(function(){ callback($fetch(mod)); });
+      else $(btn).click(function(){ callback(b.text); });
     }
   </script>
 </div>

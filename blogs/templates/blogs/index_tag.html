@@ -1,0 +1,13 @@
+{% extends 'blogs/base.html' %}
+{% block title %}律师博客 - {{ lawyer.user.username }} {% endblock %}
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    page_title("标签 - {{ tag }}");
+    breadcrumb("主页","{% url 'blogs:index' lawyer.id %}");
+    breadcrumb("标签 - {{ tag }}","#");
+    {% include 'blogs/common_mods.js' %}
+  });
+</script>
+{% endblock %}

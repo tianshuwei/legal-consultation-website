@@ -1,18 +1,21 @@
 {% extends "admin/index.html" %}
-{% load i18n %}
-
-{% block bodyclass %}{{ block.super }} app-{{ app_label }}{% endblock %}
+{% load i18n bootstrapped_goodies_tags %}
 
 {% if not is_popup %}
 {% block breadcrumbs %}
-<div class="breadcrumbs">
-<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-&rsaquo;
+<ul class="breadcrumb">
+<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
 {% for app in app_list %}
-{{ app.name }}
+<li>{% render_app_name app %}</li>
 {% endfor %}
-</div>
+</ul>
 {% endblock %}
 {% endif %}
+
+{% block content_title %}
+{% for app in app_list %}
+<a class="navbar-brand">{% render_app_name app %} {% trans "administration" %}</a>
+{% endfor %}
+{% endblock %}
 
 {% block sidebar %}{% endblock %}

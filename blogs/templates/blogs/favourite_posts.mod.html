@@ -1,0 +1,10 @@
+{% for article in articles %}
+<li class="media">
+    <a class="pull-left" href="#"><img class="media-object" src="../assets/img/demo/m2.jpg" width="80" height="80" alt="image"></a>
+    <div class="media-body">
+        <p class="media-heading"><a href="{% url 'blogs:text' article.id %}">z{{article.title}}</a></p>
+        <p>{{ article.text|truncatewords_html:60 }}</p>
+        <small>{{article.publish_date}}</small>
+    </div>
+</li>
+{% endfor %}

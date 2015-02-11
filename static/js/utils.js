@@ -107,19 +107,51 @@ get param in url
 	name 		查询串的名字
 */
 function getUrlParam(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
-    if (r != null) return unescape(r[2]); return null;
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+	var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+	if (r != null) return unescape(r[2]); return null;
 }
 
+/**
+创建一个描述按钮的对象
+
+	buttons 	描述按钮的字符串，例如"button"
+				默认按钮前标记"*"，例如"*OK"
+				提交表单按钮前标记"$"，例如"$Submit"
+				危险操作标记"!"，例如"!Delete"
+				需要其他样式标记"![0-9]"，感叹号后一位数字为样式下标，例如"!7Activate"
+				标记不能混合使用
+*/
+function mk_button (button) {
+	var style=0, s=false;
+	if(button.match(/^!\d/)){ style=button[1]; button=button.slice(2); }
+	else if(button.match(/^[*$!]/)){
+		switch(button[0]){
+			case "$": s=true;
+			case "*": style=1; break;
+			case "!": style=2; break;
+		}
+		button=button.slice(1);
+	}
+	return {
+		text: button,
+		style: [ // disclose available classes
+			"btn-default", "btn-primary", "btn-danger",
+			"btn-info", "btn-reverse", "btn-royal",
+			"btn-social", "btn-success", "btn-transparent",
+			"btn-warning"
+		][style],
+		submit: s
+	};
+}
 
 /**
 模态对话框，UI模板在 templates/mod/modal_dialogue.html
 
 	title 		标题
 	content 	内容(HTML)
-	buttons 	按钮数组，例如["*Yes","No"]，默认按钮前标记"*"，次序与渲染结果一致
-	callback 	回调函数，例如function(r){}，形参r代表用户点击的按钮（所显示的文字）
+	buttons 	按钮数组，例如["*Yes","No"]，默认按钮前标记"*"（参考），次序与渲染结果一致
+	callback 	回调函数，例如function(r){}，形参r代表用户点击的按钮（所显示的文字）或表单内容
 */
 function showModal (title, content, buttons, callback) {
 	$.get("/mod/modal_dialogue", function (template, status) {
@@ -128,7 +160,7 @@ function showModal (title, content, buttons, callback) {
 		$(mod).find('.modal-title').text(title);
 		$(mod).find('.modal-body').html(content);
 		eval($(mod).find('script').text()); // import append_button
-		for(var i=0;i<buttons.length;i++) append_button(buttons[i]);
+		for(var i=0;i<buttons.length;i++) append_button(mk_button(buttons[i]));
 		$(mod).modal('show');
 	});
 }
@@ -144,12 +176,14 @@ var Dialogue={
 	confirm: function(msg, title, callback){
 		showModal(title, msg, ["取消","*确定"], callback);
 	},
+	confirm_danger: function(msg, title, callback){
+		showModal(title, msg, ["取消","!确定"], callback);
+	},
 	prompt: function(msg, title, callback) {
 		showModal(title, 
-		'<div>'+msg+'</div><div><input name="user_input"/></div>', ["取消","$确定"],
-		function (r) {
-			if(typeof r=="object")callback(r.user_input);
-		});
+		'<div>'+msg+'</div><div><input name="user_input"/></div>', 
+		["取消","$确定"],
+		function (r) { if(typeof r=="object")callback(r.user_input); });
 	}
 }
 
@@ -177,6 +211,6 @@ function test_prompt () {
 	li元素id命名规则 "#nav_li_"+suffix
 */
 function select_nav (suffix) {
-	$("#nav_ul>li").removeClass("active"); 
+	// $("#nav_ul>li").removeClass("active"); 
 	$("#nav_li_"+suffix).addClass("active");
 }

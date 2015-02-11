@@ -29,9 +29,9 @@
 {% for order in orders %}
 	<tr>
 		{% if is_lawyer %}
-		<td><a href="{% url 'accounts:profile' 'c' order.client.id %}">{{ order.client.user.username }}</a></td>
+		<td><a href="{% url 'accounts:profile' order.client.user.id %}">{{ order.client.user.username }}</a></td>
 		{% elif is_client %}
-		<td><a href="{% url 'accounts:profile' 'l' order.lawyer.id %}">{{ order.lawyer.user.username }}</a></td>
+		<td><a href="{% url 'accounts:profile' order.lawyer.user.id %}">{{ order.lawyer.user.username }}</a></td>
 		{% endif %}
 		<td><a href="{% url 'products:detail' order.product.id %}">{{ order.product.name }}</a></td>
 		<td>{{ order.publish_date }}</td>
@@ -64,9 +64,9 @@
 {% for question in questions %}
 	<tr>
 		{% if is_lawyer %}
-		<td><a href="{% url 'accounts:profile' 'c' question.client.id %}">{{ question.client.user.username }}</a></td>
+		<td><a href="{% url 'accounts:profile' question.client.user.id %}">{{ question.client.user.username }}</a></td>
 		{% elif is_client %}
-		<td><a href="{% url 'accounts:profile' 'l' question.lawyer.id %}">{{ question.lawyer.user.username }}</a></td>
+		<td><a href="{% url 'accounts:profile' question.lawyer.user.id %}">{{ question.lawyer.user.username }}</a></td>
 		{% endif %}
 		<td><a href="{% url 'accounts:question' question.id %}">{{ question.title }}</a></td>
 		<td>{{ question.publish_date }}</td>

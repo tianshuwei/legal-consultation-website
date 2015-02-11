@@ -1,0 +1,3 @@
+{% for archive in archives %}
+<li><a href="{% url 'blogs:index_archive' lawyer.id archive.publish_date.year archive.publish_date.month %}">{{archive.publish_date|date:"Y F"}}</a></li>
+{% endfor %}

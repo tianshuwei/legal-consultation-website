@@ -1,7 +1,7 @@
 {% for comment in recent_comments %}
 <li>
     <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
-    <h4><a href="#">{{comment.user}}</a> {{comment.publish_date}}</h4>
+    <h4><a href="{% url 'accounts:profile' comment.user.id %}">{{comment.user}}</a>评论了<a href="{% url 'blogs:text' comment.article.id %}">{{comment.article.title}}</a> {{comment.publish_date}}</h4>
     <p>{{comment.text}}</p>
 </li>
 {% endfor %}

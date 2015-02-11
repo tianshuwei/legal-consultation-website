@@ -31,6 +31,19 @@ class Client(models.Model):
 
 	def __unicode__(self):
 		return self.user.username
+	@transaction.atomic
+	def minus_points(self): 
+		if self.points<=0: return -1
+		self.points-=1
+		self.save()
+		return 1
+	@transaction.atomic
+	def minus_balance(self,count): 
+		if self.balance<count: return -1
+		self.balance-=count
+		self.save()
+		return 1
+
 
 class LawyerManager(models.Manager):
 	@transaction.atomic
@@ -56,6 +69,12 @@ class Lawyer(models.Model):
 	def __unicode__(self):
 		return self.user.username
 
+	@transaction.atomic
+	def plus_score(self): 
+		self.score+=1
+		self.save()
+
+
 class Remark(models.Model):
 	lawyer = models.ForeignKey(Lawyer)
 	client = models.ForeignKey(Client)
@@ -71,9 +90,14 @@ class Question(models.Model):
 	title = models.CharField(max_length=255,default='')
 	description = models.TextField()
 	publish_date = models.DateTimeField('date published',auto_now=True)
+	state = models.IntegerField(default=0) #0=连载 1=完结
 
 	def __unicode__(self):
 		return self.title
+
+	def finish(self):
+		self.state=1
+		self.save()
 
 class Question_text(models.Model):
 	question = models.ForeignKey(Question)
