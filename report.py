@@ -6,9 +6,28 @@ Jan 2015 (C) Alex
 
 import os, sys, re, linecache, itertools
 
+def SECTION(name):
+	print '[\x1B[1;34;40m%s\x1B[0m]' % name
+
+def F(fname, line=None):
+	if line: return '\x1B[0;35;40m%s\x1B[0;36;40m:%d\x1B[0m' % (fname, line)
+	else: return '\x1B[0;35;40m%s\x1B[0m' % fname
+
+def V(name):
+	return '<\x1B[1;37;40m%s\x1B[0m>' % name
+
+def U(urlref):
+	if not urlref: return '\x1B[0;31;40m<no name>\x1B[0m'
+	if urlref in url_refs_templates: return urlref
+	else: return '\x1B[0;31;40m%s\x1B[0m' % urlref
+
 def grep(pattern, fname):
 	with open(fname,'rb') as f:
 		return pattern.finditer(f.read())
+
+def linecount(fname):
+	with open(fname, 'rb') as f:
+		return sum(b.count('\n') for b in itertools.takewhile(bool,(f.read(65536) for i in itertools.count())))
 
 def mk_index(app):
 	urlpatterns = __import__(app+'.urls').urls.urlpatterns
@@ -51,10 +70,6 @@ def mk_index(app):
 	linecache.clearcache()
 	return url_mappings, url_refs, view_defs
 
-def linecount(fname):
-	with open(fname, 'rb') as f:
-		return sum(b.count('\n') for b in itertools.takewhile(bool,(f.read(65536) for i in itertools.count())))
-
 def get_colors(fname):
 	r_color = re.compile(r'((#[0-9a-fA-F]{6})\b|(#[0-9a-fA-F]{3})\b|(rgb\([0-9, %]+\)))')
 	return set([m.group(1) for m in grep(r_color,fname)])
@@ -65,20 +80,20 @@ if __name__ == "__main__":
 	myapps = [app for app in org.settings.INSTALLED_APPS if os.path.isdir(app) and os.path.exists(os.path.join(app,'urls.py'))]
 	print 'Apps examined:', myapps
 	
-	print '[Models Quality Report]'
+	SECTION('Models Quality Report')
 	# relation summary 1
-	# admin 2
-	# function reference 2
-	# test coverage 2
+	# admin 2 -admin.py
+	# function reference 2 -views.py
+	# test coverage 2 -tests.py
 	# todo list 1
 	# constraint 999
 
-	print '[Templates Quality Report]'
+	# SECTION('Templates Quality Report')
 	# block hierarchy 3
 	# source compactness 2
 	# id usage 2
 
-	print '[Views Quality Report]'
+	SECTION('Views Quality Report')
 	url_mappings = list() 
 	url_refs_templates = set()
 	todo_list = dict()
@@ -96,7 +111,7 @@ if __name__ == "__main__":
 		if uncovered:
 			print 'Views not covered by unit test:', len(uncovered)
 			for view in uncovered:
-				print '\t%(file)s:%(line)d %(urlref)s -> <%(func_name)s>' % view
+				print '\t%(F)s %(urlref)s -> %(V)s' % dict(view, F=F(view['file'],view['line']), V=V(view['func_name']))
 		todo_list[app] = filter(lambda view:view['TODO'], view_defs)
 
 	# Isolated URLs
@@ -104,25 +119,30 @@ if __name__ == "__main__":
 	if r:
 		print 'Isolated URLs:', len(r)
 		for urlref, func_name, pattern in r:
-			print '\t%s -> <%s>  /%s/'%(urlref or '<no name>', func_name, pattern)
+			print '\t%s -> %s  /%s/'%(U(urlref), V(func_name), pattern)
 
 	# Todo list
 	print 'Todo list'
 	for app in todo_list:
 		for view in todo_list[app]:
-			print '\t%(file)s:%(line)d <%(func_name)s>' % view
+			print '\t%(file)s:%(line)d %(V)s' % dict(view, V=V(view['func_name']))
 			for i,todo in enumerate(view['TODO']):
 				print '\t%d. %s' % (i+1,todo)
 
-	print '[CSS Summary]'
+	SECTION('Site Structure')
+	print 'URL Mappings', len(url_mappings)
+	for urlref, func_name, pattern in url_mappings:
+		print '\t%s -> %s  /%s/'%(U(urlref), V(func_name), pattern)
+
+	SECTION('CSS Summary')
 	for dirpath, dirnames, filenames in os.walk('.'):
 		for f in filenames:
 			base,ext = os.path.splitext(f)
 			if ext == '.css':
-				print os.path.join(dirpath,f)
+				print F(os.path.join(dirpath,f))
 				print '\tColor set:', get_colors(os.path.join(dirpath,f))
 
-	print '[Source Summary]'
+	SECTION('Source Summary')
 	exts = ['.py','.html','.js','.css']
 	src_wc = {ext:list([0]*2) for ext in exts}
 	for dirpath, dirnames, filenames in os.walk('.'):
