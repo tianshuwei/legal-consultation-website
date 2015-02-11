@@ -25,10 +25,11 @@ def delete_article_view(request, pk_text):
 			rec.success(u'{0} 删除文章 {1} 成功'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': True }, 'blogs:index', pk_lawyer=article.author.id)
 		else:
+			handle_illegal_access(request, False)
 			messages.error(request, u'文章删除失败') # [UnitTest]
 			rec.error(u'{0} 删除文章 {1} 失败'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': False }, 'blogs:index', pk_lawyer=article.author.id)
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 @login_required # [LiveTest] [UnitTest]
 def edit_article_view(request, pk_text):
@@ -41,6 +42,7 @@ def edit_article_view(request, pk_text):
 			messages.success(request, u'文章编辑成功') # [LiveTest] [UnitTest]
 			rec.success(u'{0} 编辑文章 {1} 成功'.format(request.user.username, article.title))
 		else:
+			handle_illegal_access(request, False)
 			messages.error(request, u'文章编辑失败') # [UnitTest]
 			rec.error(u'{0} 编辑文章 {1} 失败'.format(request.user.username, article.title))
 		return redirect('blogs:index', pk_lawyer=article.author.id)
@@ -65,13 +67,16 @@ def new_article_view(request):
 				)
 				article.save()
 		except BlogCategory.DoesNotExist, e: 
+			handle_illegal_access(request, False)
 			messages.error(request, u'该分类不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
 		except ObjectDoesNotExist, e: 
+			handle_illegal_access(request, False)
 			messages.error(request, u'该律师不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
 			return redirect('index:index')
 		except: # Untestable! 
+			handle_illegal_access(request, False)
 			messages.error(request, u'文章创建失败')
 			rec.error(u'{0} 创建文章失败'.format(request.user.username))
 		else: 
@@ -154,7 +159,7 @@ def new_comment_view(request, pk_text):
 			article=BlogArticle.objects.get(id=pk_text)
 		except BlogArticle.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 评论文章失败'.format(request.user.username))
-			raise Http404
+			handle_illegal_access(request)
 		BlogComment.objects.create( 
 			user=request.user, 
 			article=article,
@@ -162,7 +167,7 @@ def new_comment_view(request, pk_text):
 		).save()
 		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest] [UnitTest]
 		return redirect('blogs:text', pk_text=article.id)
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 def recent_comments_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
@@ -191,10 +196,12 @@ def categories_view(request):
 				)
 				category.save()
 		except ObjectDoesNotExist, e: # [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
 		except: # Could be violation of integrity [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
@@ -209,7 +216,7 @@ def categories_view(request):
 				'edit_href': url_of('blogs:rename_category', pk_category=category.id),
 				'del_href': url_of('blogs:delete_category', pk_category=category.id),
 			}, 'blogs:categories')
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 @login_required # [UnitTest]
 def delete_category_view(request, pk_category):
@@ -219,17 +226,18 @@ def delete_category_view(request, pk_category):
 			category=BlogCategory.objects.get(id=pk_category)
 		except BlogCategory.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 删除分类失败，因为分类不存在'.format(request.user.username))
-			raise Http404
+			handle_illegal_access(request)
 		if checkf(lambda: request.user.lawyer==category.lawyer): # [UnitTest]
 			category.remove()
 			messages.success(request, u'分类删除成功') 
 			rec.success(u'{0} 删除分类 {1} 成功'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': True }, 'blogs:categories')
 		else: # [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'分类删除失败')
 			rec.error(u'{0} 删除分类 {1} 失败，因为权限不足'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 @login_required # [UnitTest]
 def rename_category_view(request, pk_category):
@@ -239,7 +247,7 @@ def rename_category_view(request, pk_category):
 			category=BlogCategory.objects.get(id=pk_category)
 		except BlogCategory.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 重命名分类失败，因为分类不存在'.format(request.user.username))
-			raise Http404
+			handle_illegal_access(request)
 		if checkf(lambda: request.user.lawyer==category.lawyer): # [UnitTest]
 			category.name=request.POST['name']
 			category.save()
@@ -247,7 +255,8 @@ def rename_category_view(request, pk_category):
 			rec.success(u'{0} 重命名分类 {1} 成功'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': True, 'pk':category.id, 'name':category.name  }, 'blogs:categories')
 		else: # [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'分类重命名失败')
 			rec.error(u'{0} 重命名分类 {1} 失败，因为权限不足'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-	else: raise Http404
+	else: handle_illegal_access(request)
