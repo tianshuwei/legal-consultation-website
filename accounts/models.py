@@ -1,16 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models, transaction
 from django.contrib.auth.models import User
-from blogs.models import BlogSettings, BlogCategory
-
-"""
-Fields in User
-	username
-	password
-	email
-	first_name
-	last_name
-"""
 
 class ClientManager(models.Manager):
 	@transaction.atomic
@@ -52,6 +42,7 @@ class LawyerManager(models.Manager):
 		user.save()
 		lawyer=Lawyer.objects.create(user=user)
 		lawyer.save()
+		from blogs.models import BlogSettings, BlogCategory
 		BlogSettings.objects.create(lawyer=lawyer).save()
 		BlogCategory.objects.create(lawyer=lawyer, name=u"默认", state=-1).save()
 		return lawyer

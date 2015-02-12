@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-import re
+import re, logging
 from org.tools import *
 from django import template
 from django.template.defaultfilters import stringfilter
 register = template.Library()
+
+logger = logging.getLogger('org.main')
+logger_lambda = logging.getLogger('org.lambda')
 
 @register.simple_tag
 def query_assign(request,name,val):
@@ -13,7 +16,9 @@ def query_assign(request,name,val):
 		assignment='{0}={1}'.format(name,val)
 		if re.search(pattern, querystring): return re.sub(pattern,assignment,querystring)
 		else: return '{0}&{1}'.format(querystring,assignment)
-	except: return ''
+	except: 
+		logger_lambda.exception(u'lambda容错记录')
+		return ''
 
 TRANSACSERIAL_FILTER_FORMAT = \
 	'<input name="{0}" type="hidden" value="{{0}}" />'.format(TRANSACSERIAL)
@@ -21,4 +26,8 @@ TRANSACSERIAL_FILTER_FORMAT = \
 @register.filter(name='transacserial',is_safe=True)
 @stringfilter
 def transacserial_filter(transaction_name):
-	return TRANSACSERIAL_FILTER_FORMAT.format(transacserial(transaction_name))
+	try:
+		return TRANSACSERIAL_FILTER_FORMAT.format(transacserial(transaction_name))
+	except: 
+		logger_lambda.exception(u'lambda容错记录')
+		return ''

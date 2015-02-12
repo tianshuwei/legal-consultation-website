@@ -2,7 +2,10 @@
 from django.core.urlresolvers import reverse
 from index.models import TransactionRecord
 from org.tools import transacserial, TRANSACSERIAL
-import traceback, time
+import traceback, time, logging
+
+logger = logging.getLogger('org.main')
+logger_lambda = logging.getLogger('org.lambda')
 
 class TestingTools(object):
 	def query_transaction(self, serial):
@@ -10,6 +13,7 @@ class TestingTools(object):
 			rec=TransactionRecord.objects.get(serial=serial)
 			return rec.result=='success'
 		except TransactionRecord.DoesNotExist, e: 
+			logger.error("Transaction %s dosn't exist."%serial)
 			return False
 
 	def assertTransaction(self, serial):

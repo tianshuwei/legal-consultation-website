@@ -181,7 +181,8 @@ class BlogComment(models.Model):
 
 class BlogSettingsManager(models.Manager):
 	def get_blogsettings(self, pk_lawyer):
-		r, created=self.get_or_create(lawyer__id=pk_lawyer)
+		from accounts.models import Lawyer
+		r, created=self.get_or_create(lawyer=Lawyer.objects.get(pk=pk_lawyer))
 		if r.state==1: raise Exception('Blog disabled')
 		return r
 
