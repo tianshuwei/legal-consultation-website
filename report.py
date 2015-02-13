@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-"""
-Jan 2015 (C) Alex
-"""
+"""MTV Report Jan 2015 (C) Alex"""
 
 import os, sys, re, linecache, itertools
 
@@ -14,12 +12,19 @@ def F(fname, line=None):
 	else: return '\x1B[0;35;40m%s\x1B[0m' % fname
 
 def V(name):
-	return '<\x1B[1;37;40m%s\x1B[0m>' % name
+	return '<\x1B[5;33;40m%s\x1B[0m>' % name
 
 def U(urlref):
 	if not urlref: return '\x1B[0;31;40m<no name>\x1B[0m'
 	if urlref in url_refs_templates: return urlref
 	else: return '\x1B[0;31;40m%s\x1B[0m' % urlref
+
+def find(exts, path='.'):
+	for dirpath, dirnames, filenames in os.walk(path):
+		for f in filenames:
+			base, ext = os.path.splitext(f)
+			if ext in exts:
+				yield ext, os.path.join(dirpath,f)
 
 def grep(pattern, fname):
 	with open(fname,'rb') as f:
@@ -36,11 +41,8 @@ def mk_index(app):
 	r_urlref = re.compile(r"'(\w+:\w+)'")
 	url_refs = {
 		'tests': set(m.group(1) for m in grep(r_urlref,os.path.join(app,'tests.py'))),
-		'templates': set(m.group(1) for dirpath, dirnames, filenames in 
-			os.walk(os.path.join(app,'templates')) for f in filenames if os.path.splitext(f)[1] in ['.html','.js']
-				for m in grep(r_urlref,os.path.join(dirpath,f))),
+		'templates': set(m.group(1) for ext, fname in find(['.html','.js'], os.path.join(app,'templates')) for m in grep(r_urlref,fname)),
 	}
-	linecache.clearcache()
 	f_views = os.path.join(app,'views.py')
 	def func_len(si):
 		r_funcbody = re.compile(r'^(\W.*|\n`)')
@@ -70,17 +72,15 @@ def mk_index(app):
 	linecache.clearcache()
 	return url_mappings, url_refs, view_defs
 
-def get_colors(fname):
-	r_color = re.compile(r'((#[0-9a-fA-F]{6})\b|(#[0-9a-fA-F]{3})\b|(rgb\([0-9, %]+\)))')
-	return set([m.group(1) for m in grep(r_color,fname)])
-
-if __name__ == "__main__":
+def main():
+	print __doc__
+	global url_mappings, url_refs_templates, todo_list
 	os.environ.setdefault("DJANGO_SETTINGS_MODULE", "org.settings")
 	import org.settings
 	myapps = [app for app in org.settings.INSTALLED_APPS if os.path.isdir(app) and os.path.exists(os.path.join(app,'urls.py'))]
 	print 'Apps examined:', myapps
 	
-	SECTION('Models Quality Report')
+	SECTION('Model Layer')
 	# relation summary 1
 	# admin 2 -admin.py
 	# function reference 2 -views.py
@@ -88,21 +88,17 @@ if __name__ == "__main__":
 	# todo list 1
 	# constraint 999
 
-	# SECTION('Templates Quality Report')
+	# SECTION('Template Layer')
 	# block hierarchy 3
 	# source compactness 2
 	# id usage 2
 
-	SECTION('Views Quality Report')
-	url_mappings = list() 
-	url_refs_templates = set()
-	todo_list = dict()
-
-	# Test coverage
+	SECTION('View Layer')
 	for app in myapps:
 		_url_mappings, _url_refs, view_defs = mk_index(app)
 		url_mappings+=_url_mappings
 		url_refs_templates|=_url_refs['templates']
+		
 		view4post = [view for view in view_defs 
 			for urlref,pattern in view['urls'] if view['POST']]
 		uncovered = [dict(view,urlref=urlref) for view in view_defs 
@@ -114,47 +110,46 @@ if __name__ == "__main__":
 				print '\t%(F)s %(urlref)s -> %(V)s' % dict(view, F=F(view['file'],view['line']), V=V(view['func_name']))
 		todo_list[app] = filter(lambda view:view['TODO'], view_defs)
 
-	# Isolated URLs
+	SECTION('Site Structure')
+	print 'URL Mappings', len(url_mappings)
+	for urlref, func_name, pattern in url_mappings:
+		print '\t%s -> %s  /%s/'%(U(urlref), V(func_name), pattern)
+
 	r = filter(lambda (urlref, func_name, pattern):urlref not in url_refs_templates,url_mappings)
 	if r:
 		print 'Isolated URLs:', len(r)
 		for urlref, func_name, pattern in r:
 			print '\t%s -> %s  /%s/'%(U(urlref), V(func_name), pattern)
 
-	# Todo list
-	print 'Todo list'
-	for app in todo_list:
-		for view in todo_list[app]:
-			print '\t%(file)s:%(line)d %(V)s' % dict(view, V=V(view['func_name']))
-			for i,todo in enumerate(view['TODO']):
-				print '\t%d. %s' % (i+1,todo)
-
-	SECTION('Site Structure')
-	print 'URL Mappings', len(url_mappings)
-	for urlref, func_name, pattern in url_mappings:
-		print '\t%s -> %s  /%s/'%(U(urlref), V(func_name), pattern)
-
 	SECTION('CSS Summary')
-	for dirpath, dirnames, filenames in os.walk('.'):
-		for f in filenames:
-			base,ext = os.path.splitext(f)
-			if ext == '.css':
-				print F(os.path.join(dirpath,f))
-				print '\tColor set:', get_colors(os.path.join(dirpath,f))
+	r_color = re.compile(r'((#[0-9a-fA-F]{6})\b|(#[0-9a-fA-F]{3})\b|(rgb\([0-9, %]+\)))')
+	for ext, fname in find(['.css']):
+		print F(fname)
+		print '\tColor set:', set([m.group(1) for m in grep(r_color,fname)])
 
 	SECTION('Source Summary')
 	exts = ['.py','.html','.js','.css']
 	src_wc = {ext:list([0]*2) for ext in exts}
-	for dirpath, dirnames, filenames in os.walk('.'):
-		for f in filenames:
-			base,ext = os.path.splitext(f)
-			if ext in exts:
-				src_wc[ext][0] += 1
-				src_wc[ext][1] += linecount(os.path.join(dirpath,f))
+	for ext, fname in find(exts):
+		src_wc[ext][0] += 1
+		src_wc[ext][1] += linecount(fname)
 	for ext in src_wc:
 		print ext
 		print '\t', src_wc[ext][0], "files"
 		print '\t', src_wc[ext][1], "lines"
 	print 'total lines:', sum((src_wc[ext][1] for ext in src_wc))
 
+	SECTION('Todo list')
+	for app in todo_list:
+		for view in todo_list[app]:
+			print '\t%(F)s %(V)s' % dict(view, F=F(view['file'],view['line']), V=V(view['func_name']))
+			for i,todo in enumerate(view['TODO']):
+				print '\t%d. %s' % (i+1,todo)
+
 	print 'EOF'
+
+if __name__ == '__main__':
+	url_mappings = list() 
+	url_refs_templates = set()
+	todo_list = dict()
+	main()
