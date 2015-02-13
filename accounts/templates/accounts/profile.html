@@ -1,21 +1,126 @@
-{% extends 'base.html' %}
-{% block title %}个人资料 - {{ role.user.username }}{% endblock %}
-{% block main %}
-<a href="{% url 'accounts:usercenter' %}">用户中心</a>
-{% if role.is_lawyer %}
-<a href="{% url 'accounts:lawyerlist' %}">所有律师</a>
-{% endif %}
-<h1>个人资料 - {{ role.user.username }}</h1>
-<div>姓名 {{ role.user.last_name }}{{ role.user.first_name }}</div>
-<div>邮箱 {{ role.user.email }}</div>
-<hr/>
-<div>账户余额 ￥ {{ role.balance }}</div>
+{% extends 'accounts/base_usercenter.html' %}
+{% load staticfiles %}
+
+ {% block main_col %}
+ <h1>个人资料 - {{ role.user.username }}</h1>
 {% if is_master %}
-<h3>编辑个人资料</h3>
-<form method="post">
-	{% csrf_token %}
-	{{ profile_edit }}
-	<input type="submit" />
-</form>
+ <!-- Nav tabs -->
+                <ul class="nav nav-tabs nav-tabs-ar nav-tabs-ar-white">
+                  <li class="active"><a href="#basic2" data-toggle="tab">Profile</a></li>
+                  <li><a href="#password" data-toggle="tab">change password</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                  <div class="tab-pane active" id="basic2">
+                        <!-- form -->
+                      <form method="post" class="form-horizontal" role="form">
+                      	 <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">name</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="email" required="required" class="form-control" id="inputEmail3" placeholder="{{ role.user.last_name }}{{ role.user.first_name }}">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="email" required="required" class="form-control" id="inputEmail3" placeholder="{{ role.user.email }}">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">address</label>
+                            <div class="col-sm-10 col-md-8">
+                              <input type="email" required="required" class="form-control" id="inputEmail3" placeholder="address">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="select" class="col-sm-2 control-label">Selects</label>
+                                <div class="col-sm-5 col-md-2">
+                                  <select class="form-control" id="select">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                  </select>
+                                </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Remember me
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                              <label for="select" class="col-sm-2 control-label"></label>
+                              <div class="col-sm-10 col-md-10">
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                      Option one is this and that—be sure to include why it's great
+                                    </label>
+                                  </div>
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                      Option two can be something else and selecting it will deselect option one
+                                    </label>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <button type="submit" class="btn btn-ar btn-primary">submit</button>
+                            </div>
+                          </div>
+                        </form> <!-- end form -->
+                  </div>
+                  <div class="tab-pane" id="password">
+						<form method="post" class="form-horizontal" role="form">
+							{% csrf_token %}
+                          <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">旧密码</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="password" class="form-control" id="old" placeholder="Password">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">新密码</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="password" class="form-control" id="new" placeholder="Password">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="password" class="form-control" id="confirm" placeholder="Password">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <button type="submit" class="btn btn-ar btn-primary">change!</button>
+                            </div>
+                          </div>
+                        </form>
+                  </div>
+                </div>
+{# {% else %} #}
+				<dl class="dl-horizontal">
+                    <dt>name</dt>
+                    <dd>{{ role.user.last_name }}{{ role.user.first_name }}</dd>
+                    <dt>email</dt>
+                    <dd>{{ role.user.email }}</dd>
+                    <dt>address</dt>
+                    <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio, aspernatur.</dd>
+                    <dt>other</dt>
+                    <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
+                    <dt>Felis euismod semper</dt>
+                    <dd>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</dd>
+                </dl>
+
 {% endif %}
+
 {% endblock %}
