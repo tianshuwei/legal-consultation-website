@@ -1,6 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'accounts/base_usercenter.html' %}
 {% load staticfiles %}
 {% block title %}{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}{% endblock %}
+
 {% block headextra %}
 <script type="text/javascript">
   $(function () {
@@ -24,6 +25,12 @@
                 <!-- left, vertical navbar -->
 
                 <div class="col-md-3 col-sm-3">
+                <div class="profile-bg">
+                    <div class="animated fadeInDown animation-delay-8 profile-box">
+                            <img src="{% static "img/sample/user.jpg" %}" alt="" class="face">
+                            <p class="title">Lorem ipsum</p>
+                    </div>
+                </div>
                 <div class="portfolio-menu">
                     <ul class="portfolio-cats">
                         <li ><a href="{% url 'accounts:profile_self' %}">
@@ -61,84 +68,11 @@
                 <div class="col-md-9 col-sm-9">
                 {% block main_col %}
 
-                <!--order part-->
-                <div class="panel panel-border animated fadeInDown animation-delay-8" style="border-left-color: #eee;">
-                    <!--one order-->
-                    <div class="panel-body">
-                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
-                        <div class="clearfix"></div>
+                <h1>something interesting~~:)</h1>
 
-                        <div class="row context  animated fadeInDown animation-delay-8">
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Date:</strong> 2014-12-31</p></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Price:</strong> $369.99</p></div>
-                        </div>
-
-                        <div class="row context animated fadeInDown animation-delay-8 ">
-                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
-                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
-                        </div>
-                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
-                            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 "><i class="fa fa-dollar"></i>pay now!</button>
-                            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
-                            <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-info"></i>info</button>
-                        </div>
-                        </div>
-                    </div>
-
-                    <hr class="dashed">
-
-                    <!--anoter order-->
-                    <div class="panel-body">
-                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
-                        <div class="clearfix"></div>
-
-                        <div class="row context  animated fadeInDown animation-delay-8">
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Date:</strong> 2014-12-31</p></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Price:</strong> $369.99</p></div>
-                        </div>
-
-                        <div class="row context animated fadeInDown animation-delay-8 ">
-                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
-                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
-                        </div>
-                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
-                            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
-                            <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-question"></i>help</button>
-                        </div>
-                        </div>
-                    </div>
-
-                    <hr class="dashed">
-
-                    <!--anoter order-->
-                    <div class="panel-body">
-                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
-                        <div class="clearfix"></div>
-
-                        <div class="row context  animated fadeInDown animation-delay-8">
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Date:</strong> 2014-12-31</p></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Price:</strong> $369.99</p></div>
-                        </div>
-
-                        <div class="row context animated fadeInDown animation-delay-8 ">
-                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
-                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
-                        </div>
-                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
-                            <button class="btn btn-ar btn-sm btn-royal"><i class="fa fa-star"></i>remark</button>
-                            <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <!--order part end-->
-                <div class="animated fadeInDown animation-delay-8 profile-box">
-                    <div><img src="{% static "img/sample/user.jpg" %}" alt="" class="face"></div>
-                    <div class="title">
-                        <p>Lorem ipsum</p>
-                    </div>
-                </div>
                 {% endblock %}
+
+
                 </div>
             </div>
         </div>
