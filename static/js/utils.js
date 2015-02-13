@@ -162,6 +162,7 @@ function showModal (title, content, buttons, callback) {
 		eval($(mod).find('script').text()); // import append_button
 		for(var i=0;i<buttons.length;i++) append_button(mk_button(buttons[i]));
 		$(mod).modal('show');
+		$("body").attr("style","");
 	});
 }
 

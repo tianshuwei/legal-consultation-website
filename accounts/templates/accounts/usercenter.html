@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}{% endblock %}
 {% block headextra %}
 <script type="text/javascript">
@@ -26,25 +27,29 @@
                 <div class="portfolio-menu">
                     <ul class="portfolio-cats">
                         <li ><a href="{% url 'accounts:profile_self' %}">
-                            <span id="profile" class="active"><i class="fa fa-fw fa-star"></i>&nbsp;个人资料</span>
+                            <span id="profile" class="active"><i class="fa fa-fw fa-star"></i>&nbsp;近期动态</span>
+                            </a>
+                        </li>
+                        <li ><a href="{% url 'accounts:profile_self' %}">
+                            <span><i class="fa fa-fw fa-star"></i>&nbsp;个人资料</span>
                             </a>
                         </li>
                         {% if is_lawyer %}
                         <li><a href="{% url 'blogs:home' %}">
-                        	<span><i class="fa fa-fw fa-user"></i>&nbsp;我的律师博客</span>
+                        	<span><i class="fa fa-fw fa-user"></i>&nbsp;博客近况</span>
                         	</a>
                         </li>
                         {% endif %}
-                        <li><a href="{% url 'accounts:lawyerlist' %}">
-                        	<span><i class="fa fa-fw fa-group"></i>&nbsp;所有律师</span>
-                        	</a>
-                        </li>
                         <li><a href="#">
                         	<span><i class="fa fa-fw fa-list-ol"></i>&nbsp;{% if is_lawyer %}接收到的订单{% else %}产品订单{% endif %}</span>
                         	</a>
                         </li>
+                         <li><a href="#">
+                            <span><i class="fa fa-fw fa-question-circle"></i>&nbsp;{% if is_lawyer %}我的回答{% else %}我的问题{% endif %}</span>
+                            </a>
+                        </li>
                         <li><a href="{% url 'accounts:balance' %}">
-                        	<span><i class="fa fa-fw fa-dollar"></i>&nbsp;余额充值</span>
+                        	<span><i class="fa fa-fw fa-dollar"></i>&nbsp;{% if is_lawyer %}账户提现{% else %}余额充值{% endif %}</span>
                         	</a>
                         </li>
                     </ul>
@@ -125,10 +130,14 @@
                         </div>
                         </div>
                     </div>
-
                 </div>
                 <!--order part end-->
-                    
+                <div class="animated fadeInDown animation-delay-8 profile-box">
+                    <div><img src="{% static "img/sample/user.jpg" %}" alt="" class="face"></div>
+                    <div class="title">
+                        <p>Lorem ipsum</p>
+                    </div>
+                </div>
                 {% endblock %}
                 </div>
             </div>

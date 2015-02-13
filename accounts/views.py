@@ -25,7 +25,7 @@ def login_view(request): # [UnitTest]
 			return HttpResponseRedirect(next_url)
 		else: 
 			rec.error(u'{0}登入失败'.format(username))  # [UnitTest]
-			return HttpResponseRedirect(next_url)
+			return response(request, 'accounts/login.html')
 	else:  return response(request, 'accounts/login.html')
 
 def logout_view(request):

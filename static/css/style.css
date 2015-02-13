@@ -14,6 +14,30 @@
 /* ---------------------------------------------------- */
 
 /*--------------custom---------------*/
+/*--------------client and lawyer are different---------------*/
+img.face{
+  border-radius: 50%;
+  border: 3px solid #0eb7ff;
+}
+
+.profile-box img.face{
+  border-radius: 50%;
+  border: 3px solid #0eb7ff;
+}
+/*------------------------------------------------------------*/
+
+.profile-box{
+  text-align: center;
+}
+
+.profile-box div.title{
+  padding-top: 10px;
+}
+
+.profile-box div.title p{
+  font-size: 18px;
+}
+
 ul li{
   list-style: none;
 }
