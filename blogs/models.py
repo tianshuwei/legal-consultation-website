@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from django.db import models, transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
@@ -180,9 +181,9 @@ class BlogComment(models.Model):
 		return self.text[:20]
 
 class BlogSettingsManager(models.Manager):
-	def get_blogsettings(self, pk_lawyer):
+	def get_blogsettings(self, lawyer):
 		from accounts.models import Lawyer
-		r, created=self.get_or_create(lawyer=Lawyer.objects.get(pk=pk_lawyer))
+		r, created=self.get_or_create(lawyer=lawyer)
 		if r.state==1: raise Exception('Blog disabled')
 		return r
 

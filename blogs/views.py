@@ -106,9 +106,10 @@ def favourite_posts_mod_view(request, pk_lawyer):
 	return response(request, 'blogs/favourite_posts.mod.html',
 		articles=lawyer.blogarticle_set.get_favourite_articles())
 
-chez = lambda pk_lawyer: \
-	(get_object_or_404(Lawyer, pk=pk_lawyer), 
-	or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer)))
+def chez(pk_lawyer):
+	lawyer = get_object_or_404(Lawyer, pk=pk_lawyer)
+	blogsettings = or404(lambda: BlogSettings.objects.get_blogsettings(lawyer))
+	return lawyer, blogsettings
 
 def index_view(request, pk_lawyer):
 	lawyer, blogsettings=chez(pk_lawyer)
@@ -119,7 +120,7 @@ def index_view(request, pk_lawyer):
 
 def index_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
-	blogsettings=or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer))
+	blogsettings=or404(lambda: BlogSettings.objects.get_blogsettings(category.lawyer))
 	return response(request, 'blogs/index_category.html', category=category,
 		is_master=checkf(lambda: request.user.lawyer==category.lawyer),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
