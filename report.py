@@ -50,6 +50,17 @@ def linecount(fname):
 	with open(fname, 'rb') as f:
 		return sum(b.count('\n') for b in itertools.takewhile(bool,(f.read(65536) for i in itertools.count())))
 
+def tree(x, sp=u"   ", last=u"└──", parent=u'│', mid=u'├'):
+	r = list()
+	for d,i in x:
+		r.append(''.join([sp*(d-1),last,i]) if d>0 else i)
+		p = len(sp)*(d-1)
+		for j in reversed(xrange(len(r)-1)):
+			if r[j][p] == sp[0]: r[j] = parent.join([r[j][:p],r[j][p+1:]])
+			elif r[j][p] == last[0]: r[j] = mid.join([r[j][:p],r[j][p+1:]])
+			else: break 
+	return r
+
 class Application(object):
 	def __init__(self, app_name):
 		super(Application, self).__init__()
@@ -168,18 +179,14 @@ def __template():
 		template['include_set'] = set(template['include'])
 		template['include'] = map(lambda t:r_dict[t] if t in r_dict else t, template['include'])
 	includes = reduce(operator.ior, (t['include_set'] for t in r))
-	def tree(i,d=0, last=False):
-		print '\t',
-		if d>0: print ' │  '*(d-1),
+	def walk_templates(i,d=0):
+		yield d,i['template']
 		if 'extended_by' in i and i['extended_by']:
-			if d>0: print '├──',
-			print i['template']
-			for t in i['extended_by'][:-1]: tree(t, d+1)
-			for t in i['extended_by'][-1:]: tree(t, d+1, last=True)
-		else: 
-			if d>0: print '├──' if not last else '└──',
-			print i['template']
-	for root in filter(lambda t:t['extends']==None and t['template'] not in includes,r): tree(root)
+			for t in i['extended_by']:
+				for j in walk_templates(t, d+1): yield j
+	for root in filter(lambda t:t['extends']==None and t['template'] not in includes,r):
+		for i in tree(walk_templates(root)):
+			print '\t',i
 
 @section('View Layer')
 def __view():
