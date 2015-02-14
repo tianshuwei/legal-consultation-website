@@ -168,16 +168,13 @@ def __template():
 		template['include_set'] = set(template['include'])
 		template['include'] = map(lambda t:r_dict[t] if t in r_dict else t, template['include'])
 	includes = reduce(operator.ior, (t['include_set'] for t in r))
-	def tree(i,d=0, last=False):
-		print '\t',
-		if d>0: print ' │  '*(d-1),
+	def tree(i,d=''):
+		print '\t', d
 		if 'extended_by' in i and i['extended_by']:
-			if d>0: print '├──',
 			print i['template']
-			for t in i['extended_by'][:-1]: tree(t, d+1)
-			for t in i['extended_by'][-1:]: tree(t, d+1, last=True)
+			for t in i['extended_by'][:-1]: tree(t, d+'├──')
+			for t in i['extended_by'][-1:]: tree(t, d+'└──')
 		else: 
-			if d>0: print '├──' if not last else '└──',
 			print i['template']
 	for root in filter(lambda t:t['extends']==None and t['template'] not in includes,r): tree(root)
 
