@@ -2,10 +2,11 @@
 
 """MTV Report Jan 2015 (C) Alex"""
 
-import os, sys, re, linecache, itertools
+import os, sys, re, linecache, itertools, operator
 r_urlref = re.compile(r"'(\w+:\w+)'")
 SECTION = lambda name: '[\x1B[1;34;40m%s\x1B[0m]' % name
 F = lambda fname, line=None: '\x1B[0;35;40m%s\x1B[0;36;40m:%d\x1B[0m' % (fname, line) if line else '\x1B[0;35;40m%s\x1B[0m' % fname
+LINE = lambda l: '\x1B[0;36;40m:%d\x1B[0m' % l
 V = lambda name: '<\x1B[5;33;40m%s\x1B[0m>' % name
 U = lambda urlref: '\x1B[0;31;40m<no name>\x1B[0m' if not urlref else(
 		urlref if urlref in url_refs_templates else '\x1B[0;31;40m%s\x1B[0m' % urlref)
@@ -30,6 +31,12 @@ def find(exts, path='.'):
 def grep(pattern, fname):
 	with open(fname,'rb') as f:
 		return pattern.finditer(f.read())
+
+def linematch(pattern, fname):
+	with open(fname,'rb') as f:
+		for l,line in enumerate(f.xreadlines()):
+			m=pattern.search(line)
+			if m: yield l+1, m
 
 def linecount(fname):
 	with open(fname, 'rb') as f:
@@ -86,14 +93,16 @@ class Application(object):
 			elif t is django.db.models.manager.ManagerDescriptor:
 				manager_name = m.manager.__class__.__name__
 				if manager_name != 'Manager': return 'O', manager_name
+		f_models=os.path.join(app_name,'models.py')
 		self.models = [{
 			'name': obj.__name__,
 			'doc': obj.__doc__,
+			'file': f_models, 
 			'members': filter(bool,(member(i) for i in vars(obj).iteritems())),
 		} for obj_name,obj in vars(__import__(app_name+'.models').models).iteritems()
 			if type(obj) is django.db.models.base.ModelBase and obj_name not in ['User']]
-		# print self.models
-					
+		self.f_models=f_models
+		self.models_todo=[(l,m.group(1)) for l,m in linematch(r_TODO, f_models)]
 		linecache.clearcache()
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "org.settings")
@@ -102,9 +111,8 @@ apps = [Application(app) for app in org.settings.INSTALLED_APPS if os.path.isdir
 print __doc__
 print 'Apps:', [app.name for app in apps]
 
-url_refs_templates = set(m.group(1) for ext, fname in find(['.html', '.js'], 'templates') for m in grep(r_urlref,fname))
-for a in apps:
-	url_refs_templates|=a.url_refs['templates']
+url_refs_templates = reduce(operator.ior, [a.url_refs['templates'] for a in apps]+[
+	set(m.group(1) for ext, fname in find(['.html', '.js'], 'templates') for m in grep(r_urlref,fname))])
 
 @section('Model Layer')
 def __model():
@@ -118,10 +126,8 @@ def __model():
 			print '\t%(doc)s'%model
 			for member in model['members']:
 				print '\t\t%s %s'%member
-
 	# admin 2 -admin.py
 	# function reference 2 -views.py
-	# todo list 1
 
 # @section('Template Layer')
 # def __template():
@@ -175,10 +181,15 @@ def __source():
 
 @section('Todo list')
 def l_todo():
-	for view in (view for a in apps for view in a.views if view['TODO']):
-		print '\t%(F)s %(V)s' % dict(view, F=F(view['file'],view['line']), V=V(view['func_name']))
-		for i,todo in enumerate(view['TODO']):
-			print '\t%d. %s' % (i+1,todo)
+	for a in apps:
+		for view in (view for view in a.views if view['TODO']):
+			print '\t%(F)s %(V)s' % dict(view, F=F(view['file'],view['line']), V=V(view['func_name']))
+			for i,todo in enumerate(view['TODO']):
+				print '\t%d. %s' % (i+1,todo)
+		if a.models_todo:
+			print '\t%s' % F(a.f_models)
+			for i,(l,todo) in enumerate(a.models_todo):
+				print '\t%d. %s %s' % (i+1,todo,LINE(l))
 
 if __name__ == '__main__':
 	for section in sections:
