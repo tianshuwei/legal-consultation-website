@@ -9,7 +9,10 @@ F = lambda fname, line=None: '\x1B[0;35;40m%s\x1B[0;36;40m:%d\x1B[0m' % (fname, 
 LINE = lambda l: '\x1B[0;36;40m:%d\x1B[0m' % l
 V = lambda name: '<\x1B[5;33;40m%s\x1B[0m>' % name
 U = lambda urlref: '\x1B[0;31;40m<no name>\x1B[0m' if not urlref else(
-		urlref if urlref in url_refs_templates else '\x1B[0;31;40m%s\x1B[0m' % urlref)
+	urlref if urlref in url_refs_templates else '\x1B[0;31;40m%s\x1B[0m' % urlref)
+RELATION_NAME = lambda R, f_admin: '\x1B[0;34;40m%s\x1B[0m'%R if list(grep(re.compile(''.join([r'\b',R,r'\b'])), f_admin)) else R
+RELATION_ATTR = lambda attr, foreign_keys: '\x1B[4;37;40m%s\x1B[0m'%attr if attr.endswith('_id') and attr[:-3] in foreign_keys else (
+	'\x1B[1;37;40mid\x1B[0m' if attr=='id' else attr)
 
 sections = list()
 r_section = re.compile(r'(\w)_(\w+)')
@@ -117,23 +120,27 @@ url_refs_templates = reduce(operator.ior, [a.url_refs['templates'] for a in apps
 @section('Model Layer')
 def __model():
 	print 'Relation Summary:'
+	r_relation = re.compile(r'(\w+)\((.*)\)')
 	for a in apps:
+		f_admin = os.path.join(a.name,'admin.py')
 		for model in a.models:
-			print '\t%(doc)s'%model
-	for a in apps:
-		print 'Relations (%s): %d'%(a.name,len(a.models))
-		for model in a.models:
-			print '\t%(doc)s'%model
-			for member in model['members']:
-				print '\t\t%s %s'%member
-	# admin 2 -admin.py
-	# function reference 2 -views.py
+			m = r_relation.match(model['doc'])
+			foreign_keys = [attr for t,attr in model['members'] if t=='S']
+			print '\t%s(%s)'%(
+				RELATION_NAME(m.group(1),f_admin),
+				',\x20'.join(itertools.starmap(RELATION_ATTR,((attr,foreign_keys) for attr in m.group(2).split(',\x20')))))
+	# for a in apps:
+	# 	print 'Relations (%s): %d'%(a.name,len(a.models))
+	# 	for model in a.models:
+	# 		print '\t%(doc)s'%model
+	# 		for member in model['members']:
+	# 			print '\t\t%s %s'%member
 
-# @section('Template Layer')
-# def __template():
-	# block hierarchy 3
-	# source compactness 2
-	# id usage 2
+@section('Template Layer')
+def __template():
+	extend agrep html "{%\s*extends\s+(?P<quo>(\"|\'))(?P<base>.*?)(?P=quo)\s*%}" "\g<base>"|sort|uniq
+	block hierarchy 3 agrep html "{%\s*block\s+(.*?)\s*%}" "\1"|sort|uniq
+	id usage 2 r'id=(?P<quo>(\"|\'))(.*?)(?P=quo)' agrep html "id=(?P<quo>(\"|'))(?P<id>.*?)(?P=quo)" "\g<id>"
 
 @section('View Layer')
 def __view():
