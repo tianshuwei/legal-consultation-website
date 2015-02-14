@@ -2,7 +2,7 @@
 
 """MTV Report Jan 2015 (C) Alex"""
 
-import os, sys, re, linecache, itertools, operator
+import os, sys, re, linecache, itertools, operator, org.settings
 r_urlref = re.compile(r"'(\w+:\w+)'")
 SECTION = lambda name: '[\x1B[1;34;40m%s\x1B[0m]' % name
 F = lambda fname, line=None: '\x1B[0;35;40m%s\x1B[0;36;40m:%d\x1B[0m' % (fname, line) if line else '\x1B[0;35;40m%s\x1B[0m' % fname
@@ -108,18 +108,9 @@ class Application(object):
 		self.models_todo=[(l,m.group(1)) for l,m in linematch(r_TODO, f_models)]
 		linecache.clearcache()
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "org.settings")
-import org.settings
-apps = [Application(app) for app in org.settings.INSTALLED_APPS if os.path.isdir(app) and os.path.exists(os.path.join(app,'urls.py'))]
-print __doc__
-print 'Apps:', [app.name for app in apps]
-
-url_refs_templates = reduce(operator.ior, [a.url_refs['templates'] for a in apps]+[
-	set(m.group(1) for ext, fname in find(['.html', '.js'], 'templates') for m in grep(r_urlref,fname))])
-
 @section('Model Layer')
 def __model():
-	print 'Relation Summary:'
+	print 'Entity Summary:', sum(len(a.models) for a in apps)
 	r_relation = re.compile(r'(\w+)\((.*)\)')
 	for a in apps:
 		f_admin = os.path.join(a.name,'admin.py')
@@ -138,9 +129,10 @@ def __model():
 
 @section('Template Layer')
 def __template():
-	extend agrep html "{%\s*extends\s+(?P<quo>(\"|\'))(?P<base>.*?)(?P=quo)\s*%}" "\g<base>"|sort|uniq
-	block hierarchy 3 agrep html "{%\s*block\s+(.*?)\s*%}" "\1"|sort|uniq
-	id usage 2 r'id=(?P<quo>(\"|\'))(.*?)(?P=quo)' agrep html "id=(?P<quo>(\"|'))(?P<id>.*?)(?P=quo)" "\g<id>"
+	pass
+	# extend agrep html "{%\s*extends\s+(?P<quo>(\"|\'))(?P<base>.*?)(?P=quo)\s*%}" "\g<base>"|sort|uniq
+	# block hierarchy 3 agrep html "{%\s*block\s+(.*?)\s*%}" "\1"|sort|uniq
+	# id usage 2 r'id=(?P<quo>(\"|\'))(.*?)(?P=quo)' agrep html "id=(?P<quo>(\"|'))(?P<id>.*?)(?P=quo)" "\g<id>"
 
 @section('View Layer')
 def __view():
@@ -199,6 +191,12 @@ def l_todo():
 				print '\t%d. %s %s' % (i+1,todo,LINE(l))
 
 if __name__ == '__main__':
+	os.environ.setdefault("DJANGO_SETTINGS_MODULE", "org.settings")
+	apps = [Application(app) for app in org.settings.INSTALLED_APPS if os.path.isdir(app) and os.path.exists(os.path.join(app,'urls.py'))]
+	print __doc__
+	print 'Apps:', [app.name for app in apps]
+	url_refs_templates = reduce(operator.ior, [a.url_refs['templates'] for a in apps]+[
+		set(m.group(1) for ext, fname in find(['.html', '.js'], 'templates') for m in grep(r_urlref,fname))])
 	for section in sections:
 		print SECTION(section['title'])
 		section['func']()
