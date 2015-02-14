@@ -1,9 +1,14 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """MTV Report Jan 2015 (C) Alex"""
 
 import os, sys, re, linecache, itertools, operator, org.settings
 r_urlref = re.compile(r"'(\w+:\w+)'")
+r_template_extends=re.compile(r'{%\s*extends\s+(?P<quo>(\"|\'))(?P<val>.*?)(?P=quo)\s*%}')
+r_template_include=re.compile(r'{%\s*include\s+(?P<quo>(\"|\'))(?P<val>.*?)(?P=quo)\s*%}')
+r_template_blocks=re.compile(r'{%\s*block\s+(?P<val>.*?)\s*%}')
+r_template_ids=re.compile(r'id=(?P<quo>(\"|\'))(?P<val>.*?)(?P=quo)')
 SECTION = lambda name: '[\x1B[1;34;40m%s\x1B[0m]' % name
 F = lambda fname, line=None: '\x1B[0;35;40m%s\x1B[0;36;40m:%d\x1B[0m' % (fname, line) if line else '\x1B[0;35;40m%s\x1B[0m' % fname
 LINE = lambda l: '\x1B[0;36;40m:%d\x1B[0m' % l
@@ -52,19 +57,20 @@ class Application(object):
 		mk_urlref = lambda name: '{0}:{1}'.format(app_name,name) if name else None
 		self.url_mappings = [(mk_urlref(url.name), url.callback.__name__, url.regex.pattern) 
 			for url in __import__(app_name+'.urls').urls.urlpatterns]
+		self.d_templates = os.path.join(app_name, 'templates')
 		self.url_refs = {
 			'tests': set(m.group(1) for m in grep(r_urlref,os.path.join(app_name,'tests.py'))),
-			'templates': set(m.group(1) for ext, fname in find(['.html','.js'], os.path.join(app_name,'templates')) for m in grep(r_urlref,fname)),
+			'templates': set(m.group(1) for ext, fname in find(['.html','.js'], self.d_templates) for m in grep(r_urlref,fname)),
 		}
-		f_views = os.path.join(app_name,'views.py')
+		self.f_views = os.path.join(app_name,'views.py')
 		def func_len(si):
 			r_funcbody = re.compile(r'^(\W.*|\n`)')
 			for l in xrange(si+1, 100000):
-				if not r_funcbody.match(linecache.getline(f_views, l)):
+				if not r_funcbody.match(linecache.getline(self.f_views, l)):
 					return l-si
 		r_deffunc = re.compile(r'^def\s+(\w+)\(.*')
 		self.views = [{
-			'file': f_views,
+			'file': self.f_views,
 			'line': view[0],
 			'func_name': view[1],
 			'range': xrange(view[0], view[0]+func_len(view[0])),
@@ -72,16 +78,16 @@ class Application(object):
 				for urlref, func_name, pattern in self.url_mappings if func_name==view[1]],
 		} for view in (
 			(l,m.group(1)) for l,m in filter(lambda (l,m): m,
-				((l+1,r_deffunc.match(line)) for l,line in enumerate(linecache.getlines(f_views)))))]
+				((l+1,r_deffunc.match(line)) for l,line in enumerate(linecache.getlines(self.f_views)))))]
 		r_POST = re.compile(r'\bPOST\b')
 		r_TODO = re.compile(r'#\s*TODO\s+(.*)\s*$')
 		for view in self.views:
 			for l in view['range']:
-				if r_POST.search(linecache.getline(f_views, l)):
+				if r_POST.search(linecache.getline(self.f_views, l)):
 					view['POST'] = True; break
 			else: view['POST'] = False
 			view['TODO']=[m.group(1) for m in (
-				r_TODO.search(linecache.getline(f_views, l)) for l in view['range']) if m]
+				r_TODO.search(linecache.getline(self.f_views, l)) for l in view['range']) if m]
 
 		import django.db, types
 		type_code = {
@@ -96,17 +102,25 @@ class Application(object):
 			elif t is django.db.models.manager.ManagerDescriptor:
 				manager_name = m.manager.__class__.__name__
 				if manager_name != 'Manager': return 'O', manager_name
-		f_models=os.path.join(app_name,'models.py')
+		self.f_models=os.path.join(app_name,'models.py')
 		self.models = [{
 			'name': obj.__name__,
 			'doc': obj.__doc__,
-			'file': f_models, 
+			'file': self.f_models, 
 			'members': filter(bool,(member(i) for i in vars(obj).iteritems())),
 		} for obj_name,obj in vars(__import__(app_name+'.models').models).iteritems()
 			if type(obj) is django.db.models.base.ModelBase and obj_name not in ['User']]
-		self.f_models=f_models
-		self.models_todo=[(l,m.group(1)) for l,m in linematch(r_TODO, f_models)]
+		self.models_todo=[(l,m.group(1)) for l,m in linematch(r_TODO, self.f_models)]
 		linecache.clearcache()
+
+		self.templates = [{
+			'file': fname,
+			'template': os.path.relpath(fname, self.d_templates),
+			'extends': [m.group('val') for m in grep(r_template_extends,fname)][:1] or [None], 
+			'include': [m.group('val') for m in grep(r_template_include,fname)], 
+			'blocks': [m.group('val') for m in grep(r_template_blocks,fname)],
+			'ids': [m.group('val') for m in grep(r_template_ids,fname)],
+		} for ext, fname in find(['.html','.js'], self.d_templates)]
 
 @section('Model Layer')
 def __model():
@@ -129,10 +143,43 @@ def __model():
 
 @section('Template Layer')
 def __template():
-	pass
-	# extend agrep html "{%\s*extends\s+(?P<quo>(\"|\'))(?P<base>.*?)(?P=quo)\s*%}" "\g<base>"|sort|uniq
-	# block hierarchy 3 agrep html "{%\s*block\s+(.*?)\s*%}" "\1"|sort|uniq
-	# id usage 2 r'id=(?P<quo>(\"|\'))(.*?)(?P=quo)' agrep html "id=(?P<quo>(\"|'))(?P<id>.*?)(?P=quo)" "\g<id>"
+	r = reduce(operator.add, [a.templates for a in apps])
+	r_dict = {t['template']:t for t in r}
+	for ext, fname in find(['.html','.js'], 'templates'):
+		_template = os.path.relpath(fname, 'templates')
+		if _template not in r_dict:
+			template={
+				'file': fname,
+				'template': os.path.relpath(fname, 'templates'),
+				'extends': [m.group('val') for m in grep(r_template_extends,fname)][:1] or [None], 
+				'include': [m.group('val') for m in grep(r_template_include,fname)], 
+				'blocks': [m.group('val') for m in grep(r_template_blocks,fname)],
+				'ids': [m.group('val') for m in grep(r_template_ids,fname)],
+			}
+			r_dict[_template]=template
+			r.append(template)
+	for template in r:
+		base = template['extends'][0]
+		extends = r_dict[base] if base in r_dict else base
+		template['extends'] = extends
+		if extends and type(extends) is dict:
+			if 'extended_by' in extends: template['extends']['extended_by'].append(template)
+			else: extends['extended_by']=list([template])
+		template['include_set'] = set(template['include'])
+		template['include'] = map(lambda t:r_dict[t] if t in r_dict else t, template['include'])
+	includes = reduce(operator.ior, (t['include_set'] for t in r))
+	def tree(i,d=0, last=False):
+		print '\t',
+		if d>0: print ' │  '*(d-1),
+		if 'extended_by' in i and i['extended_by']:
+			if d>0: print '├──',
+			print i['template']
+			for t in i['extended_by'][:-1]: tree(t, d+1)
+			for t in i['extended_by'][-1:]: tree(t, d+1, last=True)
+		else: 
+			if d>0: print '├──' if not last else '└──',
+			print i['template']
+	for root in filter(lambda t:t['extends']==None and t['template'] not in includes,r): tree(root)
 
 @section('View Layer')
 def __view():
