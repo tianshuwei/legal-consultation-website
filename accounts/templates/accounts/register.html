@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% load tagtools %}
 {% block title %}注册{% endblock %}
 {% block main %}
 <h1>注册</h1>
 <form method="post">
-{% csrf_token %}
+{% csrf_token %}{{ "login"|transacserial }}
 {{ register_form }}
 <input type="submit" />
 </form>
