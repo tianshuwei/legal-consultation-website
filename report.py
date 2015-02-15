@@ -9,15 +9,30 @@ r_template_extends=re.compile(r'{%\s*extends\s+(?P<quo>(\"|\'))(?P<val>.*?)(?P=q
 r_template_include=re.compile(r'{%\s*include\s+(?P<quo>(\"|\'))(?P<val>.*?)(?P=quo)\s*%}')
 r_template_blocks=re.compile(r'{%\s*block\s+(?P<val>.*?)\s*%}')
 r_template_ids=re.compile(r'id=(?P<quo>(\"|\'))(?P<val>.*?)(?P=quo)')
-SECTION = lambda name: '[\x1B[1;34;40m%s\x1B[0m]' % name
-F = lambda fname, line=None: '\x1B[0;35;40m%s\x1B[0;36;40m:%d\x1B[0m' % (fname, line) if line else '\x1B[0;35;40m%s\x1B[0m' % fname
-LINE = lambda l: '\x1B[0;36;40m:%d\x1B[0m' % l
-V = lambda name: '<\x1B[5;33;40m%s\x1B[0m>' % name
-U = lambda urlref: '\x1B[0;31;40m<no name>\x1B[0m' if not urlref else(
-	urlref if urlref in url_refs_templates else '\x1B[0;31;40m%s\x1B[0m' % urlref)
-RELATION_NAME = lambda R, f_admin: '\x1B[0;34;40m%s\x1B[0m'%R if list(grep(re.compile(''.join([r'\b',R,r'\b'])), f_admin)) else R
-RELATION_ATTR = lambda attr, foreign_keys: '\x1B[4;37;40m%s\x1B[0m'%attr if attr.endswith('_id') and attr[:-3] in foreign_keys else (
-	'\x1B[1;37;40mid\x1B[0m' if attr=='id' else attr)
+if 1:
+	SECTION = lambda name: '[\x1B[1;34;40m%s\x1B[0m]' % name
+	F = lambda fname, line=None: '\x1B[0;35;40m%s\x1B[0;36;40m:%d\x1B[0m' % (fname, line) if line else '\x1B[0;35;40m%s\x1B[0m' % fname
+	LINE = lambda l: '\x1B[0;36;40m:%d\x1B[0m' % l
+	V = lambda name: '<\x1B[5;33;40m%s\x1B[0m>' % name
+	U = lambda urlref: '\x1B[0;31;40m<no name>\x1B[0m' if not urlref else(
+		urlref if urlref in url_refs_templates else '\x1B[0;31;40m%s\x1B[0m' % urlref)
+	RELATION_NAME = lambda R, f_admin: '\x1B[0;34;40m%s\x1B[0m'%R if list(grep(re.compile(''.join([r'\b',R,r'\b'])), f_admin)) else R
+	RELATION_ATTR = lambda attr, foreign_keys: '\x1B[4;37;40m%s\x1B[0m'%attr if attr.endswith('_id') and attr[:-3] in foreign_keys else (
+		'\x1B[1;37;40mid\x1B[0m' if attr=='id' else attr)
+	BASE = lambda name: '\x1B[0;32;40m%s\x1B[0m'%name
+	TREE_SP=u"   "; TREE_LAST=u"└──"; TREE_PARENT=u'│'; TREE_MID=u'├'
+else: # remove r'\\x1B\[[\d;]+m'
+	SECTION = lambda name: '[%s]' % name
+	F = lambda fname, line=None: '%s:%d' % (fname, line) if line else '%s' % fname
+	LINE = lambda l: ':%d' % l
+	V = lambda name: '<%s>' % name
+	U = lambda urlref: '<no name>' if not urlref else(
+		urlref if urlref in url_refs_templates else '%s' % urlref)
+	RELATION_NAME = lambda R, f_admin: '%s'%R if list(grep(re.compile(''.join([r'\b',R,r'\b'])), f_admin)) else R
+	RELATION_ATTR = lambda attr, foreign_keys: '%s'%attr if attr.endswith('_id') and attr[:-3] in foreign_keys else (
+		'id' if attr=='id' else attr)
+	BASE = lambda name: '%s'%name
+	TREE_SP=u"   "; TREE_LAST=u"`--"; TREE_PARENT=u'|'; TREE_MID=u'|'
 
 sections = list()
 r_section = re.compile(r'(\w)_(\w+)')
@@ -50,15 +65,19 @@ def linecount(fname):
 	with open(fname, 'rb') as f:
 		return sum(b.count('\n') for b in itertools.takewhile(bool,(f.read(65536) for i in itertools.count())))
 
-def tree(x, sp=u"   ", last=u"└──", parent=u'│', mid=u'├'):
-	r = list()
+def tree(x, width=65535):
+	r = list(); foo = lambda x,w:[x[p:p+w] for p in xrange(0,len(x),w)]
 	for d,i in x:
-		r.append(''.join([sp*(d-1),last,i]) if d>0 else i)
-		p = len(sp)*(d-1)
-		for j in reversed(xrange(len(r)-1)):
-			if r[j][p] == sp[0]: r[j] = parent.join([r[j][:p],r[j][p+1:]])
-			elif r[j][p] == last[0]: r[j] = mid.join([r[j][:p],r[j][p+1:]])
-			else: break 
+		if d>0:
+			j=foo(i,width-len(TREE_SP)*d)
+			r+=map(lambda k:''.join([TREE_SP*(d-1),TREE_LAST,k]),j[:1])+map(lambda k:''.join([TREE_SP*d,k]),j[1:])
+		else: r+=foo(i,width)
+		p = len(TREE_SP)*(d-1)
+		if r[-1][p]==TREE_LAST[0]:
+			for j in reversed(xrange(len(r)-1)):
+				if r[j][p] == TREE_SP[0]: r[j] = TREE_PARENT.join([r[j][:p],r[j][p+1:]])
+				elif r[j][p] == TREE_LAST[0]: r[j] = TREE_MID.join([r[j][:p],r[j][p+1:]])
+				else: break 
 	return r
 
 class Application(object):
@@ -76,7 +95,7 @@ class Application(object):
 		self.f_views = os.path.join(app_name,'views.py')
 		def func_len(si):
 			r_funcbody = re.compile(r'^(\W.*|\n`)')
-			for l in xrange(si+1, 100000):
+			for l in itertools.count(si+1):
 				if not r_funcbody.match(linecache.getline(self.f_views, l)):
 					return l-si
 		r_deffunc = re.compile(r'^def\s+(\w+)\(.*')
@@ -176,17 +195,25 @@ def __template():
 		if extends and type(extends) is dict:
 			if 'extended_by' in extends: template['extends']['extended_by'].append(template)
 			else: extends['extended_by']=list([template])
-		template['include_set'] = set(template['include'])
+		template['include_set'] = template['include']
 		template['include'] = map(lambda t:r_dict[t] if t in r_dict else t, template['include'])
-	includes = reduce(operator.ior, (t['include_set'] for t in r))
+	includes = reduce(operator.ior, (set(t['include_set']) for t in r))
+	print 'Template Hierarchy'
 	def walk_templates(i,d=0):
-		yield d,i['template']
+		def block_def(block, i):
+			if i['extends'] and type(i['extends']) is dict: 
+				return False if block in i['extends']['blocks'] else block_def(block, i['extends'])
+			else: return True
+		r = ',\x20'.join(filter(lambda b:block_def(b,i),i['blocks'])+i['include_set'])
+		if r: r=''.join(['(',r,')'])
 		if 'extended_by' in i and i['extended_by']:
+			yield d,BASE(i['template'])+r
 			for t in i['extended_by']:
 				for j in walk_templates(t, d+1): yield j
-	for root in filter(lambda t:t['extends']==None and t['template'] not in includes,r):
-		for i in tree(walk_templates(root)):
-			print '\t',i
+		else: yield d,i['template']+r
+	roots=filter(lambda t:t['extends']==None and t['template'] not in includes,r)
+	for i in tree(reduce(operator.add,(list(walk_templates(root,d=1)) for root in roots)), width=120):
+		print i
 
 @section('View Layer')
 def __view():
@@ -206,8 +233,7 @@ def w_site():
 	print 'URL Mappings', len(url_mappings)
 	for urlref, func_name, pattern in url_mappings:
 		print '\t%s -> %s  /%s/'%(U(urlref), V(func_name), pattern)
-
-	isolated_urls = filter(lambda (urlref, func_name, pattern):urlref not in url_refs_templates,url_mappings)
+	isolated_urls = filter(lambda (urlref, func_name, pattern):urlref and urlref not in url_refs_templates,url_mappings)
 	print 'Isolated URLs:', len(isolated_urls)
 	for urlref, func_name, pattern in isolated_urls:
 		print '\t%s -> %s  /%s/'%(U(urlref), V(func_name), pattern)
