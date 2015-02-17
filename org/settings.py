@@ -55,6 +55,11 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.clickjacking.XFrameOptionsMiddleware'
 )
 
+AUTHENTICATION_BACKENDS = (
+    'org.rsa_authentication.RSABackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 ROOT_URLCONF = 'org.urls'
 WSGI_APPLICATION = 'org.wsgi.application'
 
