@@ -62,6 +62,16 @@ function $fetch (obj) {
 }
 
 /**
+为django渲染的表单补充样式
+
+	obj 		表单父容器
+*/
+function $djform (obj) {
+	$(obj).find(".form-group label").addClass("col-sm-1 control-label");
+	$(obj).find(".form-group input,textarea,select").addClass("form-control");
+}
+
+/**
 产生id选择器
 
 	prefix 		前缀

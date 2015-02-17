@@ -13,8 +13,3 @@ $(function () {
 function search_action (url) {
   $("#frmSearch").attr("action",url);
 }
-
-function $djform (selector) {
-	$(selector).find(".form-group label").addClass("col-sm-1 control-label");
-	$(selector).find(".form-group input,textarea,select").addClass("form-control");
-}
