@@ -47,11 +47,11 @@
                         	</a>
                         </li>
                         {% endif %}
-                        <li><a href="#">
+                        <li><a href="{% url 'accounts:order_list' %}">
                         	<span><i class="fa fa-fw fa-list-ol"></i>&nbsp;{% if is_lawyer %}接收到的订单{% else %}产品订单{% endif %}</span>
                         	</a>
                         </li>
-                         <li><a href="#">
+                         <li><a href="{% url 'accounts:question_list' %}">
                             <span><i class="fa fa-fw fa-question-circle"></i>&nbsp;{% if is_lawyer %}我的回答{% else %}我的问题{% endif %}</span>
                             </a>
                         </li>

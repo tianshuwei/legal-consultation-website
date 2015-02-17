@@ -64,15 +64,18 @@ def usercenter_view(request):
 	u = get_role(request.user)
 	if type(u) is Client or type(u) is Lawyer:
 		return response(request, 'accounts/usercenter.html',
-			orders=paginated(lambda: request.GET.get('po'), 10, 
-				u.order_set.order_by('-publish_date')),
-			questions=paginated(lambda: request.GET.get('pq'), 10, 
-				u.question_set.order_by('-publish_date')))
+			orders=paginated(lambda: request.GET.get('page'), 10, 
+				u.order_set.order_by('-publish_date')),)
 	else: raise Http404
 
 @login_required
 def questions_view(request):
-	return response(request, 'accounts/question_list.html')
+	u = get_role(request.user)
+	if type(u) is Client or type(u) is Lawyer:
+		return response(request, 'accounts/question_list.html',
+			questions=paginated(lambda: request.GET.get('page'), 10, 
+					u.question_set.order_by('-publish_date')))
+	else: raise Http404
 
 @login_required
 def orders_view(request):

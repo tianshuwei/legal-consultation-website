@@ -43,3 +43,6 @@ class CategoryTest(UnitTestCase):
 			'last_name':'Doe',
 			'first_name':'John',
 		},'accounts:register', role='client'))
+
+	def test_new_question(self):
+		pass
