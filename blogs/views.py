@@ -13,6 +13,9 @@ class ArticleForm(forms.ModelForm):
 			'tags' : u'标签',
 			'text' : u'正文',
 		}
+		widgets = {
+			'text': BootstrapWYSIWYG(attrs={'class': 'form-control', 'id': 'editor'}), 
+		}
 
 @login_required # [UnitTest]
 def delete_article_view(request, pk_text):
@@ -76,6 +79,7 @@ def new_article_view(request):
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
 			return redirect('index:index')
 		except: # Untestable! 
+			# TODO log trackback
 			handle_illegal_access(request, False)
 			messages.error(request, u'文章创建失败')
 			rec.error(u'{0} 创建文章失败'.format(request.user.username))
