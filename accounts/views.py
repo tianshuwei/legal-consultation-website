@@ -70,6 +70,14 @@ def usercenter_view(request):
 				u.question_set.order_by('-publish_date')))
 	else: raise Http404
 
+@login_required
+def questions_view(request):
+	return response(request, 'accounts/question_list.html')
+
+@login_required
+def orders_view(request):
+	return response(request, 'accounts/order_list.html')
+
 class ProfileEditForm(forms.ModelForm):
 	class Meta:
 		model = User
