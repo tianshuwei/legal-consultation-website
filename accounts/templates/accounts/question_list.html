@@ -1,5 +1,13 @@
 {% extends 'accounts/base_usercenter.html' %}
 {% load staticfiles %}
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    select_nav("Questions");
+  });
+</script>
+{% endblock %}
 {% block main_col %}
 <a href="{% url 'accounts:new_question' %}">我要提问</a>
 <div class="list-group animated fadeInLeft animation-delay-8">

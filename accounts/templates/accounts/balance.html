@@ -1,5 +1,11 @@
 {% extends 'accounts/base_usercenter.html' %}
-{# {% extends 'base.html' %} #}
+{% block headextra %}
+<script type="text/javascript">
+  $(function () {
+    select_nav("Money");
+  });
+</script>
+{% endblock %}
 {% load staticfiles %}
 <!-- 此处可以根据出现的场合 套用全局base或者用户中心的base,之后再做update -->
 
