@@ -74,10 +74,9 @@ def new_article_view(request):
 			messages.error(request, u'该分类不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
 		except ObjectDoesNotExist, e: 
-			handle_illegal_access(request, False)
 			messages.error(request, u'该律师不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
-			return redirect('index:index')
+			handle_illegal_access(request)
 		except: # Untestable! 
 			# TODO log trackback
 			handle_illegal_access(request, False)
