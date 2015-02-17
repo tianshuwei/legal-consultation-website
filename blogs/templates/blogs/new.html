@@ -1,18 +1,174 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% load tagtools %}
-{% block title %}新文章{% endblock %}
+
+{% block headextra %}
+<script type="text/javascript">
+  function page_title (title) {
+    $("header.main-header .page-title").text(title);
+  }
+
+  function breadcrumb (label, url) {
+    $("header.main-header .breadcrumb").append('<li><a href="'+url+'">'+label+'</a></li>');
+  }
+  function initToolbarBootstrapBindings() {
+    var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 
+          'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+          'Times New Roman', 'Verdana'],
+          fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+    $.each(fonts, function (idx, fontName) {
+        fontTarget.append($('<li><a data-edit="fontName ' + fontName +'" style="font-family:\''+ fontName +'\'">'+fontName + '</a></li>'));
+    });
+    $('a[title]').tooltip({container:'body'});
+  	$('.dropdown-menu input').click(function() {return false;})
+  	    .change(function () {$(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');})
+      .keydown('esc', function () {this.value='';$(this).change();});
+    $('[data-role=magic-overlay]').each(function () { 
+      var overlay = $(this), target = $(overlay.data('target')); 
+      overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+    });
+    if ("onwebkitspeechchange"  in document.createElement("input")) {
+      var editorOffset = $('#editor').offset();
+      $('#voiceBtn').css('position','absolute').offset({top: editorOffset.top, left: editorOffset.left+$('#editor').innerWidth()-35});
+    } else {
+      $('#voiceBtn').hide();
+    }
+  };
+
+  function showErrorAlert (reason, detail) {
+  	var msg='';
+  	if (reason==='unsupported-file-type') { msg = "Unsupported format " +detail; }
+  	else {
+  		console.log("error uploading file", reason, detail);
+  	}
+  	$('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button>'+ 
+  	 '<strong>File upload error</strong> '+msg+' </div>').prependTo('#alerts');
+  };
+
+  $(function () {
+    select_nav("Blog");
+    initToolbarBootstrapBindings();
+	$('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
+
+  });
+$(document).ready( function() {
+    $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+        console.log(numFiles);
+        console.log(label);
+    });
+});
+
+$(document).on('change', '.btn-file :file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.trigger('fileselect', [numFiles, label]);
+});
+
+  function search_action (url) {
+    $("#frmSearch").attr("action",url);
+  }
+</script>
+{% endblock %}
+
+{%block toolbar %}
+{% if is_master %}
+<li><a href="{% url 'blogs:new_article' %}" class="animated fadeIn animation-delay-6 rss"><i class="fa fa-align-justify"></i>&nbsp;&nbsp;写新文章</a></li>
+{{ block.super }}
+{% endif %}
+{% endblock %}
+
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">写新文章</h1>
+        <ol class="breadcrumb pull-right">
+        </ol>
+    </div>
+</header>
+<script src="http://www.bootcss.com/p/bootstrap-wysiwyg/bootstrap-wysiwyg.js"></script>
+
+{% endblock %}
 {% block main %}
-<h1>写新文章</h1>
-<a href="{% url 'blogs:index' request.user.lawyer.id %}">返回博客主页</a>
-<form id="frmArticle" method="post">
-	{% csrf_token %}{{ "blogs:new_article"|transacserial }}
-	{{ article_create }} {# << 渲染表单 #}
-	{% comment %}
 
-	- 其他渲染形式参考 https://docs.djangoproject.com/en/1.7/topics/forms/#form-rendering-options
-	- 手动渲染表单参考 https://docs.djangoproject.com/en/1.7/topics/forms/#rendering-fields-manually
+		<form id="frmArticle" method="post" role="form" class="form-horizontal" >
+			{% csrf_token %}{{ "blogs:new_article"|transacserial }}
+			<div class="form-group" >
+				<label for="id_title" class="col-sm-1 control-label">标题:</label>
+				<div class="col-sm-10 col-md-10">
+				<input id="id_title" class="form-control" maxlength="255" name="title" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+	            <label for="select" class="col-sm-1 control-label">分类:</label>
+                <div class="col-sm-4 col-md-2">
+                  <select class="form-control" id="select">
+                    <option value="" selected="selected">---------</option>
+					<option value="2">阿文24</option>
+					<option value="3">阿文24234</option>
+					<option value="4">默认</option>
+                  </select>
+                </div>
+                <label for="id_tags" class="col-sm-1 control-label">标签:</label>
+				<div class="col-sm-4 col-md-3">
+                  <input id="id_tags" class="form-control" maxlength="255" name="tags" type="text">
+              	</div>
+	        </div>
 
-	{% endcomment %}
-	<input type="submit"/>
-</form>
+
+			<div class="form-group">
+				<label for="id_text" class="col-sm-1 control-label">正文:</label>
+				<div class="col-sm-10 col-md-10">
+					<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+					  <div class="btn-group">
+					  <a class="btn  btn-default dropdown-toggle" data-toggle="dropdown" title="Font"><i class="fa fa-font"></i><span class="fa fa-angle-down"></span></a>
+				          <ul class="dropdown-menu">
+				          </ul>
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="Font Size"><i class="fa fa-text-height"></i><span class="fa fa-sm fa-angle-down"></span></a>
+				          <ul class="dropdown-menu">
+				          <li><a data-edit="fontSize 5"><font size="5">Huge</font></a></li>
+				          <li><a data-edit="fontSize 3"><font size="3">Normal</font></a></li>
+				          <li><a data-edit="fontSize 1"><font size="1">Small</font></a></li>
+				          </ul>
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn btn-default" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i class="fa fa-bold"></i></a>
+				        <a class="btn btn-default" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i class="fa fa-italic"></i></a>
+				        <a class="btn btn-default" data-edit="strikethrough" title="Strikethrough"><i class="fa fa-strikethrough"></i></a>
+				        <a class="btn btn-default" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i class="fa fa-underline"></i></a>
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn btn-default" data-edit="insertunorderedlist" title="Bullet list"><i class="fa fa-list "></i></a>
+				        <a class="btn btn-default" data-edit="insertorderedlist" title="Number list"><i class="fa fa-list-ol"></i></a>
+				        <a class="btn btn-default" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i class="fa fa-indent"></i></a>
+				        <a class="btn btn-default" data-edit="indent" title="Indent (Tab)"><i class="fa fa-outdent"></i></a>
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn btn-default" data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+				        <a class="btn btn-default" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i class="fa fa-align-center"></i></a>
+				        <a class="btn btn-default" data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)"><i class="fa fa-align-right"></i></a>
+				        <a class="btn btn-default" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i class="fa fa-align-justify"></i></a>
+				      </div>
+
+				      <div class="btn-group">
+				        <a class="btn btn-default" title="Insert picture (or just drag &amp; drop)" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
+				        <span class="btn btn-primary btn-file"><i class="fa">选择文件</i><input type="file" type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage"></span>
+				       <!--  http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/ -->
+				      </div>
+				      <div class="btn-group">
+				        <a class="btn btn-default" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i class="fa fa-undo"></i></a>
+				        <a class="btn btn-default" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
+				      </div>
+				    </div>
+					<div id="editor" cols="40" class="form-control" id="id_text" name="text" rows="10">werwerwer</div>
+				</div>
+			</div>
+			<input class="btn btn-ar btn-primary pull-right" type="submit">
+		</form>
+
+<script type="text/javascript">
+
+</script>
 {% endblock %}
