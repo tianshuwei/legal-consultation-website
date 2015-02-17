@@ -3,6 +3,8 @@
 {% load tagtools %}
 
 {% block headextra %}
+<script src="{% static 'js/jquery.hotkeys.js' %}"></script>
+<script src="{% static 'js/bootstrap-wysiwyg.js' %}"></script>
 <script type="text/javascript">
   function page_title (title) {
     $("header.main-header .page-title").text(title);

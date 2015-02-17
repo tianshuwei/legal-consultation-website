@@ -63,7 +63,7 @@ server {
   }
 }
 EOF
-uwsgi --chdir=/var/www/org \
+sudo uwsgi --chdir=/var/www/org \
  --module=org.wsgi:application \
  --env DJANGO_SETTINGS_MODULE=org.settings \
  --master --pidfile=/tmp/project-master.pid \
