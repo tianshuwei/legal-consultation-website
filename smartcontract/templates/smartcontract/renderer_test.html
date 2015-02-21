@@ -1,7 +1,14 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
-<head><title>org.docxrenderer test</title></head>
-<body>
+{% extends 'smartcontract/base.html' %}
+{% load tagtools %}
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    page_title("org.docxrenderer test");
+  });
+</script>
+{% endblock %}
+{% block contexts %}
 <h1>org.docxrenderer 演示</h1>
 <form enctype="multipart/form-data" method="post">
 	<div>1.上传Word（docx）文件作为模板，模板变量形式：@+varname/</div>{% csrf_token %}
@@ -23,5 +30,104 @@
 {% endfor %}
 </tbody></table>
 {% endif %}
-</body>
-</html>
+
+<!-- ////////////////////////////////-my part / -->
+<div class="col-md-9 ">
+            <ul class="timeline-2">
+                <li class="animated fadeInRight animation-delay-10">
+                    <time class="timeline-time" datetime="">Step<span>1</span></time>
+                    <i class="timeline-2-point"></i>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae, iusto.</div>
+                        <div class="panel-body">
+                            <form method="post" class="form-horizontal" role="form">
+                      	 <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">name</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="email" required="required" class="form-control" id="inputEmail3" placeholder="Lorem ipsum dolor sit amet.">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="email" required="required" class="form-control" id="inputEmail3" placeholder="nsectetur adipisicing elit. Corporis, excepturi.">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">address</label>
+                            <div class="col-sm-10 col-md-8">
+                              <input type="email" required="required" class="form-control" id="inputEmail3" placeholder="ipsum isicing elit. Culpa, itaque!">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="select" class="col-sm-2 control-label">Selects</label>
+                                <div class="col-sm-5 col-md-2">
+                                  <select class="form-control" id="select">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                  </select>
+                                </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Remember me
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                              <label for="select" class="col-sm-2 control-label">option</label>
+                              <div class="col-sm-10 col-md-10">
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                      Option one is this and that—be sure to include why it's great
+                                    </label>
+                                  </div>
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                      Option two can be something else and selecting it will deselect option one
+                                    </label>
+                                  </div>
+                                  <p class="em-primary"><i class="fa fa-warning"></i><small>Lorem ipsum dolor sit amet.</small></p>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <button type="submit" class="btn btn-ar btn-primary">save</button><p>此处应该在加载页面时加载预存信息,js提交部分内容用于符合信息可以重用</p>
+                            </div>
+                          </div>
+                        </form> <!-- end form -->
+                        </div>
+                    </div>
+                </li>
+                <li class="animated fadeInRight animation-delay-8">
+                    <time class="timeline-time" datetime="">Step<span>2</span></time>
+                    <i class="timeline-2-point"></i>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Event with responsive image</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <img src="../assets/img/demo/office1.jpg" alt="" class="img-responsive">
+                                </div>
+                                <div class="col-sm-8">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum, praesentium, quam! Quia fugiat aperiam.</p>
+                                    <p>Perspiciatis soluta voluptate dolore officiis libero repellat cupiditate explicabo atque facere aliquam.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                
+            </ul>
+        </div>
+
+{% endblock %}

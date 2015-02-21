@@ -190,20 +190,31 @@ class QuestionForm(forms.ModelForm):
 @login_required
 def new_question_view(request):
 	if request.method=='POST':
+		rec=recorded(request,'blogs:delete_article')
 		try:
-			qu=Question.objects.create(
-				client=request.user.client,
-				title=request.POST['title'],
-				lawyer=Lawyer.objects.get(id=request.POST['lawyer']),
-				description=request.POST['description']
-			)
-			qu.save()
-			cl=get_object_or_404(Client,pk=request.user.client.id)
-			cl.minus_points()
-		except ObjectDoesNotExist,e: raise Http404
-		except : messages.error(request, u'问题创建失败')
-		else: messages.success(request, u'问题创建成功')
-		return redirect('accounts:question',pk_question=qu.id)
+			with transaction.atomic():
+				question=Question.objects.create(
+					client=request.user.client,
+					title=request.POST['title'],
+					lawyer=Lawyer.objects.get(id=request.POST['lawyer']),
+					description=request.POST['description']
+				)
+				question.save()
+				request.user.client.minus_points()
+		# TODO 律师可以为None，这种情况表示所有律师可以回答
+		except ObjectDoesNotExist,e: 
+			messages.error(request, u'问题创建失败')
+			rec.error(u'{0} 创建问题失败，因为客户不存在'.format(request.user.username))
+			handle_illegal_access(request)
+		except: # Untestable!
+			# TODO log trackback
+			handle_illegal_access(request, False)
+			messages.error(request, u'问题创建失败')
+			rec.error(u'{0} 创建问题失败'.format(request.user.username))
+		else: 
+			messages.success(request, u'问题创建成功')
+			rec.success(u'{0} 创建问题 {1} 成功'.format(request.user.username, question.title))
+		return redirect('accounts:question',pk_question=question.id)
 	else: 
 		return response(request, 'accounts/new_question.html', 
 			question_create=QuestionForm())

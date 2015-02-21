@@ -3,11 +3,11 @@
 {% load tagtools %}
 {% block title %}新问题{% endblock %}
 {% block headextra %}
+{{ block.super }}
 <script type="text/javascript">
   $(function () {
-    select_nav("UserCenter");
+    select_nav("Questions");
     $djform("#frmQuestion");
-    console.debug('ih');
   });
 </script>
 {% endblock %}
@@ -16,7 +16,7 @@
 <form id="frmQuestion" method="post" role="form" class="form-horizontal">
     {% csrf_token %} {{ 'accounts:new_question'|transacserial }}
     <div class="form-group" >
-    {{ question_create.title.label_tag }}<div class="col-sm-6 col-md-6">{{ question_create.title }}</div>
+    {{ question_create.title.label_tag }}<div class="col-sm-5 col-md-6">{{ question_create.title }}</div>
     {{ question_create.lawyer.label_tag }}<div class="col-sm-4 col-md-3">{{ question_create.lawyer }}</div>
     </div>
     <div class="form-group" >

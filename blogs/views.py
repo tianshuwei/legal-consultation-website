@@ -72,7 +72,6 @@ def new_article_view(request):
 			rec.error(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
 			return response_jquery({ 'success': False, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 		except ObjectDoesNotExist, e: 
-			handle_illegal_access(request, False)
 			messages.error(request, u'该律师不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
 			return response_jquery({ 'success': False, 'redirect': href('index:index')})
