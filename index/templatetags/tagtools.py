@@ -31,3 +31,10 @@ def transacserial_filter(transaction_name):
 	except: 
 		logger_lambda.exception(u'lambda容错记录')
 		return ''
+
+from org.antixss import antiXSS_BootstrapWYSIWYS
+@register.filter(name='antixss',is_safe=True)
+@stringfilter
+def antixss_filter(html):
+	try: return antiXSS_BootstrapWYSIWYS(html)
+	except: return '<antiXSS_BootstrapWYSIWYS failure>'

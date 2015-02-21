@@ -203,9 +203,6 @@ def paginated(pagenumf, items_per_page, dataset):
 	page.page_range=sorted(set(filter(lambda i:i in paginator.page_range, range(current-2,current+6)+[current+10,(1+current)/2,(current+paginator.count)/2])))
 	return page
 
-def antiXSS(html):
-	NotImplemented
-
 from accounts.models import Lawyer, Client
 def get_role(user):
 	def foo(user):

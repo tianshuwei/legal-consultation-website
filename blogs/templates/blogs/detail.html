@@ -42,7 +42,7 @@
     </small>
 	{% endif %}
 	</h2>
-    <div>{{ article.text|safe }}</div>
+    <div>{{ article.text|antixss|safe }}</div>
 </section>
 <section>
     <div class="panel panel-default">
