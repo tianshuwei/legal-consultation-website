@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
+from org.widgets import BootstrapWYSIWYG, BlogCategorySelect
 from accounts.models import Lawyer
 from blogs.models import BlogArticle, BlogComment, BlogCategory, BlogSettings
 
@@ -14,6 +15,7 @@ class ArticleForm(forms.ModelForm):
 			'text' : u'正文',
 		}
 		widgets = {
+			'category': BlogCategorySelect,
 			'text': BootstrapWYSIWYG(attrs={'class': 'form-control', 'id': 'editor'}), 
 		}
 
