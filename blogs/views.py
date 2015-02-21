@@ -62,36 +62,32 @@ def new_article_view(request):
 		rec=recorded(request,'blogs:new_article')
 		try:
 			with transaction.atomic():
-				article=BlogArticle.objects.create(
-					author=request.user.lawyer,
-					title=request.POST['title'],
-					category=BlogCategory.objects.get(id=request.POST['category']),
-					publish_date=datetime.now(),
-					tags=request.POST['tags'],
-					text=request.POST['text']
-				)
+				article = ArticleForm(request.POST).save(commit=False)
+				article.author = request.user.lawyer
+				article.publish_date = datetime.now()
 				article.save()
 		except BlogCategory.DoesNotExist, e: 
 			handle_illegal_access(request, False)
 			messages.error(request, u'该分类不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
+			return response_jquery({ 'success': False, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 		except ObjectDoesNotExist, e: 
 			handle_illegal_access(request, False)
 			messages.error(request, u'该律师不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
-			return redirect('index:index')
-		except: # Untestable! 
-			# TODO log trackback
+			return response_jquery({ 'success': False, 'redirect': href('index:index')})
+		except:
+			logger.exception('Untestable')
 			handle_illegal_access(request, False)
 			messages.error(request, u'文章创建失败')
 			rec.error(u'{0} 创建文章失败'.format(request.user.username))
+			return response_jquery({ 'success': False, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 		else: 
 			messages.success(request, u'文章创建成功') # [LiveTest] [UnitTest]
 			rec.success(u'{0} 创建文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
-		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
+			return response_jquery({ 'success': True, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 	else: 
-		return response(request, 'blogs/new.html', 
-			article_create=ArticleForm())
+		return response(request, 'blogs/new.html', article_create=ArticleForm())
 
 def home_view(request):
 	try: return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
