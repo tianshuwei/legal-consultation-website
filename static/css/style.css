@@ -42,6 +42,10 @@ img.face{
   background: #0088DB;
 }
 /*------------------------------------------------------------*/
+
+i.fa{
+  margin-right: 10px;
+}
 .btn-file {
     position: relative;
     overflow: hidden;
