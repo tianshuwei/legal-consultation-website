@@ -8,6 +8,13 @@
     select_nav("UserCenter");
   });
 </script>
+<script type="text/javascript">
+$document.ready(){
+    $("#profile").removeClass("active");
+    $("#"+getUrlParam("ids")).addClass("active");
+}
+</script>
+
 {% endblock %}
 {% block head %}
 <header class="main-header">
@@ -16,72 +23,11 @@
     </div>
 </header>
 {% endblock %}
+    {% block main_col %}
+    <h1>something interesting~~:)</h1>
+    {% endblock %}
 
 
-{% block main %}
-<div class="container">
-            <!-- left, vertical navbar & content -->
-            <div class="row">
-                <!-- left, vertical navbar -->
-
-                <div class="col-md-3 col-sm-3">
-                <div class="profile-bg">
-                    <div class="animated fadeInDown animation-delay-8 profile-box">
-                            <img src="{% static "img/sample/user.jpg" %}" alt="" class="face">
-                            <p class="title">Lorem ipsum</p>
-                    </div>
-                </div>
-                <div class="portfolio-menu">
-                    <ul class="portfolio-cats">
-                        <li ><a href="{% url 'accounts:profile_self' %}">
-                            <span id="profile" class="active"><i class="fa fa-fw fa-star"></i>&nbsp;近期动态</span>
-                            </a>
-                        </li>
-                        <li ><a href="{% url 'accounts:profile_self' %}">
-                            <span><i class="fa fa-fw fa-star"></i>&nbsp;个人资料</span>
-                            </a>
-                        </li>
-                        {% if is_lawyer %}
-                        <li><a href="{% url 'blogs:home' %}">
-                        	<span><i class="fa fa-fw fa-user"></i>&nbsp;博客近况</span>
-                        	</a>
-                        </li>
-                        {% endif %}
-                        <li><a href="{% url 'accounts:order_list' %}">
-                        	<span><i class="fa fa-fw fa-list-ol"></i>&nbsp;{% if is_lawyer %}接收到的订单{% else %}产品订单{% endif %}</span>
-                        	</a>
-                        </li>
-                         <li><a href="{% url 'accounts:question_list' %}">
-                            <span><i class="fa fa-fw fa-question-circle"></i>&nbsp;{% if is_lawyer %}我的回答{% else %}我的问题{% endif %}</span>
-                            </a>
-                        </li>
-                        <li><a href="{% url 'accounts:balance' %}">
-                        	<span><i class="fa fa-fw fa-dollar"></i>&nbsp;{% if is_lawyer %}账户提现{% else %}余额充值{% endif %}</span>
-                        	</a>
-                        </li>
-                    </ul>
-                </div>
-
-                </div>
-
-                <!-- content -->
-                <div class="col-md-9 col-sm-9">
-                {% block main_col %}
-
-                <h1>something interesting~~:)</h1>
-
-                {% endblock %}
 
 
-                </div>
-            </div>
-        </div>
 
-<script type="text/javascript">
-$document.ready(){
-	$("#profile").removeClass("active");
-	$("#"+getUrlParam("ids")).addClass("active");
-}
-</script>
-
-{% endblock %}
