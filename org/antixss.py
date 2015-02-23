@@ -30,5 +30,6 @@ options_BootstrapWYSIWYS = dict(
 		'border',
 	])
 
-def antiXSS_BootstrapWYSIWYS(text):
-	return bleach.clean(text, **options_BootstrapWYSIWYS)
+def antiXSS_BootstrapWYSIWYS(text, strip=False):
+	options=dict(options_BootstrapWYSIWYS, strip=strip)
+	return bleach.clean(text, **options)
