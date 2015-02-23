@@ -2,9 +2,14 @@
 <li class="media">
     <a class="pull-left" href="#"><img class="media-object" src="../assets/img/demo/m2.jpg" width="80" height="80" alt="image"></a>
     <div class="media-body">
-        <p class="media-heading"><a href="{% url 'blogs:text' article.id %}">z{{article.title}}</a></p>
-        <p>{{ article.text|truncatewords_html:60 }}</p>
-        <small>{{article.publish_date}}</small>
+        <p class="media-heading"><a href="{% url 'blogs:text' article.id %}">{{article.title}}</a></p>
+        <p><small><i class="fa fa-folder-open"></i> <a href="{% url 'blogs:index_category' article.category.id %}">{{article.category}}</a>
+                    <i class="fa fa-tags">
+                    {% for tag in article.get_tags %}
+                    <a href="{% url 'blogs:index_tag' article.author.id tag %}">{{tag}}</a>
+                    {% endfor %}
+                    </i> </small></p>
+        <p><small>{{article.publish_date}}</small></p>
     </div>
 </li>
 {% endfor %}
