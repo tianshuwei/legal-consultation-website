@@ -7,7 +7,38 @@ from django.shortcuts import render
 from settings import DEBUG
 from index.models import TransactionRecord
 from datetime import datetime
-import random
+import random, logging, re
+
+logger = logging.getLogger('org.main')
+logger_security = logging.getLogger('org.security')
+logger_lambda = logging.getLogger('org.lambda')
+
+def format_dict(fmt, d, default=None):
+	"""
+	格式化字典对象，对不存在的关键字插入默认值
+
+		fmt 		   格式
+		d 			   字典对象
+		default 	   默认值
+	"""
+	r_key=re.compile(r'%\((\w+)\)s')
+	return fmt % {key:(d[key] if key in d else default) for key in (m.group(1) for m in r_key.finditer(fmt))}
+
+def handle_illegal_access(request, exception=True):
+	"""
+	处理非法访问，记录安全日志并产生Http404
+
+		request        被响应HTTP请求
+		exception      是否产生Http404
+	"""
+	logger_security.warning(format_dict(u"""非法访问 %(REQUEST_METHOD)s %(REQUEST_URL)s
+	CONTENT_TYPE %(CONTENT_TYPE)s
+	HTTP_USER_AGENT %(HTTP_USER_AGENT)s
+	OS %(OS)s
+	QUERY_STRING %(QUERY_STRING)s
+	REMOTE_ADDR %(REMOTE_ADDR)s""",
+	dict(request.META, REQUEST_URL=request.path)))
+	if exception: raise Http404
 
 class TransactionRecordException(Exception):
 	"""
@@ -62,6 +93,7 @@ def recorded(request, transaction_name):
 	如果请求包含事务序列号，则建立事务日志，跟踪这个事务。
 	"""
 	if request.method!='POST': 
+		logger.error(u'{0}没有采用POST请求。'.format(transaction_name))
 		raise TransactionRecordException(u'必须使用POST请求。')
 	if TRANSACSERIAL in request.POST:
 		rec = TransactionRecord.objects.create(
@@ -72,6 +104,7 @@ def recorded(request, transaction_name):
 		rec.save()
 		return rec
 	else:
+		logger.error(u'{0} POST请求中缺少transacserial。'.format(transaction_name))
 		raise TransactionRecordException(u'POST请求中缺少transacserial')
 
 class Lazy(object):
@@ -91,6 +124,9 @@ def redirect(url_ref, **kwargs):
 		kwargs        url中的命名参数
 	"""
 	return HttpResponseRedirect(reverse(url_ref, kwargs = kwargs))
+
+def href(url_ref, **kwargs):
+	return reverse(url_ref, kwargs = kwargs)
 
 def url_of(url_ref, **kwargs):
 	return reverse(url_ref, kwargs = kwargs)
@@ -139,11 +175,16 @@ def checkf(exp, default=None):
 		default        异常返回默认值
 	""" 
 	try: return exp()
-	except: return default
+	except: 
+		logger_lambda.exception(u'lambda容错记录')
+		return default
 
 def or404(exp):
 	try: return exp()
-	except: raise Http404
+	except Exception, e: 
+		logger_security.warning(u'or404捕获异常 {0}'.format(e))
+		logger_lambda.exception(u'lambda容错记录')
+		raise Http404
 
 def paginated(pagenumf, items_per_page, dataset):
 	"""
@@ -186,10 +227,16 @@ for funcname in __messages_override:
 			return __messages[funcname](request,message)
 	setattr(messages,funcname,foo)
 
+from django.shortcuts import get_object_or_404 as _get_object_or_404
+def get_object_or_404(model, pk):
+	try: return _get_object_or_404(model, pk=pk)
+	except Http404:
+		logger_security.warning(u"非法访问 {0} pk={1}".format(model,pk))
+		raise
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django import forms
 import traceback

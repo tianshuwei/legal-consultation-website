@@ -10,18 +10,19 @@
     </div>
     <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false" style="height: 1px;">
       <ul class="nav navbar-nav">
-            <li id="nav_li_Home"><a href="{% url 'index:index' %}">Home</a></li>
-            <li id="nav_li_Product"><a href="{% url 'products:index' %}">products</a></li>
-            <li id="nav_li_LawyerList"><a href="{% url 'accounts:lawyerlist' %}">lawyers</a></li>
+            <li id="nav_li_Home"><a href="{% url 'index:index' %}">首页</a></li>
+            <li id="nav_li_Product"><a href="{% url 'products:index' %}">产品</a></li>
+            <li id="nav_li_LawyerList"><a href="{% url 'accounts:lawyerlist' %}">律师</a></li>
               {% if is_lawyer %}
               <li id="nav_li_Blog">
-              <a href="{% url 'blogs:home' %}" >blogs</a></li>
+              <a href="{% url 'blogs:home' %}" >博客</a></li>
               {% endif %}
+              <li id="nav_li_smartcontract"><a href="{% url 'smartcontract:test' %}">智能合同</a></li>
           </ul>
     {% if user.is_authenticated %}
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="{% url 'accounts:logout' %}">LogOut</a></li>
-        <li><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i>&nbsp;&nbsp;<strong>{{ user.username }}</strong>'s center</a></li>
+        <li><a href="{% url 'accounts:logout' %}">安全退出</a></li>
+        <li id="nav_li_UserCenter"><a href="{% url 'accounts:usercenter' %}" ><i class="fa fa-user"></i><strong>{{ user.username }}</strong>用户中心</a></li>
         <!-- <li class="dropdown">
           <a href="{% url 'accounts:usercenter' %}" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}'s center</a>
           <ul class="dropdown-menu" role="menu">
@@ -45,7 +46,7 @@
                   <input type="password" name="password" placeholder="Password" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-ar btn-success" id="login" >Sign in</button>
-            <a href="{% url 'accounts:register' 'client' %}"><button class="btn btn-ar btn-primary">Sign up</button></a>
+            <a href="{% url 'accounts:register' 'client' %}" class="btn btn-ar btn-primary">Sign up</a>
             </form>
     {% endif %}
     </div>

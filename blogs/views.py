@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
+from org.widgets import BootstrapWYSIWYG, BlogCategorySelect
 from accounts.models import Lawyer
 from blogs.models import BlogArticle, BlogComment, BlogCategory, BlogSettings
 
@@ -13,6 +14,10 @@ class ArticleForm(forms.ModelForm):
 			'tags' : u'标签',
 			'text' : u'正文',
 		}
+		widgets = {
+			'category': BlogCategorySelect,
+			'text': BootstrapWYSIWYG(attrs={'class': 'form-control', 'id': 'editor'}), 
+		}
 
 @login_required # [UnitTest]
 def delete_article_view(request, pk_text):
@@ -25,10 +30,11 @@ def delete_article_view(request, pk_text):
 			rec.success(u'{0} 删除文章 {1} 成功'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': True }, 'blogs:index', pk_lawyer=article.author.id)
 		else:
+			handle_illegal_access(request, False)
 			messages.error(request, u'文章删除失败') # [UnitTest]
 			rec.error(u'{0} 删除文章 {1} 失败'.format(request.user.username, article.title))
 			return response_auto(request, { 'success': False }, 'blogs:index', pk_lawyer=article.author.id)
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 @login_required # [LiveTest] [UnitTest]
 def edit_article_view(request, pk_text):
@@ -41,6 +47,7 @@ def edit_article_view(request, pk_text):
 			messages.success(request, u'文章编辑成功') # [LiveTest] [UnitTest]
 			rec.success(u'{0} 编辑文章 {1} 成功'.format(request.user.username, article.title))
 		else:
+			handle_illegal_access(request, False)
 			messages.error(request, u'文章编辑失败') # [UnitTest]
 			rec.error(u'{0} 编辑文章 {1} 失败'.format(request.user.username, article.title))
 		return redirect('blogs:index', pk_lawyer=article.author.id)
@@ -55,32 +62,31 @@ def new_article_view(request):
 		rec=recorded(request,'blogs:new_article')
 		try:
 			with transaction.atomic():
-				article=BlogArticle.objects.create(
-					author=request.user.lawyer,
-					title=request.POST['title'],
-					category=BlogCategory.objects.get(id=request.POST['category']),
-					publish_date=datetime.now(),
-					tags=request.POST['tags'],
-					text=request.POST['text']
-				)
+				article = ArticleForm(request.POST).save(commit=False)
+				article.author = request.user.lawyer
+				article.publish_date = datetime.now()
 				article.save()
 		except BlogCategory.DoesNotExist, e: 
+			handle_illegal_access(request, False)
 			messages.error(request, u'该分类不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为分类不存在'.format(request.user.username))
+			return response_jquery({ 'success': False, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 		except ObjectDoesNotExist, e: 
 			messages.error(request, u'该律师不存在') # [UnitTest]
 			rec.error(u'{0} 创建文章失败，因为律师不存在'.format(request.user.username))
-			return redirect('index:index')
-		except: # Untestable! 
+			return response_jquery({ 'success': False, 'redirect': href('index:index')})
+		except:
+			logger.exception('Untestable')
+			handle_illegal_access(request, False)
 			messages.error(request, u'文章创建失败')
 			rec.error(u'{0} 创建文章失败'.format(request.user.username))
+			return response_jquery({ 'success': False, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 		else: 
 			messages.success(request, u'文章创建成功') # [LiveTest] [UnitTest]
 			rec.success(u'{0} 创建文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
-		return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
+			return response_jquery({ 'success': True, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 	else: 
-		return response(request, 'blogs/new.html', 
-			article_create=ArticleForm())
+		return response(request, 'blogs/new.html', article_create=ArticleForm())
 
 def home_view(request):
 	try: return redirect('blogs:index', pk_lawyer=request.user.lawyer.id)
@@ -101,9 +107,10 @@ def favourite_posts_mod_view(request, pk_lawyer):
 	return response(request, 'blogs/favourite_posts.mod.html',
 		articles=lawyer.blogarticle_set.get_favourite_articles())
 
-chez = lambda pk_lawyer: \
-	(get_object_or_404(Lawyer, pk=pk_lawyer), 
-	or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer)))
+def chez(pk_lawyer):
+	lawyer = get_object_or_404(Lawyer, pk=pk_lawyer)
+	blogsettings = or404(lambda: BlogSettings.objects.get_blogsettings(lawyer))
+	return lawyer, blogsettings
 
 def index_view(request, pk_lawyer):
 	lawyer, blogsettings=chez(pk_lawyer)
@@ -114,7 +121,7 @@ def index_view(request, pk_lawyer):
 
 def index_category_view(request, pk_category):
 	category=get_object_or_404(BlogCategory, pk=pk_category)
-	blogsettings=or404(lambda: BlogSettings.objects.get_blogsettings(pk_lawyer))
+	blogsettings=or404(lambda: BlogSettings.objects.get_blogsettings(category.lawyer))
 	return response(request, 'blogs/index_category.html', category=category,
 		is_master=checkf(lambda: request.user.lawyer==category.lawyer),
 		articles=paginated(lambda: request.GET.get('page'), blogsettings.items_per_page, 
@@ -154,7 +161,7 @@ def new_comment_view(request, pk_text):
 			article=BlogArticle.objects.get(id=pk_text)
 		except BlogArticle.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 评论文章失败'.format(request.user.username))
-			raise Http404
+			handle_illegal_access(request)
 		BlogComment.objects.create( 
 			user=request.user, 
 			article=article,
@@ -162,7 +169,7 @@ def new_comment_view(request, pk_text):
 		).save()
 		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest] [UnitTest]
 		return redirect('blogs:text', pk_text=article.id)
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 def recent_comments_mod_view(request, pk_lawyer):
 	lawyer=get_object_or_404(Lawyer, pk=pk_lawyer)
@@ -191,10 +198,12 @@ def categories_view(request):
 				)
 				category.save()
 		except ObjectDoesNotExist, e: # [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
 		except: # Could be violation of integrity [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'新分类创建失败')
 			rec.error(u'{0} 新分类创建失败'.format(request.user.username))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
@@ -209,7 +218,7 @@ def categories_view(request):
 				'edit_href': url_of('blogs:rename_category', pk_category=category.id),
 				'del_href': url_of('blogs:delete_category', pk_category=category.id),
 			}, 'blogs:categories')
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 @login_required # [UnitTest]
 def delete_category_view(request, pk_category):
@@ -219,17 +228,18 @@ def delete_category_view(request, pk_category):
 			category=BlogCategory.objects.get(id=pk_category)
 		except BlogCategory.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 删除分类失败，因为分类不存在'.format(request.user.username))
-			raise Http404
+			handle_illegal_access(request)
 		if checkf(lambda: request.user.lawyer==category.lawyer): # [UnitTest]
 			category.remove()
 			messages.success(request, u'分类删除成功') 
 			rec.success(u'{0} 删除分类 {1} 成功'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': True }, 'blogs:categories')
 		else: # [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'分类删除失败')
 			rec.error(u'{0} 删除分类 {1} 失败，因为权限不足'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-	else: raise Http404
+	else: handle_illegal_access(request)
 
 @login_required # [UnitTest]
 def rename_category_view(request, pk_category):
@@ -239,7 +249,7 @@ def rename_category_view(request, pk_category):
 			category=BlogCategory.objects.get(id=pk_category)
 		except BlogCategory.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 重命名分类失败，因为分类不存在'.format(request.user.username))
-			raise Http404
+			handle_illegal_access(request)
 		if checkf(lambda: request.user.lawyer==category.lawyer): # [UnitTest]
 			category.name=request.POST['name']
 			category.save()
@@ -247,7 +257,8 @@ def rename_category_view(request, pk_category):
 			rec.success(u'{0} 重命名分类 {1} 成功'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': True, 'pk':category.id, 'name':category.name  }, 'blogs:categories')
 		else: # [UnitTest]
+			handle_illegal_access(request, False)
 			messages.error(request, u'分类重命名失败')
 			rec.error(u'{0} 重命名分类 {1} 失败，因为权限不足'.format(request.user.username,category.name))
 			return response_auto(request, { 'success': False }, 'blogs:categories')
-	else: raise Http404
+	else: handle_illegal_access(request)

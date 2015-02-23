@@ -25,7 +25,12 @@
     <script src="{% static "js/bootstrap.js"%}"></script>
     <script src="{% static "js/utils.js"%}"></script>
     <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
-    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    {% if is_lawyer %}
+        <link rel="stylesheet" href="{% static "css/style_lawyer.css" %}">
+    {% else %}
+        <link rel="stylesheet" href="{% static "css/style.css" %}">
+    {% endif %}
+
     <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
     <link rel="stylesheet" href="{% static "css/animate.min.css" %}">
     <script src="{% static "js/wow.min.js" %}"></script>

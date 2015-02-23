@@ -1,4 +1,6 @@
 from org.testingtools import *
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.select import Select
 
 class FTest(FunctionalTestCase):
 	fixtures = [

@@ -75,3 +75,77 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 	site_join("static"),
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'org.standard': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+    },
+    'handlers': {
+        'org.request': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': site_join('deployment/log/org.request.log'),
+            'formatter': 'org.standard',
+        },
+        'org.database': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': site_join('deployment/log/org.database.log'),
+            'formatter': 'org.standard',
+        },
+        'org.security': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': site_join('deployment/log/org.security.log'),
+            'formatter': 'org.standard',
+        },
+        'org.main': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': site_join('deployment/log/org.main.log'),
+            'formatter': 'org.standard',
+        },
+        'org.lambda': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': site_join('deployment/log/org.lambda.log'),
+            'formatter': 'org.standard',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['org.request'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['org.database'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['org.security'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'org': {
+            'handlers': ['org.main'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'org.lambda': {
+            'handlers': ['org.lambda'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'org.security': {
+            'handlers': ['org.security'],
+            'level': 'WARNING',
+            'propagate': True,
+        },
+    },
+}
