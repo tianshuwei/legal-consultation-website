@@ -42,6 +42,16 @@ img.face{
   background: #0088DB;
 }
 /*------------------------------------------------------------*/
+#footer-full {
+  padding: 17px 0;
+  text-align: center;
+  margin-top: -50px;
+}
+@media (min-width: 990px){
+  #footer-full {
+  margin-top: -70px;
+}
+}
 
 li i.fa{
   margin-right: 10px;
@@ -1088,6 +1098,7 @@ hr.double {
 .text-icon .icon-ar {
   float: left;
   margin-top: 5px;
+  padding-top: 15px;
 }
 .text-icon-content {
   padding-left: 70px;
@@ -1843,6 +1854,7 @@ hr.double {
   height: 50px;
   font-size: 22px;
   line-height: 2.2;
+  padding-top: 15px;
 }
 .icon-ar.icon-ar-xl-lg {
   width: 80px;
@@ -5501,7 +5513,7 @@ a.feature-icon:hover {
 }
 @media (min-height: 800px) {
   .login-form-full {
-    padding-top: 10%;
+    padding-top: 5%;
   }
 }
 /* ---------------------------------------------------- */

@@ -1,16 +1,170 @@
-{% extends 'base.html' %}
+{% load staticfiles %}
 {% load tagtools %}
-{% block title %}用户中心 - {{ request.user.username }}{% endblock %}
-{% block main %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-cn" class="sb-init" style="overflow-y: hidden;"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+    <title>{% block title %}Index{% endblock %}</title>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="{% static "js/bootstrap.js"%}"></script>
+    <script src="{% static "js/utils.js"%}"></script>
+    <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+    {% if is_lawyer %}
+        <link rel="stylesheet" href="{% static "css/style_lawyer.css" %}">
+    {% else %}
+        <link rel="stylesheet" href="{% static "css/style.css" %}">
+    {% endif %}
 
-<h1>Login</h1>
-<form method="post">
-{% csrf_token %}{{'login'|transacserial }}
-<label for="id_username">帐号:</label>
-<input id="id_username" maxlength="30" name="username" type="text" />
-<label for="id_password">密码:</label>
-<input id="id_password" maxlength="128" name="password" type="password" />
-<input type="submit" />
-</form>
+    <link rel="stylesheet" href="{% static "css/font-awesome.min.css" %}">
+    <link rel="stylesheet" href="{% static "css/animate.min.css" %}">
+    <script src="{% static "js/wow.min.js" %}"></script>
+    <script src="{% static "js/jquery.cookie.js" %}"></script>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- http://bootstrap-table.wenzhixin.net.cn/getting-started/ -->
+    <link rel="stylesheet" href="{% static "css/bootstrap-table.css" %}">
+    <script src="{% static "js/bootstrap-table.js" %}"></script>
+    <script src="{% static "js/locale/bootstrap-table-zh-CN.js" %}"></script>
+    {% block headextra %}{% endblock %}
+  </head>
 
-{% endblock %}
+<body ryt12699="1" style="overflow: visible;"><div id="sb-site"><div id="preloader" style="display: none;">
+    <div id="status" style="display: none;">&nbsp;</div>
+</div>
+<div class="paper-back-full" style="min-height: 925px;">
+    <div class="login-form-full">
+        <div class="fix-box">
+            <div class="text-center title-logo animated fadeInDown animation-delay-5">artificial<span>reason</span></div>
+            <div class="transparent-div no-padding animated fadeInUp animation-delay-8">
+                <ul class="nav nav-tabs nav-tabs-transparent">
+                  <li class=""><a href="#home" data-toggle="tab" aria-expanded="false">Login</a></li>
+                  <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">Register</a></li>
+                  <li class="active"><a href="#messages" data-toggle="tab" aria-expanded="true">Recovery Pass</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                  <div class="tab-pane" id="home">
+                    <form role="form">
+                        <div class="form-group">
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" class="form-control" placeholder="Username">
+                            </div>
+                            <br>
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> Remember me
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-ar btn-primary pull-right">Login</button>
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                  </div>
+                  <div class="tab-pane" id="profile">
+                      <form role="form">
+                          <div class="form-group">
+                                <label for="chreacteroption">chreacter<sup>*</sup></label>
+                                <div >
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                          I'm lawyer
+                                        </label>
+                                      </div>
+                                      <div class="radio">
+                                        <label>
+                                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                          I'm client
+                                        </label>
+                                      </div>
+                                 </div>
+                            </div>
+                          <div class="form-group">
+                              <label for="InputUserName">User Name<sup>*</sup></label>
+                              <input type="text" class="form-control" id="InputUserName">
+                          </div>
+                          <div class="form-group">
+                              <label for="InputFirstName">First Name</label>
+                              <input type="text" class="form-control" id="InputFirstName">
+                          </div>
+                          <div class="form-group">
+                              <label for="InputLastName">Last Name</label>
+                              <input type="text" class="form-control" id="InputLastName">
+                          </div>
+                          <div class="form-group">
+                              <label for="InputEmail">Email<sup>*</sup></label>
+                              <input type="email" class="form-control" id="InputEmail">
+                          </div>
+                          <div class="row">
+                              <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="InputPassword">Password<sup>*</sup></label>
+                                      <input type="password" class="form-control" id="InputPassword">
+                                  </div>
+                              </div>
+                              <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="InputConfirmPassword">Confirm Password<sup>*</sup></label>
+                                      <input type="password" class="form-control" id="InputConfirmPassword">
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-8">
+                                  <label class="checkbox-inline">
+                                      <input type="checkbox" id="inlineCheckbox1" value="option1"> I read <a href="#">Terms and Conditions</a>.
+                                  </label>
+                              </div>
+                              <div class="col-md-4">
+                                  <button type="submit" class="btn btn-ar btn-primary pull-right">Register</button>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+                  <div class="tab-pane active" id="messages">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="InputUserName">User Name<sup>*</sup></label>
+                            <input type="text" class="form-control" id="InputUserName">
+                        </div>
+                        <div class="form-group">
+                            <label for="InputEmail">Email<sup>*</sup></label>
+                            <input type="email" class="form-control" id="InputEmail">
+                        </div>
+                        <button type="submit" class="btn btn-ar btn-primary pull-right">Send Password</button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <footer id="footer-full">
+    <p>© 2014 <a href="#">org_dev</a>, inc. All rights reserved.</p>
+</footer>
+</div>
+</body>
+
+</html>
+
