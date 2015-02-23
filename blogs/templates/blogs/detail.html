@@ -1,5 +1,5 @@
 {% extends 'blogs/base.html' %}
-{% load tagtools %}
+{% load tagtools %}{% load staticfiles %}
 {% block title %}{{ article.author.user.username }}的律师博客 - {{ article.title }}{% endblock %}
 
 {% block headextra %}
@@ -63,7 +63,7 @@
     <li class="comment">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="{% static '/assets/js/holder.js/100x100/sky/text:avatar' %}" style="width: 100px; height: 100px;">
                     <p>{{comment.text}} </p>
                 </div>
                 <div class="panel-footer">
@@ -85,7 +85,7 @@
         <li class="comment">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="{% static '/assets/js/holder.js/100x100/sky/text:avatar' %}" style="width: 100px; height: 100px;">
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fruuntur timorem maiores. Efficiatur calere labefactant impendere praesidia ullius, necesse graecis refugiendi angusta, nescius augeri monstruosi ornatum provincias. Iucundum dolemus iucundius cruciantur affert inflammati circumcisaque certae, privatione epularum tollunt videre reliquaque maiestatis veserim inflammati vituperari memoriter.</p>
                 </div>
                 <div class="panel-footer">
@@ -103,7 +103,7 @@
                 <li class="comment">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="{% static '/assets/js/holder.js/100x100/sky/text:avatar' %}" style="width: 100px; height: 100px;">
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fruuntur timorem maiores. Efficiatur calere labefactant impendere praesidia ullius, necesse graecis refugiendi angusta, nescius augeri monstruosi ornatum provincias. Iucundum dolemus iucundius cruciantur affert inflammati circumcisaque certae, privatione epularum tollunt videre reliquaque maiestatis veserim inflammati vituperari memoriter.</p>
                         </div>
                         <div class="panel-footer">
@@ -125,7 +125,7 @@
         <li class="comment">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="{% static '/assets/js/holder.js/100x100/sky/text:avatar' %}" style="width: 100px; height: 100px;">
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fruuntur timorem maiores. Efficiatur calere labefactant impendere praesidia ullius, necesse graecis refugiendi angusta, nescius augeri monstruosi ornatum provincias. Iucundum dolemus iucundius cruciantur affert inflammati circumcisaque certae, privatione epularum tollunt videre reliquaque maiestatis veserim inflammati vituperari memoriter.</p>
                 </div>
                 <div class="panel-footer">

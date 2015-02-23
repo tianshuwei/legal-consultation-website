@@ -1,5 +1,5 @@
 {% extends 'smartcontract/base.html' %}
-{% load tagtools %}
+{% load tagtools %}{% load staticfiles %}
 {% block headextra %}
 {{ block.super }}
 <script type="text/javascript">
@@ -116,7 +116,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <img src="../assets/img/demo/office1.jpg" alt="" class="img-responsive">
+                                    <img src="{% static 'assets/img/demo/office1.jpg' %}" alt="" class="img-responsive">
                                 </div>
                                 <div class="col-sm-8">
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum, praesentium, quam! Quia fugiat aperiam.</p>
