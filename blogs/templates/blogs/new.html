@@ -1,18 +1,11 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load tagtools %}
-
 {% block headextra %}
 <script src="{% static 'js/jquery.hotkeys.js' %}"></script>
 <script src="{% static 'js/bootstrap-wysiwyg.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/blogs-common.js' %}"></script>
 <script type="text/javascript">
-  function page_title (title) {
-    $("header.main-header .page-title").text(title);
-  }
-
-  function breadcrumb (label, url) {
-    $("header.main-header .breadcrumb").append('<li><a href="'+url+'">'+label+'</a></li>');
-  }
   function initToolbarBootstrapBindings() {
     var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier', 
           'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
@@ -48,10 +41,9 @@
   };
 
   $(function () {
-    select_nav("Blog");
     initToolbarBootstrapBindings();
 	$('#editor').wysiwyg({ fileUploadError: showErrorAlert} );
-
+	$djform("#frmArticle");
   });
 $(document).ready( function() {
     $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
@@ -67,9 +59,13 @@ $(document).on('change', '.btn-file :file', function() {
     input.trigger('fileselect', [numFiles, label]);
 });
 
-  function search_action (url) {
-    $("#frmSearch").attr("action",url);
-  }
+function submit_article () {
+	var r = $fetch("#frmArticle");
+	r["text"] = $("#editor").html();
+	$.post("{% url 'blogs:new_article' %}", r, function(r,status) {
+		if(status=="success"&&r.success==true) window.location.href = r.redirect;
+	});
+}
 </script>
 {% endblock %}
 
@@ -95,31 +91,16 @@ $(document).on('change', '.btn-file :file', function() {
 
 		<form id="frmArticle" method="post" role="form" class="form-horizontal" >
 			{% csrf_token %}{{ "blogs:new_article"|transacserial }}
-			<div class="form-group" >
-				<label for="id_title" class="col-sm-1 control-label">标题:</label>
-				<div class="col-sm-10 col-md-10">
-				<input id="id_title" class="form-control" maxlength="255" name="title" type="text">
-				</div>
+			<div class="form-group djform" >
+				{{ article_create.title.label_tag }}<div class="col-sm-10 col-md-10">{{ article_create.title }}</div>
 			</div>
-			<div class="form-group">
-	            <label for="select" class="col-sm-1 control-label">分类:</label>
-                <div class="col-sm-4 col-md-2">
-                  <select class="form-control" id="select">
-                    <option value="" selected="selected">---------</option>
-					<option value="2">阿文24</option>
-					<option value="3">阿文24234</option>
-					<option value="4">默认</option>
-                  </select>
-                </div>
-                <label for="id_tags" class="col-sm-1 control-label">标签:</label>
-				<div class="col-sm-4 col-md-3">
-                  <input id="id_tags" class="form-control" maxlength="255" name="tags" type="text">
-              	</div>
+			<div class="form-group djform">
+				{{ article_create.category.label_tag }}<div class="col-sm-4 col-md-2">{{ article_create.category }}</div>
+                {{ article_create.tags.label_tag }}<div class="col-sm-4 col-md-3">{{ article_create.tags }}</div>
 	        </div>
-
-
 			<div class="form-group">
-				<label for="id_text" class="col-sm-1 control-label">正文:</label>
+				{{ article_create.text.label_tag }}
+				<!-- <label for="id_text" class="col-sm-1 control-label">正文:</label> -->
 				<div class="col-sm-10 col-md-10">
 					<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
 					  <div class="btn-group">
@@ -164,13 +145,9 @@ $(document).on('change', '.btn-file :file', function() {
 				        <a class="btn btn-default" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
 				      </div>
 				    </div>
-					<div id="editor" cols="40" class="form-control" id="id_text" name="text" rows="10">werwerwer</div>
+					{{ article_create.text }}
 				</div>
 			</div>
-			<input class="btn btn-ar btn-primary pull-right" type="submit">
+			<input class="btn btn-ar btn-primary pull-right" value="提交" type="button" onclick="submit_article()">
 		</form>
-
-<script type="text/javascript">
-
-</script>
 {% endblock %}

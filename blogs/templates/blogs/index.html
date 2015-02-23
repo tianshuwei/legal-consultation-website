@@ -23,7 +23,7 @@
                     <img src="../assets/img/demo/7.jpg" class="img-post img-responsive" alt="Image">
                 </div>
                 <div class="col-lg-6 post-content">
-                    <p>{{ article.text|truncatewords_html:60 }}</p>
+                    <p>{{ article.text|truncatewords_html:60|safe }}</p>
                 </div>
             </div>
         </div>

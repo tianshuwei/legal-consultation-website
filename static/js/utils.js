@@ -62,6 +62,16 @@ function $fetch (obj) {
 }
 
 /**
+为django渲染的表单补充样式
+
+	obj 		表单父容器
+*/
+function $djform (obj) {
+	$(obj).find(".form-group label").addClass("col-sm-1 control-label");
+	$(obj).find(".form-group input,textarea,select").addClass("form-control");
+}
+
+/**
 产生id选择器
 
 	prefix 		前缀
@@ -212,6 +222,26 @@ function test_prompt () {
 	li元素id命名规则 "#nav_li_"+suffix
 */
 function select_nav (suffix) {
-	// $("#nav_ul>li").removeClass("active"); 
 	$("#nav_li_"+suffix).addClass("active");
+}
+
+
+function ras_encryption(string){
+	setMaxDigits(19);
+	key = new RSAKeyPair(
+ 		"16d1507964604313b5121c52c1051115",  //e
+ 		"",  
+ 		"70a6c76c3631387e7eaca739f7f5cbe7"   //n
+	);
+	return encryptedString(key,string);
+}
+
+function ras_decryption(en_string){          //测试时用的解密函数，之后可删
+	setMaxDigits(19);
+	key = new RSAKeyPair(
+ 		"16d1507964604313b5121c52c1051115",  //e
+ 		"55afdcf744d8f5fe0c655fee417b3765",  //d
+ 		"70a6c76c3631387e7eaca739f7f5cbe7"   //n
+	);
+	return decryptedString(key,en_string);
 }
