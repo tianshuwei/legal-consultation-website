@@ -62,9 +62,11 @@ def new_article_view(request):
 		rec=recorded(request,'blogs:new_article')
 		try:
 			with transaction.atomic():
+				from org.antixss import antiXSS_BootstrapWYSIWYS as antixss
 				article = ArticleForm(request.POST).save(commit=False)
 				article.author = request.user.lawyer
 				article.publish_date = datetime.now()
+				article.text = antixss(article.text, strip=True)
 				article.save()
 		except BlogCategory.DoesNotExist, e: 
 			handle_illegal_access(request, False)
