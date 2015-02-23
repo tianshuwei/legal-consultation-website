@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}Index{% endblock %}
 {% block headextra %}
 <script type="text/javascript">
@@ -15,7 +16,7 @@
             <div class="wrap-pointers" style="min-height: 824px;">
                 <div class="container">
                     <div id="primary-plan">
-                        <img src="../assets/img/logo_big_white.png" alt="logo" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
+                        <img src="{% static 'assets/img/logo_big_white.png' %}" alt="logo" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
                         <h1 class="animated fadeInDown animation-delay-3">Lorem ipsum dolor sit amet, consectetur.</h1>
                         <p class="lead lead-lg animated fadeInDown animation-delay-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit nam, et distinctio omnis quidem ratione accusantium non molestiae sint dolorem.</p>
                     </div>
@@ -66,7 +67,7 @@
     <div class="wrap-primary" style="min-height: 672px;">
         <div class="container">
             <h1 class="head-title animated bounceInDown animation-delay-8">artificial reason</h1>
-            <img src="../assets/img/logo_raw_white.png" alt="" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
+            <img src="{% static 'assets/img/logo_raw_white.png' %}" alt="" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
             <h2 class="secondary-color text-center head-subtitle animated fadeInUp animation-delay-14">connect to the artificial revolution</h2>
             <p class="lead text-center animated fadeInUp animation-delay-14">We bring the revolution to the web design, our principles are experience, knowledge and creativity. Discover all that can offer artificial reason.</p>
             <div class="row header-full-icons text-center">

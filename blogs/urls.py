@@ -20,10 +20,10 @@ urlpatterns = patterns('',
 	url(r'^text\.(?P<pk_text>\d+)/remove/$', views.delete_article_view, name='delete_article'),
 	url(r'^text\.new/$', views.new_article_view, name='new_article'),
 
-	url(r'^(?P<pk_lawyer>\d+)/archives/$', views.archives_mod_view, name='archives_mod'),
-	url(r'^(?P<pk_lawyer>\d+)/categories/$', views.categories_mod_view, name='categories_mod'),
-	url(r'^(?P<pk_lawyer>\d+)/favourites/$', views.favourite_posts_mod_view, name='favourite_posts_mod'),
-	url(r'^(?P<pk_lawyer>\d+)/recent_comments/$', views.recent_comments_mod_view, name='recent_comments_mod'),
-	url(r'^(?P<pk_lawyer>\d+)/tags/$', views.tags_mod_view, name='tags_mod'),
+	url(r'^(?P<pk_lawyer>\d+)/archives\.mod$', views.archives_mod_view, name='archives_mod'),
+	url(r'^(?P<pk_lawyer>\d+)/categories\.mod$', views.categories_mod_view, name='categories_mod'),
+	url(r'^(?P<pk_lawyer>\d+)/favourites\.mod$', views.favourite_posts_mod_view, name='favourite_posts_mod'),
+	url(r'^(?P<pk_lawyer>\d+)/recent_comments\.mod$', views.recent_comments_mod_view, name='recent_comments_mod'),
+	url(r'^(?P<pk_lawyer>\d+)/tags\.mod$', views.tags_mod_view, name='tags_mod'),
 )
 

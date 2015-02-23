@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}
 Product detail -- {{ product.name }}
 {% endblock %}
@@ -72,7 +73,7 @@ Product detail -- {{ product.name }}
         <div class="col-md-12">
             <div class="title-logo animated fadeInDown animation-delay-5">artificial<span>reason</span></div>
             <p class="slogan text-center margin-bottom">Discover the <span>artificial reason</span> template. <br> A world of possibilities and customization for your website.</p>
-            <img src="../assets/img/demo/pre.png" alt="" class="img-responsive">
+            <img src="{% static 'assets/img/demo/pre.png' %}" alt="" class="img-responsive">
         </div>
     </div> <!-- row -->
 
@@ -172,16 +173,16 @@ Product detail -- {{ product.name }}
             <div class="col-md-8">
                 <div class="tab-content">
                     <div class="tab-pane active" id="desktop">
-                        <img src="../assets/img/demo/mac.png" alt="" class="img-responsive">
+                        <img src="{% static 'assets/img/demo/mac.png' %}" alt="" class="img-responsive">
                     </div>
                     <div class="tab-pane" id="laptop">
-                        <img src="../assets/img/demo/macpro.png" alt="" class="img-responsive">
+                        <img src="{% static 'assets/img/demo/macpro.png' %}" alt="" class="img-responsive">
                     </div>
                     <div class="tab-pane" id="tablet">
-                        <img src="../assets/img/demo/ipad.png" alt="" class="img-responsive">
+                        <img src="{% static 'assets/img/demo/ipad.png' %}" alt="" class="img-responsive">
                     </div>
                     <div class="tab-pane" id="mobile">
-                        <img src="../assets/img/demo/iphone.png" alt="" class="img-responsive">
+                        <img src="{% static 'assets/img/demo/iphone.png' %}" alt="" class="img-responsive">
                     </div>
                 </div>
             </div>
@@ -262,7 +263,7 @@ Product detail -- {{ product.name }}
                     <li class="comment">
                         <div class="panel panel-default">
                             <div class="panel-body">
-                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="../assets/js/holder.js/100x100/sky/text:avatar" style="width: 100px; height: 100px;">
+                                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzBEOEZEQiIvPjx0ZXh0IHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwIiB5PSI1MCIgc3R5bGU9ImZpbGw6I2ZmZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxMnB4O2ZvbnQtZmFtaWx5OkFyaWFsLEhlbHZldGljYSxzYW5zLXNlcmlmO2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPmF2YXRhcjwvdGV4dD48L3N2Zz4=" alt="avatar" class="imageborder alignleft" data-src="{% static 'assets/js/holder.js/100x100/sky/text:avatar' %}" style="width: 100px; height: 100px;">
                                 <p>{{comment.text}}</p>
                             </div>
                             <div class="panel-footer">
