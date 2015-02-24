@@ -8,7 +8,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
-from deployment import *
+import org.rsa
+from org.deployment import *
 
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
@@ -154,3 +155,8 @@ LOGGING = {
         },
     },
 }
+
+# Adjust with caution #bits, on which these depend:
+#   static/js/utils.js: function encrypt(m)
+#   org/rsa/pkcs1.py: def decrypt_busted(crypto, priv_key)
+RSA_LOGIN_KEY = org.rsa.newkeys(300)

@@ -225,6 +225,17 @@ function select_nav (suffix) {
 	$("#nav_li_"+suffix).addClass("active");
 }
 
+function get_public_key () {
+	var z = "";
+	$.ajax({ url: "/lpub.hex", async: false, success: function (r){ z=r; } });
+	return z;
+}
+
+function encrypt(m){
+	setMaxDigits(80);
+	var key = new RSAKeyPair("10001", "", get_public_key());
+	return encryptedString(key, m, RSAAPP.PKCS1Padding);
+}
 
 function ras_encryption(string){
 	setMaxDigits(19);
