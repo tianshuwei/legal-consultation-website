@@ -77,7 +77,7 @@ li i.fa{
 }
 
 
-#editor {
+.editor,#editor {
   max-height: 250px;
   height: 250px;
   background-color: white;
