@@ -8,10 +8,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
-import org.rsa
 from org.deployment import *
 
-import os
+import os, rsa
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 site_join = lambda rpath: os.path.join(BASE_DIR, rpath).replace('\\','/')
 
@@ -158,5 +157,5 @@ LOGGING = {
 
 # Adjust with caution #bits, on which these depend:
 #   static/js/utils.js: function encrypt(m)
-#   org/rsa/pkcs1.py: def decrypt_busted(crypto, priv_key)
-RSA_LOGIN_KEY = org.rsa.newkeys(300)
+#   org/rsa_authentication.py: def decrypt(crypto, priv_key)
+RSA_LOGIN_KEY = rsa.newkeys(300)
