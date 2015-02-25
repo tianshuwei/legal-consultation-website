@@ -11,12 +11,12 @@
 <div class="panel panel-border animated fadeInDown animation-delay-8" style="border-left-color: #eee;">
 {% for order in orders %}
     <div class="panel-body">
-        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
+        <h4 href="#" class="section-title no-margin-top"> {{ order.product }} <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
         <div class="clearfix"></div>
 
         <div class="row context  animated fadeInDown animation-delay-8">
-            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Date:</strong> 2014-12-31</p></div>
-            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Price:</strong> $369.99</p></div>
+            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>日期：&nbsp;</strong>{{ order.publish_date }}</p></div>
+            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>价格：&nbsp;</strong>￥{{ order.product.price }}</p></div>
         </div>
 
         <div class="row context animated fadeInDown animation-delay-8 ">
@@ -46,4 +46,5 @@
 {% endfor %}
 </div>
 
+<!-- TODO paginator here -->
 {% endblock %}
