@@ -25,9 +25,9 @@ import abc
 import sys
 from optparse import OptionParser
 
-import rsa
-import bigfile
-import pkcs1
+import org.rsa
+from org.rsa import bigfile
+import org.rsa import pkcs1
 
 HASH_METHODS = sorted(pkcs1.HASH_METHODS.keys())
 

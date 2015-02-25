@@ -20,8 +20,8 @@
 
 import os
 
-from rsa import common, transform
-from _compat import byte
+from org.rsa import common, transform
+from org.rsa._compat import byte
 
 def read_random_bits(nbits):
     '''Reads 'nbits' random bits.

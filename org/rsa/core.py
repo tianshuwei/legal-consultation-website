@@ -21,7 +21,7 @@ mathematically on integers.
 '''
 
 
-from _compat import is_integer
+from org.rsa._compat import is_integer
 
 def assert_int(var, name):
 

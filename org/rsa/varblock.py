@@ -33,7 +33,7 @@ used to denote the block sizes.
 
 '''
 
-from _compat import byte, b
+from org.rsa._compat import byte, b
 
 
 ZERO_BYTE = b('\x00')

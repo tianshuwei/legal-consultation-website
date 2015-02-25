@@ -31,8 +31,8 @@ __author__ = "Sybren Stuvel, Barry Mead and Yesudeep Mangalapilly"
 __date__ = "2014-02-22"
 __version__ = '3.1.4'
 
-from key import newkeys, PrivateKey, PublicKey
-from pkcs1 import encrypt, decrypt, decrypt_busted, sign, verify, DecryptionError, \
+from org.rsa.key import newkeys, PrivateKey, PublicKey
+from org.rsa.pkcs1 import encrypt, decrypt, decrypt_busted, sign, verify, DecryptionError, \
     VerificationError
 
 # Do doctest if we're run directly

@@ -21,7 +21,7 @@ from __future__ import with_statement, print_function
 import sys
 from optparse import OptionParser
 
-import key
+from org.rsa import key
 
 def private_to_public():
     '''Reads a private key and outputs the corresponding public key.'''

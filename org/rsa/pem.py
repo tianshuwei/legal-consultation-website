@@ -17,7 +17,7 @@
 '''Functions that load and write PEM-encoded files.'''
 
 import base64
-from _compat import b, is_bytes
+from org.rsa._compat import b, is_bytes
 
 def _markers(pem_marker):
     '''

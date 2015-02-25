@@ -28,8 +28,8 @@ from __future__ import print_function
 
 import multiprocessing as mp
 
-import prime
-import randnum
+from org.rsa import prime
+from org.rsa import randnum
 
 def _find_prime(nbits, pipe):
     while True:

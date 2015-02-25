@@ -39,8 +39,8 @@ used to denote the block sizes.
 
 '''
 
-from rsa import key, common, pkcs1, varblock
-from _compat import byte
+from org.rsa import key, common, pkcs1, varblock
+from org.rsa._compat import byte
 
 def encrypt_bigfile(infile, outfile, pub_key):
     '''Encrypts a file, writing it to 'outfile' in VARBLOCK format.

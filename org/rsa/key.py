@@ -26,11 +26,11 @@ of pyasn1.
 '''
 
 import logging
-from _compat import b, bytes_type
+from org.rsa._compat import b, bytes_type
 
-import prime
-import pem
-import common
+from org.rsa import prime
+from org.rsa import pem
+from org.rsa import common
 
 log = logging.getLogger(__name__)
 
@@ -576,7 +576,7 @@ def newkeys(nbits, accurate=True, poolsize=1):
 
     # Determine which getprime function to use
     if poolsize > 1:
-        from rsa import parallel
+        from org.rsa import parallel
         import functools
 
         getprime_func = functools.partial(parallel.getprime, poolsize=poolsize)

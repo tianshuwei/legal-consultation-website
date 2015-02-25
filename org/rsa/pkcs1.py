@@ -31,8 +31,8 @@ SUCH INFORMATION to your users.
 import hashlib
 import os
 
-from _compat import b
-from rsa import common, transform, core, varblock
+from org.rsa._compat import b
+from org.rsa import common, transform, core, varblock
 
 # ASN.1 codes that describe the hash algorithm used.
 HASH_ASN1 = {

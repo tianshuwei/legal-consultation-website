@@ -27,7 +27,7 @@ import sys
 import types
 import zlib
 
-from _compat import byte
+from org.rsa._compat import byte
 
 # Display a warning that this insecure version is imported.
 import warnings

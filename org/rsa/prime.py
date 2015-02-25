@@ -22,7 +22,7 @@ Roberto Tamassia, 2002.
 
 __all__ = [ 'getprime', 'are_relatively_prime']
 
-import randnum
+from org.rsa import randnum
 
 def gcd(p, q):
     '''Returns the greatest common divisor of p and q

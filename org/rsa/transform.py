@@ -32,8 +32,8 @@ except ImportError:
 
 import binascii
 from struct import pack
-from rsa import common
-from _compat import is_integer, b, byte, get_word_alignment, ZERO_BYTE, EMPTY_BYTE
+from org.rsa import common
+from org.rsa._compat import is_integer, b, byte, get_word_alignment, ZERO_BYTE, EMPTY_BYTE
 
 
 def bytes2int(raw_bytes):
