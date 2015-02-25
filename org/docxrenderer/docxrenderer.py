@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-"""
-Jan 2015 (C) Alex
-"""
+# Copyright 2015 Alex Yang <aleozlx@126.com>
 
 from bisect import bisect, bisect_left
 from StringIO import StringIO

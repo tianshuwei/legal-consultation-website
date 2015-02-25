@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Copyright 2014 Alex Yang
 from django.core.urlresolvers import reverse
 from index.models import TransactionRecord
 from org.tools import transacserial, TRANSACSERIAL

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Copyright 2014 Alex Yang
 from django.core.paginator import Paginator, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse

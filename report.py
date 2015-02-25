@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""MTV Report Jan 2015 (C) Alex"""
+"""MTV Report
+Copyright 2015 Alex Yang
+"""
 
 import os, sys, re, linecache, itertools, operator, org.settings
 r_urlref = re.compile(r"'(\w+:\w+)'")
@@ -151,6 +153,14 @@ class Application(object):
 			'blocks': [m.group('val') for m in grep(r_template_blocks,fname)],
 			'ids': [m.group('val') for m in grep(r_template_ids,fname)],
 		} for ext, fname in find(['.html','.js'], self.d_templates)]
+
+@section('Copyrights and licenses')
+def l_copyright():
+	r_LICENSE = re.compile(r'(?i)(licensed\x20under|copyright.*\d{4})')
+	llen=lambda x: x if x>=0 else 0
+	for ext, fname in find(['.py','.js','.css','.html']):
+		for l,m in linematch(r_LICENSE, fname):
+			print F(fname,l), m.string.strip()[:llen(120-len(fname))]
 
 @section('Model Layer')
 def __model():
