@@ -40,7 +40,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae, iusto.</div>
                         <div class="panel-body">
-                            <form method="post" class="form-horizontal" role="form">
+                          <form method="post" class="form-horizontal" role="form">
                       	 <div class="form-group">
                             <label for="inputEmail3" class="col-sm-2 control-label">name</label>
                             <div class="col-sm-8 col-md-5">
@@ -112,21 +112,77 @@
                     <time class="timeline-time" datetime="">Step<span>2</span></time>
                     <i class="timeline-2-point"></i>
                     <div class="panel panel-default">
-                        <div class="panel-heading">Event with responsive image</div>
+                        <div class="panel-heading">use this form to create new contract</div>
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-sm-4">
-                                    <img src="{% static 'assets/img/demo/office1.jpg' %}" alt="" class="img-responsive">
+                             <form method="post" class="form-horizontal" role="form">
+                               <div class="form-group">
+                                  <label for="inputEmail3" class="col-sm-2 control-label">contract name</label>
+                                  <div class="col-sm-8 col-md-5">
+                                    <input type="text" required="required" class="form-control" id="contract_name" placeholder="Lorem ipsum dolor sit amet.">
+                                  </div>
                                 </div>
-                                <div class="col-sm-8">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum, praesentium, quam! Quia fugiat aperiam.</p>
-                                    <p>Perspiciatis soluta voluptate dolore officiis libero repellat cupiditate explicabo atque facere aliquam.</p>
+                                <div class="form-group">
+                                  <label for="inputEmail3" class="col-sm-2 control-label">upload file</label>
+                                  <span class="btn btn-ar btn-primary btn-file" style="margin-left: 15px;">
+                                  选择文件<input type="file" id="contract_modal" class="form-control" >
+                                  </span>
                                 </div>
+                                <div class="form-group">
+                                  <label for="inputEmail3" class="col-sm-2 control-label">form detail</label>
+                                  <div class="col-sm-9 col-md-9">
+                                  <textarea id="form_detail" class="editor" style="margin-bottom:15px;min-width:100%;"splaceholder=" json code here"></textarea>
+                                  <p><strong>for example:</strong></p>
+                                  <pre>
+{
+  "steps":[
+    //step one part
+    {
+      "guide_word":"finish this step",
+      "var1":{
+        "type":"radio",
+        "option":["aa","bb","cc"],
+        "guide_word":"please fill it"},
+      "var2":{
+        "type":"option",
+        "option":["aa","bb","cc"],
+        "guide_word":"please fill it"},
+      "var3":{
+        "type":"text",
+        "guide_word":"please fill it"},
+    },
+    
+    //step two part
+    {
+      "guide_word":"finish this step",
+      "var1":{
+        "type":"radio",
+        "option":["aa","bb","cc"],
+        "guide_word":"please fill it"}
+    },
+    {
+      "guide_word":"finish this step",
+      "var1":{
+        "type":"radio",
+        "option":["aa","bb","cc"],
+        "guide_word":"please fill it"}
+    }
+    ]
+}</pre>
+                                  </div>
+
+                                </div>
+                                <div class="form-group">
+                                  <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-ar btn-primary">save</button>
+                                  </div>
+                                </div>
+                              </form> <!-- end form -->
                             </div>
                         </div>
                     </div>
                 </li>
-                
+
             </ul>
         </div>
 
