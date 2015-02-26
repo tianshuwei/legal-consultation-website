@@ -1,11 +1,127 @@
 {% extends 'base.html' %}
 {% load tagtools %}
 {% block title %}注册{% endblock %}
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">Register</h1>
+
+		<!-- {# {% if is_master %}
+		        <ol class="breadcrumb pull-right">
+			<li><a href="{% url 'blogs:new_article' %}">写新文章</a></li>
+		</ol>
+		{% endif %} #} -->
+    </div>
+</header>
+{% endblock %}
 {% block main %}
-<h1>注册</h1>
+<div class="row">
+        <div class="col-md-7">
+            <h2 class="section-title no-margin-top">Create Account</h2>
+            <div class="panel panel-success-dark animated fadeInDown">
+                <div class="panel-heading">Register Form</div>
+                <div class="panel-body">
+                    <form role="form">
+	                    <div class="form-group">
+	                    	<label for="chreacteroption">chreacter<sup>*</sup></label>
+	                    	<div >
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                      I'm lawyer
+                                    </label>
+                                  </div>
+                                  <div class="radio">
+                                    <label>
+                                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                      I'm client
+                                    </label>
+                                  </div>
+                             </div>
+	                    </div>
+                        <div class="form-group">
+                            <label for="id_username">User Name<sup>*</sup></label>
+                            <input type="text" class="form-control" id="id_username">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_first_name">First Name</label>
+                            <input type="text" class="form-control" id="id_first_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_last_name">Last Name</label>
+                            <input type="text" class="form-control" id="id_last_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_email">Email<sup>*</sup></label>
+                            <input type="email" class="form-control" id="id_email">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_password">Password<sup>*</sup></label>
+                                    <input type="password" class="form-control" id="id_password">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="id_password_confirm">Confirm Password<sup>*</sup></label>
+                                    <input type="password" class="form-control" id="id_password_confirm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" id="inlineCheckbox1" value="option1"> I read <a href="#">Terms and Conditions</a>.
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-ar btn-primary pull-right">Register</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-lg-offset-1 col-md-5">
+            <h2 class="section-title no-margin-top">Are you registered?</h2>
+            <div class="panel panel-primary animated fadeInDown animation-delay-2">
+                <div class="panel-heading">Login Form</div>
+                <div class="panel-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                <input type="text" class="form-control" placeholder="Username">
+                            </div>
+                            <br>
+                            <div class="input-group login-input">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> Remember me
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-ar btn-primary pull-right">Login</button>
+                            <a href="#" class="social-icon-ar sm twitter animated fadeInDown animation-delay-3"><i class="fa fa-twitter"></i></a>
+                            <a href="#" class="social-icon-ar sm google-plus animated fadeInDown animation-delay-4"><i class="fa fa-google-plus"></i></a>
+                            <a href="#" class="social-icon-ar sm facebook animated fadeInDown animation-delay-5"><i class="fa fa-facebook"></i></a>
+                            <hr>
+                            <p class="">forget your password? try <a href="#" >Password Recovery</a></p>
+                            
+                            <div class="clearfix"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- <h1>注册</h1>
 <form method="post">
 {% csrf_token %}{{ "login"|transacserial }}
 {{ register_form }}
 <input type="submit" />
-</form>
+</form> -->
 {% endblock %}

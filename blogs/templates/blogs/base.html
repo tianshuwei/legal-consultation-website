@@ -1,24 +1,8 @@
 {% extends 'base.html' %}
 {% load tagtools %}
-
+{% load staticfiles %}
 {% block headextra %}
-<script type="text/javascript">
-  function page_title (title) {
-    $("header.main-header .page-title").text(title);
-  }
-
-  function breadcrumb (label, url) {
-    $("header.main-header .breadcrumb").append('<li><a href="'+url+'">'+label+'</a></li>');
-  }
-
-  $(function () {
-    select_nav("Blog");
-  });
-
-  function search_action (url) {
-    $("#frmSearch").attr("action",url);
-  }
-</script>
+<script type="text/javascript" src="{% static 'js/blogs-common.js' %}"></script>
 {% endblock %}
 
 {%block toolbar %}
@@ -86,7 +70,7 @@
                     <div class="input-group">
                       <input name="q" type="text" placeholder="搜索..." class="form-control" value="{{query}}">
                       <span class="input-group-btn">
-                        <button class="btn btn-ar btn-primary" type="submit"><i class="fa fa-search no-margin-right"></i></button>
+                        <button class="btn btn-ar btn-primary" style="height: 34px;" type="submit"><i class="fa fa-search no-margin-right"></i></button>
                       </span>
                     </div><!-- /input-group -->
                 </form>
@@ -105,21 +89,21 @@
                             <ul id="favourite_posts" class="media-list">
                             {# see favourite_posts.mod.html #}{%comment%}
                                 <!-- <li class="media">
-                                    <a class="pull-left" href="#"><img class="media-object" src="../assets/img/demo/m2.jpg" width="80" height="80" alt="image"></a>
+                                    <a class="pull-left" href="#"><img class="media-object" src="{% static 'assets/img/demo/m2.jpg' %}" width="80" height="80" alt="image"></a>
                                     <div class="media-body">
                                         <p class="media-heading"><a href="#">Lorem ipsum dolor sit amet aut consectetur adipisicing elitl libero</a></p>
                                         <small>Sep, 28 2013</small>
                                     </div>
                                 </li>
                                 <li class="media">
-                                    <a class="pull-left" href="#"><img class="media-object" src="../assets/img/demo/m9.jpg" width="80" height="80" alt="image"></a>
+                                    <a class="pull-left" href="#"><img class="media-object" src="{% static 'assets/img/demo/m9.jpg' %}" width="80" height="80" alt="image"></a>
                                     <div class="media-body">
                                         <p class="media-heading"><a href="#">Lorem ipsum dolor sit amet in consectetur adipisicing</a></p>
                                         <small>Oct, 9 2013</small>
                                     </div>
                                 </li>
                                 <li class="media">
-                                    <a class="pull-left" href="#"><img class="media-object" src="../assets/img/demo/m12.jpg" width="80" height="80" alt="image"></a>
+                                    <a class="pull-left" href="#"><img class="media-object" src="{% static 'assets/img/demo/m12.jpg' %}" width="80" height="80" alt="image"></a>
                                     <div class="media-body">
                                         <p class="media-heading"><a href="#">Sit amet consectetur adipisicing elit incidunt minus</a></p>
                                         <small>Dec, 30 2013</small>
@@ -186,17 +170,17 @@
                         <ul id="recent_comments" class="comments-sidebar">
                         {# see blogs/recent_comments.mod.html #}{%comment%}
                             <!-- <li>
-                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
+                                <img src="{% static 'assets/img/demo/client.jpg' %}" class="img-responsive" alt="Image">
                                 <h4><a href="#">Fitzpatrick</a> in <a href="#">Lorem ipsum</a> 11 Jan. 2012</h4>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atomus, appellat dedocendi omnes quoddam atomos.</p>
                             </li>
                             <li>
-                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
+                                <img src="{% static 'assets/img/demo/client.jpg' %}" class="img-responsive" alt="Image">
                                 <h4><a href="#">Fitzpatrick</a> in <a href="#">Lorem ipsum</a> 11 Jan. 2012</h4>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atomus, appellat dedocendi omnes quoddam atomos.</p>
                             </li>
                             <li>
-                                <img src="../assets/img/demo/client.jpg" class="img-responsive" alt="Image">
+                                <img src="{% static 'assets/img/demo/client.jpg' %}" class="img-responsive" alt="Image">
                                 <h4><a href="#">Fitzpatrick</a> in <a href="#">Lorem ipsum</a> 11 Jan. 2012</h4>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atomus, appellat dedocendi omnes quoddam atomos.</p>
                             </li> -->{%endcomment%}

@@ -62,6 +62,16 @@ function $fetch (obj) {
 }
 
 /**
+为django渲染的表单补充样式
+
+	obj 		表单父容器
+*/
+function $djform (obj) {
+	$(obj).find(".form-group label").addClass("col-sm-1 control-label");
+	$(obj).find(".form-group input,textarea,select").addClass("form-control");
+}
+
+/**
 产生id选择器
 
 	prefix 		前缀
@@ -212,6 +222,5 @@ function test_prompt () {
 	li元素id命名规则 "#nav_li_"+suffix
 */
 function select_nav (suffix) {
-	// $("#nav_ul>li").removeClass("active"); 
 	$("#nav_li_"+suffix).addClass("active");
 }

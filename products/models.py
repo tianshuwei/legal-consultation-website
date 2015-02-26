@@ -24,9 +24,18 @@ class Order(models.Model):
 	client = models.ForeignKey('accounts.Client')
 	product = models.ForeignKey(Product)
 	lawyer = models.ForeignKey('accounts.Lawyer')
-	state = models.IntegerField(default=0)
+	state = models.IntegerField(default=0) # 0=UNPAID 1=IN BUSINESS 2=FINISHED
 	text = models.TextField()
 	publish_date = models.DateTimeField('date published',auto_now=True)
+
+	def is_unpaid(self):
+		return self.state==0
+
+	def is_in_business(self):
+		return self.state==1
+
+	def is_finished(self):
+		return self.state==2
 
 	def __unicode__(self):
 		return self.text[:20]

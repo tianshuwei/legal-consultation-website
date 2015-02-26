@@ -1,5 +1,5 @@
 {% extends 'blogs/base.html' %}
-{% load tagtools %}
+{% load tagtools %}{% load staticfiles %}
 {% block title %}律师博客 - {{ lawyer.user.username }}{% endblock %}
 
 {% block headextra %}
@@ -20,10 +20,10 @@
             <h3 class="post-title"><a href="{% url 'blogs:text' article.id %}" class="transicion">{{ article.title }}</a></h3>
             <div class="row">
                 <div class="col-lg-6">
-                    <img src="../assets/img/demo/7.jpg" class="img-post img-responsive" alt="Image">
+                    <img src="{% static 'assets/img/demo/7.jpg' %}" class="img-post img-responsive" alt="Image">
                 </div>
                 <div class="col-lg-6 post-content">
-                    <p>{{ article.text|truncatewords_html:60 }}</p>
+                    <p>{{ article.text|truncatewords_html:60|antixss|safe }}</p>
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}Index{% endblock %}
 {% block headextra %}
 <script type="text/javascript">
@@ -10,12 +11,12 @@
 {% endblock %}
 
  {% block head %}
-    <header id="header-full-plan">
+     <!-- <header id="header-full-plan">
         <div class="wrap-primary-plan" style="min-height: 824px;">
             <div class="wrap-pointers" style="min-height: 824px;">
                 <div class="container">
                     <div id="primary-plan">
-                        <img src="../assets/img/logo_big_white.png" alt="logo" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
+                        <img src="{% static 'assets/img/logo_big_white.png' %}" alt="logo" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
                         <h1 class="animated fadeInDown animation-delay-3">Lorem ipsum dolor sit amet, consectetur.</h1>
                         <p class="lead lead-lg animated fadeInDown animation-delay-1">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odit nam, et distinctio omnis quidem ratione accusantium non molestiae sint dolorem.</p>
                     </div>
@@ -26,7 +27,7 @@
                           <span class="input-group-btn">
                             <button class="btn btn-plan" type="button">lorem</button>
                           </span>
-                        </div><!-- /input-group -->
+                        </div>/input-group
                     </div>
                     <div class="row">
                         <div class="col-sm-6 col-md-3">
@@ -61,7 +62,39 @@
                 </div>
             </div>
         </div>
-    </header>
+         </header>  -->
+    <header id="header-full">
+    <div class="wrap-primary" style="min-height: 672px;">
+        <div class="container">
+            <h1 class="head-title animated bounceInDown animation-delay-8">artificial reason</h1>
+            <img src="{% static 'assets/img/logo_raw_white.png' %}" alt="" class="aligncenter head-full-logo animated bounceIn animation-delay-5">
+            <h2 class="secondary-color text-center head-subtitle animated fadeInUp animation-delay-14">connect to the artificial revolution</h2>
+            <p class="lead text-center animated fadeInUp animation-delay-14">We bring the revolution to the web design, our principles are experience, knowledge and creativity. Discover all that can offer artificial reason.</p>
+            <div class="row header-full-icons text-center">
+                <div class="col-sm-3 animated fadeInDown animation-delay-19">
+                    <span class="icon-ar icon-ar-circle icon-ar-xl-lg icon-ar-white icon-ar-inverse"><i class="fa fa-html5"></i></span>
+                    <h3>HTML 5</h3>
+                    <p class="text-center">Illo quas ab, aut quasi vitae nam ipsum totam aspernatur.</p>
+                </div>
+                <div class="col-sm-3 animated fadeInDown animation-delay-21">
+                    <span class="icon-ar icon-ar-circle icon-ar-xl-lg icon-ar-white icon-ar-inverse"><i class="fa fa-css3"></i></span>
+                    <h3>CSS 3</h3>
+                    <p class="text-center">Culpa, excepturi ipsa, aut reiciendis maiores deserunt.</p>
+                </div>
+                <div class="col-sm-3 animated fadeInDown animation-delay-22">
+                    <span class="icon-ar icon-ar-circle icon-ar-xl-lg icon-ar-white icon-ar-inverse"><i class="fa fa-bold"></i></span>
+                    <h3>Bootstrap 3</h3>
+                    <p class="text-center">Blanditiis consequatur minima voluptatibus ducimus tempore.</p>
+                </div>
+                <div class="col-sm-3 animated fadeInDown animation-delay-20">
+                    <span class="icon-ar icon-ar-circle icon-ar-xl-lg icon-ar-white icon-ar-inverse"><i class="fa fa-desktop"></i></span>
+                    <h3>Responsive</h3>
+                    <p class="text-center">Eius culpa eligendi autem odio nisi dignissimos sapiente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
     <section class="wrap-dark-color margin-bottom">
         <div class="container">
             <div class="row">

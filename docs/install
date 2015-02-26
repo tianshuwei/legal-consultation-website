@@ -1,3 +1,10 @@
+[psql server]
+sudo apt-get install postgresql-9.3
+/etc/postgresql/9.3/main/pg_hba.conf:
+>	host    all             all             0.0.0.0/0               md5
+/etc/postgresql/9.3/main/postgresql.conf
+>	listen_addresses = '*'
+
 [django server]
 sudo pip install Django=1.7.1
 sudo apt-get install libpqxx3-dev
@@ -30,9 +37,41 @@ DATABASES = {
 EOF
 mkdir -pv deployment/log
 
-[psql server]
-sudo apt-get install postgresql-9.3
-/etc/postgresql/9.3/main/pg_hba.conf:
-	host    all             all             0.0.0.0/0               md5
-/etc/postgresql/9.3/main/postgresql.conf
-	listen_addresses = '*'
+[web server]
+sudo apt-get install nginx
+sudo pip install uwsgi
+mkdir -pv deployment/static
+org/deployment.py
+>	STATIC_ROOT = '/var/www/org/deployment/static'
+./manager.py collectstatic
+cat > /etc/nginx/conf.d/org.conf <<EOF
+server {
+  listen 6001;
+  server_name 222.69.93.107;
+  root /var/www/org/deployment/default;
+
+  location ~ ^/static/ {
+      root  /var/www/org/deployment;
+      access_log   off;
+      expires 24h;
+  }
+
+  location / {
+      uwsgi_pass  127.0.0.1:6003;
+      include     uwsgi_params;
+      access_log  off;
+  }
+}
+EOF
+sudo uwsgi --chdir=/var/www/org \
+ --module=org.wsgi:application \
+ --env DJANGO_SETTINGS_MODULE=org.settings \
+ --master --pidfile=/tmp/project-master.pid \
+ --socket=127.0.0.1:6003 \
+ --processes=5 \
+ --uid=1000 --gid=1000 \
+ --harakiri=20 \
+ --max-requests=5000 \
+ --vacuum \
+ --daemonize=/var/log/uwsgi/org.log
+sudo service start nginx
