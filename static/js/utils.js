@@ -237,9 +237,9 @@ function encrypt(m){
 	return encryptedString(key, m, RSAAPP.PKCS1Padding);
 }
 
-function ras_encryption(string){
+function rsa_encryption(string){
 	setMaxDigits(19);
-	key = new RSAKeyPair(
+	var key = new RSAKeyPair(
  		"16d1507964604313b5121c52c1051115",  //e
  		"",  
  		"70a6c76c3631387e7eaca739f7f5cbe7"   //n
@@ -247,12 +247,18 @@ function ras_encryption(string){
 	return encryptedString(key,string);
 }
 
-function ras_decryption(en_string){          //测试时用的解密函数，之后可删
+function rsa_decryption(en_string){          //测试时用的解密函数，之后可删
 	setMaxDigits(19);
-	key = new RSAKeyPair(
+	var key = new RSAKeyPair(
  		"16d1507964604313b5121c52c1051115",  //e
  		"55afdcf744d8f5fe0c655fee417b3765",  //d
  		"70a6c76c3631387e7eaca739f7f5cbe7"   //n
 	);
 	return decryptedString(key,en_string);
+}
+
+function rsalogin()
+{
+	$("#pw").val(encrypt($("#pw").val()));
+	$('form1').submit();
 }
