@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models, transaction
 from django.contrib.auth.models import User
+from org.types import Enum
 
 class ClientManager(models.Manager):
 	@transaction.atomic
@@ -42,9 +43,9 @@ class LawyerManager(models.Manager):
 		user.save()
 		lawyer=Lawyer.objects.create(user=user)
 		lawyer.save()
-		from blogs.models import BlogSettings, BlogCategory
+		from blogs.models import BlogSettings, BlogCategory, EnumBlogCategoryState
 		BlogSettings.objects.create(lawyer=lawyer).save()
-		BlogCategory.objects.create(lawyer=lawyer, name=u"默认", state=-1).save()
+		BlogCategory.objects.create(lawyer=lawyer, name=u"默认", state=EnumBlogCategoryState.SYSTEM).save()
 		return lawyer
 
 class Lawyer(models.Model):
@@ -75,19 +76,23 @@ class Remark(models.Model):
 	def __unicode__(self):
 		return str(self.grade)
 
+class EnumQuestionState(Enum):
+	OPEN = 0
+	CLOSED = 1	
+
 class Question(models.Model):
 	lawyer = models.ForeignKey(Lawyer)
 	client = models.ForeignKey(Client)
 	title = models.CharField(max_length=255,default='')
 	description = models.TextField()
 	publish_date = models.DateTimeField('date published',auto_now=True)
-	state = models.IntegerField(default=0) #0=连载 1=完结
+	state = models.IntegerField(default=EnumQuestionState.OPEN)
 
 	def __unicode__(self):
 		return self.title
 
 	def finish(self):
-		self.state=1
+		self.state=EnumQuestionState.CLOSED
 		self.save()
 
 class Question_text(models.Model):

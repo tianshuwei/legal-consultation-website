@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models, transaction
 from django.contrib.auth.models import User
+from org.types import Enum
 
 class Product(models.Model):
 	name = models.CharField(max_length=255,default='')
@@ -20,22 +21,27 @@ class Comment(models.Model):
 	def __unicode__(self):
 		return self.text[:20]
 
+class EnumOrderState(Enum):
+	UNPAID = 0
+	IN_BUSINESS = 1
+	FINISHED = 2
+
 class Order(models.Model):
 	client = models.ForeignKey('accounts.Client')
 	product = models.ForeignKey(Product)
 	lawyer = models.ForeignKey('accounts.Lawyer')
-	state = models.IntegerField(default=0) # 0=UNPAID 1=IN BUSINESS 2=FINISHED
+	state = models.IntegerField(default=EnumOrderState.UNPAID)
 	text = models.TextField()
 	publish_date = models.DateTimeField('date published',auto_now=True)
 
 	def is_unpaid(self):
-		return self.state==0
+		return self.state==EnumOrderState.UNPAID
 
 	def is_in_business(self):
-		return self.state==1
+		return self.state==EnumOrderState.IN_BUSINESS
 
 	def is_finished(self):
-		return self.state==2
+		return self.state==EnumOrderState.FINISHED
 
 	def __unicode__(self):
 		return self.text[:20]

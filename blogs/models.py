@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from org.settings import DATABASES
 from org.dbtools import rawsql
+from org.types import Enum
 
 POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
 EN_FULLTEXTSEARCH = False
@@ -13,19 +14,24 @@ class BlogCategoryManager(models.Manager):
 	use_for_related_fields = True
 
 	def get_public_categories(self):
-		return self.filter(state__lte=0).annotate(articles_count=models.Count('blogarticle')).order_by('name')
+		return self.filter(state__lte=EnumBlogCategoryState.PUBLIC).annotate(articles_count=models.Count('blogarticle')).order_by('name')
 
 	def get_default_category(self, lawyer):
 		r, created=BlogCategory.objects.get_or_create(lawyer=lawyer,name=u"默认")
 		if created: 
-			r.state=-1
+			r.state=EnumBlogCategoryState.SYSTEM
 			r.save()
 		return r
+
+class EnumBlogCategoryState(Enum):
+	PUBLIC = 0
+	PRIVATE = 1
+	SYSTEM = -1
 
 class BlogCategory(models.Model):
 	lawyer = models.ForeignKey("accounts.Lawyer")
 	name = models.CharField(max_length=255, default='', unique=True)
-	state = models.IntegerField(default=0) # 0=PUBLIC 1=PRIVATE -1=SYSTEM 
+	state = models.IntegerField(default=EnumBlogCategoryState.PUBLIC)
 
 	objects = BlogCategoryManager()
 
@@ -38,7 +44,7 @@ class BlogCategory(models.Model):
 
 	@transaction.atomic
 	def remove(self):
-		if self.state<0: return
+		if self.state==EnumBlogCategoryState.SYSTEM: return
 		self.blogarticle_set.all().update(category=BlogCategory.objects.get_default_category(self.lawyer))
 		self.delete()
 
@@ -184,15 +190,19 @@ class BlogSettingsManager(models.Manager):
 	def get_blogsettings(self, lawyer):
 		from accounts.models import Lawyer
 		r, created=self.get_or_create(lawyer=lawyer)
-		if r.state==1: raise Exception('Blog disabled')
+		if r.state==EnumBlogSettingsState.DISABLE: raise Exception('Blog disabled')
 		return r
 
-class BlogSettings(models.Model):
-	lawyer=models.OneToOneField("accounts.Lawyer")
-	state=models.IntegerField(default=0) # 0=PUBLIC 1=DISABLE
-	items_per_page=models.IntegerField(default=15)
+class EnumBlogSettingsState(Enum):
+	PUBLIC = 0
+	DISABLE = 1
 
-	objects=BlogSettingsManager()
+class BlogSettings(models.Model):
+	lawyer = models.OneToOneField("accounts.Lawyer")
+	state = models.IntegerField(default=EnumBlogSettingsState.PUBLIC)
+	items_per_page = models.IntegerField(default=15)
+
+	objects = BlogSettingsManager()
 
 	def __unicode__(self):
 		return self.lawyer.user.username

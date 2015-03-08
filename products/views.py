@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
-from products.models import Product,Comment,Order
+from products.models import Product,Comment,Order,EnumOrderState
 from accounts.models import Lawyer,Client
 from django.views import generic
 
@@ -33,7 +33,7 @@ def new_order_view(request, pk_product):
 				client=cl,
 				product=pr,
 				lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
-				state=0,
+				state=EnumOrderState.UNPAID,
 				text=request.POST['text']
 			).save()
 		else:

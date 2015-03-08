@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from org.types import Enum
 
 class SmartContractCategory(models.Model):
 	user = models.ForeignKey(User)
@@ -8,20 +9,26 @@ class SmartContractCategory(models.Model):
 	def __unicode__(self):
 		return self.name
 
+class EnumSmartContractState(Enum):
+	DEFAULT = 0
+
 class SmartContract(models.Model):
 	category = models.ForeignKey(SmartContractCategory)
 	name = models.CharField(max_length=255, default='')
 	publish_date = models.DateTimeField('date published', auto_now=True)
-	state = models.IntegerField(default=0)
+	state = models.IntegerField(default=EnumSmartContractState.DEFAULT)
 
 	def __unicode__(self):
 		return self.name
+
+class EnumSmartContractTemplateState(Enum):
+	DEFAULT = 0
 
 class SmartContractTemplate(models.Model):
 	contract = models.ForeignKey(SmartContract)
 	template_type = models.CharField(max_length=32, default='')
 	text = models.TextField()
-	state = models.IntegerField(default=0)
+	state = models.IntegerField(default=EnumSmartContractTemplateState.DEFAULT)
 
 	def __unicode__(self):
 		return self.template_type
