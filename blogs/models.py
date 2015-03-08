@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from org.settings import DATABASES
 from org.dbtools import rawsql
-from org.types import Enum
+from org.types import Enum, CustomException
 
 POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
 EN_FULLTEXTSEARCH = False
@@ -190,7 +190,7 @@ class BlogSettingsManager(models.Manager):
 	def get_blogsettings(self, lawyer):
 		from accounts.models import Lawyer
 		r, created=self.get_or_create(lawyer=lawyer)
-		if r.state==EnumBlogSettingsState.DISABLE: raise Exception('Blog disabled')
+		if r.state==EnumBlogSettingsState.DISABLE: raise CustomException('Blog disabled')
 		return r
 
 class EnumBlogSettingsState(Enum):

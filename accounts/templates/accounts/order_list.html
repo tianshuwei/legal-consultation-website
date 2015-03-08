@@ -24,7 +24,7 @@
             <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
         </div>
         <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
-        {% if order.isfinished %}
+        {% if order.is_finished %}
             <button class="btn btn-ar btn-sm btn-royal"><i class="fa fa-star"></i>remark</button>
             <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
         {% elif order.is_unpaid %}

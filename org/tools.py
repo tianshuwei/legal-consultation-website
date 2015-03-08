@@ -8,6 +8,7 @@ from django.shortcuts import render
 from settings import DEBUG
 from index.models import TransactionRecord
 from datetime import datetime
+from org.types import CustomException
 import random, logging, re
 
 logger = logging.getLogger('org.main')
@@ -40,12 +41,6 @@ def handle_illegal_access(request, exception=True):
 	REMOTE_ADDR %(REMOTE_ADDR)s""",
 	dict(request.META, REQUEST_URL=request.path)))
 	if exception: raise Http404
-
-class TransactionRecordException(Exception):
-	"""
-	事务日志错误：
-		没有找到transacserial等引起的无法记录事务日志问题。
-	"""
 
 def transacserial(transaction_name):
 	"""
@@ -95,7 +90,7 @@ def recorded(request, transaction_name):
 	"""
 	if request.method!='POST': 
 		logger.error(u'{0}没有采用POST请求。'.format(transaction_name))
-		raise TransactionRecordException(u'必须使用POST请求。')
+		raise CustomException(u'必须使用POST请求。')
 	if TRANSACSERIAL in request.POST:
 		rec = TransactionRecord.objects.create(
 			title=transaction_name.lower(),
@@ -106,7 +101,7 @@ def recorded(request, transaction_name):
 		return rec
 	else:
 		logger.error(u'{0} POST请求中缺少transacserial。'.format(transaction_name))
-		raise TransactionRecordException(u'POST请求中缺少transacserial')
+		raise CustomException(u'POST请求中缺少transacserial')
 
 class Lazy(object):
 	def __init__(self, f):

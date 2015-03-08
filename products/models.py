@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models, transaction
 from django.contrib.auth.models import User
-from org.types import Enum
+from org.types import Enum, CustomException
 
 class Product(models.Model):
 	name = models.CharField(max_length=255,default='')
@@ -25,6 +25,7 @@ class EnumOrderState(Enum):
 	UNPAID = 0
 	IN_BUSINESS = 1
 	FINISHED = 2
+	CANCELLED = 3
 
 class Order(models.Model):
 	client = models.ForeignKey('accounts.Client')
@@ -42,6 +43,27 @@ class Order(models.Model):
 
 	def is_finished(self):
 		return self.state==EnumOrderState.FINISHED
+
+	@transaction.atomic
+	def cancel(self):
+		if self.state==EnumOrderState.UNPAID or self.state==EnumOrderState.IN_BUSINESS:
+			self.state=EnumOrderState.CANCELLED
+			self.save()
+		else: raise CustomException(u"状态转换异常")
+
+	@transaction.atomic
+	def finish(self):
+		if self.state==EnumOrderState.IN_BUSINESS:
+			self.state=EnumOrderState.FINISHED
+			self.save()
+		else: raise CustomException(u"状态转换异常")
+
+	@transaction.atomic
+	def start(self):
+		if self.state==EnumOrderState.UNPAID:
+			self.state=EnumOrderState.IN_BUSINESS
+			self.save()
+		else: raise CustomException(u"状态转换异常")
 
 	def __unicode__(self):
 		return self.text[:20]
