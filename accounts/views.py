@@ -117,33 +117,6 @@ def question_view(request, pk_question):
 		question_texts=Question_text.objects.filter(question_id=pk_question)
 	)
 
-
-@login_required
-def order_detail_view(request, pk_order):
-	order = get_object_or_404(Order, pk=pk_order)
-	if request.method=='POST':
-		try:
-			if request.user.client==order.client:
-				order.text=request.POST['text']
-				order.save()
-			else: raise Exception
-		except: messages.error(request, u'备注修改失败')
-		else: messages.success(request, u'备注修改成功')
-		return redirect('accounts:order_detail', pk_order=pk_order)
-	else: return response(request, 'accounts/order_detail.html', order=order)
-
-@login_required
-def order_delete_view(request, pk_order): # TODO use post in template
-	order = get_object_or_404(Order, pk=pk_order)
-	if request.method=='POST':
-		try:
-			if request.user.client==order.client: order.delete()
-			else: raise Exception			
-		except: messages.error(request, u'取消订单失败')	
-		else: messages.success(request, u'取消订单成功')
-		return redirect('accounts:usercenter')
-	else: raise Http404
-
 from decimal import Decimal
 @login_required
 def balance_view(request):
