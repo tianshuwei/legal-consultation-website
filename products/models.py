@@ -31,13 +31,17 @@ def gen_order_serial():
 	return '='*25
 
 class Order(models.Model):
-	client = models.ForeignKey('accounts.Client')
-	product = models.ForeignKey(Product)
-	lawyer = models.ForeignKey('accounts.Lawyer')
+	client = models.ForeignKey('accounts.Client', on_delete=models.SET_NULL, null=True)
+	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True)
 	serial = models.CharField(max_length=25, default=gen_order_serial, editable=False)
-	state = models.IntegerField(default=EnumOrderState.UNPAID)
+	state = models.IntegerField(default=EnumOrderState.UNPAID, choices=EnumOrderState.get_choices())
 	text = models.TextField(blank=True)
 	publish_date = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		verbose_name = u'订单'
+		verbose_name_plural = u'订单'
 
 	def is_unpaid(self):
 		return self.state==EnumOrderState.UNPAID
