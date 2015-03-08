@@ -64,16 +64,17 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                   <div class="tab-pane" id="home">
-                    <form role="form">
-                        <div class="form-group">
+                    <form role="form"  id="for1" method="post">
+                      {% csrf_token %} {{ "login"|transacserial }}
+                        <div class="form-grou {{ "login"|transacserial }}p">
                             <div class="input-group login-input">
                                 <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                <input type="text" class="form-control" placeholder="Username">
+                                <input type="text" class="form-control" placeholder="Username" name="username">
                             </div>
                             <br>
                             <div class="input-group login-input">
                                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                <input type="password" class="form-control" placeholder="Password" id="pw">
+                                <input type="password" class="form-control" placeholder="Password" id="pw" name="password">
                             </div>
                             <div class="checkbox">
                                 <label>
@@ -85,6 +86,7 @@
                         </div>
                     </form>
                   </div>
+                  <script type="text/javascript">$("#for1").submit(function(){$("#pw").val(encrypt($("#pw").val()));})</script>
                   <div class="tab-pane" id="profile">
                       <form role="form">
                           <div class="form-group">
@@ -147,7 +149,8 @@
                       </form>
                   </div>
                   <div class="tab-pane active" id="messages">
-                    <form role="form">
+                    <form role="form" method="post">
+                      {% csrf_token %}
                         <div class="form-group">
                             <label for="InputUserName">User Name<sup>*</sup></label>
                             <input type="text" class="form-control" id="InputUserName">

@@ -36,18 +36,19 @@
       </ul>
 
     {% else %}
-            <form class="navbar-form navbar-right"
+            <form id="pom" class="navbar-form navbar-right"
      action="/accounts/login/?next={{ request.path|urlencode:"" }}%3F{{ request.META.QUERY_STRING|urlencode:"" }}" method="post" >
       {% csrf_token %} {{ "login"|transacserial }}
                 <div class="form-group">
                   <input type="text" name="username" placeholder="username" class="form-control">
                 </div>
                 <div class="form-group">
-                  <input type="password" name="password" placeholder="Password" class="form-control">
+                  <input type="password" name="password" placeholder="Password" class="form-control" id="qom">
                 </div>
                 <button type="submit" class="btn btn-ar btn-success" id="login" >Sign in</button>
             <a href="{% url 'accounts:register' 'client' %}" class="btn btn-ar btn-primary">Sign up</a>
             </form>
+            <script type="text/javascript">$("#pom").submit(function(){$("#qom").val(encrypt($("#qom").val()));})</script>
     {% endif %}
     </div>
 

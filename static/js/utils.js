@@ -259,6 +259,6 @@ function rsa_decryption(en_string){          //测试时用的解密函数，之
 
 function rsalogin()
 {
-	$("#pw").val(encrypt($("#pw").val()));
-	$('form1').submit();
+	$("#x").val(encrypt($("#pw").val()));
+	$('form').submit();
 }
