@@ -1,0 +1,10 @@
+http://222.69.93.107:6001/static/js/bootstrap.js
+http://222.69.93.107:6001/static/js/utils.js
+http://222.69.93.107:6001/static/js/wow.min.js
+http://222.69.93.107:6001/static/js/jquery.cookie.js
+http://222.69.93.107:6001/static/js/bootstrap-table.js
+http://222.69.93.107:6001/static/js/blogs-common.js
+http://222.69.93.107:6001/static/css/bootstrap.css
+http://222.69.93.107:6001/static/css/style_lawyer.css
+http://222.69.93.107:6001/static/css/font-awesome.min.css
+http://222.69.93.107:6001/static/css/bootstrap-table.css

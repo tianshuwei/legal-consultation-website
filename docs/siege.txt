@@ -1,0 +1,210 @@
+
+server {
+     listen 6001;
+     server_name 222.69.93.107;
+     root /var/www/org/deployment/default;
+	 
+	 location ~ ^/static/ {
+		 root  /var/www/org/deployment;
+		 access_log   off;
+		 expires 24h;
+		 # limit_conn addr 16;
+		 limit_rate 80k;
+	 }
+	 
+	 location ~ \.mod/?$ {
+	     uwsgi_pass  127.0.0.1:6004;
+	     include     uwsgi_params;
+	     access_log  off;
+	 }
+
+	 location / {
+         uwsgi_pass  127.0.0.1:6004;
+         include     uwsgi_params;
+         access_log  off;
+		 limit_conn addr 12;
+		 limit_req zone=one burst=8;
+     }
+}
+
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 1  0      0  92224 189036 301644    0    0     0    16  118  246  1  0 99  0
+ 0  0      0  91852 189036 301644    0    0     0    17  100  217  0  0 100  0
+ 0  0      0  92860 189036 301644    0    0     0    29  113  245  1  1 99  0
+ 0  0      0  92364 189036 301644    0    0     0     0   94  196  0  0 100  0
+ 0  0      0  92380 189036 301644    0    0     0    21  105  214  1  0 98  0
+
+siege http://222.69.93.107:6001/static/img/back.jpg
+ 3  0      0  85808 190944 303312    0    0     0     0  261  290  1  1 99  0
+ 0  0      0  85856 190948 303312    0    0     0    16  240  260  0  1 98  0
+ 0  0      0  86260 190948 303312    0    0     0     0  262  288  1  1 98  0
+ 1  0      0  86136 190948 303316    0    0     0     4  260  277  0  1 99  0
+ 0  0      0  86260 190948 303316    0    0     0    25  260  293  1  1 98  0
+Transactions:		          41 hits
+Availability:		      100.00 %
+Elapsed time:		      236.14 secs
+Data transferred:	       22.29 MB
+Response time:		       74.98 secs
+Transaction rate:	        0.17 trans/sec
+Throughput:		        0.09 MB/sec
+Concurrency:		       13.02
+Successful transactions:          41
+Failed transactions:	           0
+Longest transaction:	      122.52
+Shortest transaction:	       39.61
+
+siege http://222.69.93.107:6001/blogs/1/tags.mod
+ 6  0      0  81200 190932 303080    0    0     0    32  468 1620 60 21 19  0
+ 5  0      0  84772 190932 303096    0    0     0    11  284 1288 27 20 53  0
+10  0      0  82576 190932 303108    0    0     0     1  252 1277 28 25 48  0
+ 3  0      0  86924 190932 303128    0    0     0    11  279 1370 33 29 38  0
+ 2  0      0  85544 190932 303144    0    0     0    25  278 1371 35 29 36  0
+Transactions:		        1283 hits
+Availability:		      100.00 %
+Elapsed time:		       51.94 secs
+Data transferred:	        0.08 MB
+Response time:		        0.09 secs
+Transaction rate:	       24.70 trans/sec
+Throughput:		        0.00 MB/sec
+Concurrency:		        2.30
+Successful transactions:        1283
+Failed transactions:	           0
+Longest transaction:	        0.45
+Shortest transaction:	        0.03
+
+siege -c 200 -t 2 http://222.69.93.107:6001/blogs/1/tags.mod
+ 7  0      0  75064 190964 303544    0    0     0     0  491 1446 73 27  0  0
+ 6  0      0  74432 190964 303564    0    0     0    24  468 1521 74 26  0  0
+ 5  0      0  73020 190968 303584    0    0     0    11  476 1497 73 27  0  0
+ 3  0      0  78592 190996 303608    0    0     9     0  569 1698 74 26  0  0
+ 0  0      0  78808 190996 303628    0    0     0    19  463 1390 71 29  0  0
+Transactions:		        3772 hits
+Availability:		       95.66 %
+Elapsed time:		      119.17 secs
+Data transferred:	        0.26 MB
+Response time:		        4.85 secs
+Transaction rate:	       31.65 trans/sec
+Throughput:		        0.00 MB/sec
+Concurrency:		      153.57
+Successful transactions:        3772
+Failed transactions:	         171
+Longest transaction:	       29.70
+Shortest transaction:	        0.17
+
+siege http://222.69.93.107:6001/blogs/1/recent_comments.mod
+ 5  0      0  85576 188996 301412    0    0     0     0  392 1264 83 17  0  0
+ 4  0      0  90056 188996 301424    0    0     0    36  363 1294 83 17  0  0
+ 6  0      0  83744 188996 301440    0    0     0     1  222 1201 66 34  0  0
+ 6  0      0  86352 189000 301452    0    0     0    20  233 1284 63 31  6  0
+ 8  0      0  84608 189000 301464    0    0     0    11  200 1267 66 34  0  0
+Transactions:		        1005 hits
+Availability:		       99.90 %
+Elapsed time:		       73.66 secs
+Data transferred:	        0.31 MB
+Response time:		        0.54 secs
+Transaction rate:	       13.64 trans/sec
+Throughput:		        0.00 MB/sec
+Concurrency:		        7.39
+Successful transactions:        1005
+Failed transactions:	           1
+Longest transaction:	        7.60
+Shortest transaction:	        0.06
+
+siege -c 200 -t 2 http://222.69.93.107:6001/blogs/1/recent_comments.mod
+ 9  0      0  84592 189088 301848    0    0     0     0  365 1037 85 15  0  0
+ 6  0      0  84560 189088 301860    0    0     0    11  278  971 81 19  0  0
+ 6  0      0  83120 189088 301868    0    0     0     0  310 1016 86 14  0  0
+ 5  0      0  80168 189092 301876    0    0     0    13  366 1047 84 16  0  0
+ 6  0      0  80088 189096 301884    0    0     0     8  355 1041 84 16  0  0
+Transactions:		        1335 hits
+Availability:		       82.46 %
+Elapsed time:		      120.00 secs
+Data transferred:	        0.42 MB
+Response time:		       10.45 secs
+Transaction rate:	       11.12 trans/sec
+Throughput:		        0.00 MB/sec
+Concurrency:		      116.22
+Successful transactions:        1335
+Failed transactions:	         284
+Longest transaction:	       28.79
+Shortest transaction:	        0.53
+
+siege -c 200 -t 2 -f docs/siege_static.txt
+ 0  0      0  85272 189308 302396    0    0     0     0  577  365  1  4 95  0
+ 0  0      0  85768 189308 302396    0    0     0    11  617  397  1  7 92  0
+ 1  0      0  85272 189308 302396    0    0     0     0  574  350  1  4 95  0
+ 0  0      0  85140 189308 302396    0    0     0    17  535  343  1  4 95  0
+ 0  0      0  85604 189308 302400    0    0     0    23  540  345  1  4 95  0
+Transactions:		         606 hits
+Availability:		       85.59 %
+Elapsed time:		      119.91 secs
+Data transferred:	        7.23 MB
+Response time:		       15.15 secs
+Transaction rate:	        5.05 trans/sec
+Throughput:		        0.06 MB/sec
+Concurrency:		       76.56
+Successful transactions:         606
+Failed transactions:	         102
+Longest transaction:	      116.34
+Shortest transaction:	        0.01
+
+siege -c 7 -t 1 http://222.69.93.107:6001/index/
+ 1  0      0  91048 189372 302492    0    0     0     0  121  267  3  0 97  0
+ 0  0      0  91172 189372 302496    0    0     0    12  135  294  4  1 96  0
+ 0  0      0  91172 189372 302500    0    0     0    13  120  258  3  0 97  0
+ 0  0      0  91172 189372 302500    0    0     0     0  114  245  3  1 97  0
+ 0  0      0  91172 189372 302500    0    0     0    21  129  286  3  1 96  0
+Transactions:		          60 hits
+Availability:		      100.00 %
+Elapsed time:		       59.67 secs
+Data transferred:	        0.31 MB
+Response time:		        5.94 secs
+Transaction rate:	        1.01 trans/sec
+Throughput:		        0.01 MB/sec
+Concurrency:		        5.97
+Successful transactions:          60
+Failed transactions:	           0
+Longest transaction:	        7.61
+Shortest transaction:	        0.04
+
+siege -c 9 -t 1 http://222.69.93.107:6001/index/
+ 1  0      0  91740 189408 302688    0    0     0    11   99  230  2  1 97  0
+ 0  0      0  91740 189408 302688    0    0     0     7   91  224  2  0 98  0
+ 0  0      0  91740 189408 302692    0    0     0     0   85  207  2  0 98  0
+ 0  0      0  91740 189408 302692    0    0     0     4   93  215  2  1 97  0
+ 1  0      0  91740 189408 302692    0    0     0     0  111  228  2  1 97  0
+Transactions:		          56 hits
+Availability:		       52.83 %
+Elapsed time:		       59.76 secs
+Data transferred:	        0.30 MB
+Response time:		        7.82 secs
+Transaction rate:	        0.94 trans/sec
+Throughput:		        0.00 MB/sec
+Concurrency:		        7.33
+Successful transactions:          56
+Failed transactions:	          50
+Longest transaction:	        8.01
+Shortest transaction:	        0.00
+
+siege -c 200 -t 1 http://222.69.93.107:6001/index/
+ 0  0      0  90964 189456 303056    0    0     0    33 1182  945  3 17 80  0
+ 2  0      0  90448 189456 303144    0    0     0    17 1096 1041  2 18 80  0
+ 0  0      0  90600 189456 303144    0    0     0     0  143  258  2  1 97  0
+ 0  0      0  90600 189456 303144    0    0     0     5  104  227  2  1 97  0
+ 0  0      0  91468 189456 303144    0    0     0     0   99  219  3  0 97  0
+Transactions:		          15 hits
+Availability:		        1.22 %
+Elapsed time:		       14.11 secs
+Data transferred:	        0.32 MB
+Response time:		       47.10 secs
+Transaction rate:	        1.06 trans/sec
+Throughput:		        0.02 MB/sec
+Concurrency:		       50.07
+Successful transactions:          15
+Failed transactions:	        1211
+Longest transaction:	        8.39
+Shortest transaction:	        0.00
+
+siege -c 6 -t 10 -f docs/siege_normal.txt
+TODO a way around csrf
