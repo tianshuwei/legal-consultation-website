@@ -4,10 +4,14 @@ from django.contrib.auth.models import User
 from org.types import Enum, CustomException
 
 class Product(models.Model):
-	name = models.CharField(max_length=255,default='')
+	name = models.CharField(max_length=255)
 	publish_date = models.DateTimeField(auto_now=True)
-	description = models.TextField()
+	description = models.TextField(blank=True)
 	price = models.DecimalField(max_digits=16, decimal_places=3, default=0)
+
+	class Meta:
+		verbose_name = u'产品'
+		verbose_name_plural = u'产品'
 
 	def __unicode__(self):
 		return self.name
@@ -28,6 +32,7 @@ class EnumOrderState(Enum):
 	CANCELLED = 3
 
 def gen_order_serial():
+	# TODO 设计订单号格式
 	return '='*25
 
 class Order(models.Model):

@@ -30,8 +30,8 @@ class EnumBlogCategoryState(Enum):
 
 class BlogCategory(models.Model):
 	lawyer = models.ForeignKey("accounts.Lawyer")
-	name = models.CharField(max_length=255, default='', unique=True)
-	state = models.IntegerField(default=EnumBlogCategoryState.PUBLIC)
+	name = models.CharField(max_length=255)
+	state = models.IntegerField(default=EnumBlogCategoryState.PUBLIC, choices=EnumBlogCategoryState.get_choices())
 
 	objects = BlogCategoryManager()
 
@@ -131,12 +131,12 @@ class BlogArticleManager(models.Manager):
 
 class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)
-	title = models.CharField(max_length=255, default='')
+	title = models.CharField(max_length=255)
 	modify_date = models.DateTimeField(auto_now=True, null=True)
 	publish_date = models.DateTimeField()
-	clicks = models.IntegerField(default=0)
+	clicks = models.IntegerField(default=0, editable=False)
 	category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True)
-	tags = models.CharField(max_length=255, default='')
+	tags = models.CharField(max_length=255, blank=True)
 	text = models.TextField()
 
 	objects = BlogArticleManager()
@@ -176,8 +176,8 @@ class BlogCommentManager(models.Manager):
 		return self.filter(article__author=lawyer).order_by('-publish_date')[:6]
 
 class BlogComment(models.Model):
-	user = models.ForeignKey(User)
-	publish_date = models.DateTimeField('date published', auto_now=True)
+	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+	publish_date = models.DateTimeField(auto_now=True)
 	article = models.ForeignKey(BlogArticle)
 	text = models.TextField()
 
@@ -199,7 +199,7 @@ class EnumBlogSettingsState(Enum):
 
 class BlogSettings(models.Model):
 	lawyer = models.OneToOneField("accounts.Lawyer")
-	state = models.IntegerField(default=EnumBlogSettingsState.PUBLIC)
+	state = models.IntegerField(default=EnumBlogSettingsState.PUBLIC, choices=EnumBlogSettingsState.get_choices())
 	items_per_page = models.IntegerField(default=15)
 
 	objects = BlogSettingsManager()

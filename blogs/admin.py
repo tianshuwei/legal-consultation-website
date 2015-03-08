@@ -9,4 +9,3 @@ class BlogArticleAdmin(admin.ModelAdmin):
 	inlines = [CommentInline]
 
 admin.site.register(BlogArticle, BlogArticleAdmin)
-admin.site.register(BlogCategory)
