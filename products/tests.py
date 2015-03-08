@@ -1,3 +1,10 @@
-from django.test import TestCase
+from org.testingtools import *
 
-# Create your tests here.
+class OrderTest(UnitTestCase):
+	fixtures = [
+		'fixtures/accounts.json',
+		'fixtures/products.json',
+	]
+
+	def setUp(self):
+		self.client = Client()
