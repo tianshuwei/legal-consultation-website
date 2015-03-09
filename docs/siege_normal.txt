@@ -1,3 +1,4 @@
+http://222.69.93.107:6001/accounts/login4siege/ POST username=client0&password=1234
 http://222.69.93.107:6001/index/
 http://222.69.93.107:6001/static/css/style.css
 http://222.69.93.107:6001/static/js/bootstrap.js
@@ -59,6 +60,7 @@ http://222.69.93.107:6001/accounts/usercenter/
 http://222.69.93.107:6001/accounts/usercenter/
 http://222.69.93.107:6001/accounts/usercenter/
 http://222.69.93.107:6001/accounts/logout/
+http://222.69.93.107:6001/accounts/login4siege/ POST username=lawyer0&password=1234
 http://222.69.93.107:6001/index/
 http://222.69.93.107:6001/index/
 http://222.69.93.107:6001/static/css/style_lawyer.css

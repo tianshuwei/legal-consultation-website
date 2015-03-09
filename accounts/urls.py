@@ -5,6 +5,7 @@ from accounts import views
 urlpatterns = patterns('',
 	url(r'^lawyerlist/$', views.lawyerlist_view, name='lawyerlist'),
 	url(r'^login/$', views.login_view, name='login'),
+	url(r'^login4siege/$', views.siege_view),
 	url(r'^logout/$', views.logout_view, name='logout'),
 	url(r'^profile\.(?P<pk_user>\d+)/$', views.profile_view, name='profile'),
 	url(r'^questions/(?P<pk_question>\d+)/$', views.question_view, name='question'),

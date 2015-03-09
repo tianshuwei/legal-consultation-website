@@ -28,6 +28,18 @@ def login_view(request): # [UnitTest]
 			return response(request, 'accounts/login.html')
 	else:  return response(request, 'accounts/login.html')
 
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def siege_view(request):
+	# $.post('/accounts/login4siege/',{username:'lawyer0',password:'1234'});
+	# siege -A "org-under-siege" "http://localhost:8000/accounts/login4siege/ POST username=lawyer0&password=1234"
+	if request.method=='POST' and request.META['HTTP_USER_AGENT']=="org-under-siege":
+		username,password = request.POST['username'],request.POST['password']
+		user = authenticate(username=username, password=password)
+		if user is not None: login(request, user)
+		return HttpResponse('HELLO')
+	else: raise Http404
+
 def logout_view(request):
 	logout(request)
 	return redirect('index:index')
