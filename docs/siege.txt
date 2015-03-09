@@ -206,5 +206,29 @@ Failed transactions:	        1211
 Longest transaction:	        8.39
 Shortest transaction:	        0.00
 
-siege -c 6 -t 10 -f docs/siege_normal.txt
-TODO a way around csrf
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 0  0      0  71108 198796 321028    0    0     0     0   62  185  0  0 100  0
+ 0  0      0  71108 198796 321028    0    0     0     0   64  187  0  0 100  0
+ 0  0      0  71108 198796 321028    0    0     0     0   65  188  0  0 100  0
+ 0  0      0  71108 198796 321028    0    0     0     0   67  199  0  0 100  0
+ 0  0      0  71108 198796 321028    0    0     0     0   69  197  0  0 100  0
+
+siege -c 6 -t 10 -A "org-under-siege" -f docs/siege_normal.txt
+ 0  0      0  71100 198808 321048    0    0     0    23  127  336 10  3 87  0
+ 2  0      0  70564 198808 321052    0    0     0     0  110  351 13  3 85  0
+ 1  0      0  69920 198808 321056    0    0     0     7  186  457 27  4 69  0
+ 0  0      0  71044 198808 321056    0    0     0     0  134  348 12  3 85  0
+ 1  0      0  69672 198812 321056    0    0     0     4  112  289  6  2 92  0
+Transactions:		        1107 hits
+Availability:		       98.75 %
+Elapsed time:		      599.61 secs
+Data transferred:	       14.92 MB
+Response time:		        2.74 secs
+Transaction rate:	        1.85 trans/sec
+Throughput:		        0.02 MB/sec
+Concurrency:		        5.06
+Successful transactions:        1110
+Failed transactions:	          14
+Longest transaction:	       30.41
+Shortest transaction:	        0.02
