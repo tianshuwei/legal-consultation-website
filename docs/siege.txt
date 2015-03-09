@@ -27,6 +27,7 @@ server {
      }
 }
 
+[Reference]
 procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
  1  0      0  92224 189036 301644    0    0     0    16  118  246  1  0 99  0
@@ -206,6 +207,7 @@ Failed transactions:	        1211
 Longest transaction:	        8.39
 Shortest transaction:	        0.00
 
+[Reference]
 procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
  0  0      0  71108 198796 321028    0    0     0     0   62  185  0  0 100  0
@@ -232,3 +234,32 @@ Successful transactions:        1110
 Failed transactions:	          14
 Longest transaction:	       30.41
 Shortest transaction:	        0.02
+
+[Reference]
+procs -----------memory---------- ---swap-- -----io---- -system-- ----cpu----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa
+ 1  0      0 1698568 118948 1474424    0    0     0    37 1068 1786  5  4 92  0
+ 0  0      0 1692268 118956 1484172    0    0     0    23 1194 2059  4  2 93  1
+ 0  0      0 1691456 118956 1481560    0    0     0     8 1259 1909  4  2 94  0
+ 0  0      0 1691216 118956 1481932    0    0     0     8 1152 2068  4  2 94  0
+ 0  0      0 1698804 118964 1477948    0    0     0    12  628  884  2  1 97  1
+ 1  0      0 1692240 118964 1481576    0    0     0    45 1016 1619  3  2 96  0
+
+siege -c 200 -t 2 -b -A "org-under-siege" -f docs/siege_normal_local.txt
+ 6  0      0 1688472 118864 1473700    0    0     0    65 16812 35030 46  8 45  0
+14  0      0 1675876 118864 1473724    0    0     0    19 16327 34213 50  9 40  0
+ 1  0      0 1681412 118864 1476720    0    0     0    40 17773 37366 48  9 44  0
+ 8  0      0 1676016 118872 1477072    0    0     0    17 18444 38055 47  7 45  0
+ 5  0      0 1684240 118872 1474036    0    0     0     0 17755 36793 44  8 48  0
+Transactions:		        3653 hits
+Availability:		       90.76 %
+Elapsed time:		      119.68 secs
+Data transferred:	      182.60 MB
+Response time:		        3.34 secs
+Transaction rate:	       30.52 trans/sec
+Throughput:		        1.53 MB/sec
+Concurrency:		      102.04
+Successful transactions:        3653
+Failed transactions:	         372
+Longest transaction:	       28.61
+Shortest transaction:	        0.03
