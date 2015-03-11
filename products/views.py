@@ -24,30 +24,39 @@ def new_comment_view(request, pk_product):
 
 @login_required
 def new_order_view(request, pk_product):
-	try:
-		cl=request.user.client
-		pr=Product.objects.get(pk=pk_product)
-		a=cl.minus_balance(pr.price)
-		if(a==1):
-			Order.objects.create( 
-				client=cl,
-				product=pr,
-				lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
-				state=EnumOrderState.UNPAID,
-				text=request.POST['text']
-			).save()
-		else:
-			raise Exception
-	except Exception, e: 
-		traceback.print_exc() # DEBUG_ONLY
-		messages.error(request, u'订单提交失败')
-		return response_jquery({ 'success': False })
-	else: 
-		messages.success(request, u'订单提交成功')
-		return response_jquery({ 'success': True })
+	if request.method=='POST':
+		rec=recorded(request, 'products:new_order')
+		try:
+			client=request.user.client
+			product=Product.objects.get(pk=pk_product)
+			# TODO 用户中心点击支付时再支付，以后再调，原来if先去掉了
+			# a=client.minus_balance(product.price)
+			with transaction.atomic():
+				order = Order.objects.create( 
+					client=client,
+					product=product,
+					lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
+					state=EnumOrderState.UNPAID,
+					text=request.POST['text']
+				)
+				order.save()
+		except Exception, e: 
+			# TODO 提交者不是客户/产品不存在/违反完整性约束约束 这些异常要区分开记录
+			# TODO 取消注释下面一行可以看Exception类型，except里面加以区分
+			# traceback.print_exc() # 最后要注释掉或删掉，不要保留这一行
+			# TODO rec.error(...
+			messages.error(request, u'订单提交失败')
+			# TODO 必要时调用 handle_illegal_access 参考org/tools.py中的文档
+			return response_jquery({ 'success': False })
+		else: 
+			messages.success(request, u'订单提交成功')
+			rec.success(u'{0} 订单提交成功 {1}'.format(request.user.username, order.serial))
+			return response_jquery({ 'success': True })
+	else: raise Http404
 
 @login_required
 def order_detail_view(request, pk_order):
+	# TODO 按照上面new_order_view修改
 	order = get_object_or_404(Order, pk=pk_order)
 	if request.method=='POST':
 		try:
@@ -61,7 +70,8 @@ def order_detail_view(request, pk_order):
 	else: return response(request, 'accounts/order_detail.html', order=order)
 
 @login_required
-def order_delete_view(request, pk_order): # TODO use post in template
+def order_delete_view(request, pk_order):
+	# TODO 按照上面new_order_view修改
 	order = get_object_or_404(Order, pk=pk_order)
 	if request.method=='POST':
 		try:
@@ -69,5 +79,6 @@ def order_delete_view(request, pk_order): # TODO use post in template
 			else: raise Exception			
 		except: messages.error(request, u'取消订单失败')	
 		else: messages.success(request, u'取消订单成功')
+		# TODO 应该return response_jquery(...
 		return redirect('accounts:usercenter')
 	else: raise Http404
