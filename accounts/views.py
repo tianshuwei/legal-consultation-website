@@ -4,6 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from accounts.models import Lawyer, Client, Remark, Question, Question_text
 from products.models import Order
+from org.settings import RSA_LOGIN_KEY
+from org.rsa_authentication import decrypt
 
 class RegisterForm(forms.Form):
 	username = forms.CharField(label="账户",max_length=254)
@@ -16,17 +18,21 @@ class RegisterForm(forms.Form):
 def login_view(request): # [UnitTest]
 	if request.method=='POST':
 		username,password = request.POST['username'],request.POST['password']
-		next_url = request.GET['next'] if 'next' in request.GET else reverse('index:index')
+		next_url = request.POST['next'] if 'next' in request.POST else reverse('index:index')
 		user = authenticate(username=username, password=password)
 		rec=recorded(request,'login')
 		if user is not None:
 			login(request, user)
 			rec.success(u'{0}登入成功'.format(username))  # [UnitTest]
-			return HttpResponseRedirect(next_url)
+			return response_jquery({'r':'success','redirect':next_url})
 		else: 
 			rec.error(u'{0}登入失败'.format(username))  # [UnitTest]
+			return response_jquery({'r':'error'})
+	else:
+		if request.user.is_authenticated():
+			return redirect("index:index")
+		else:  
 			return response(request, 'accounts/login.html')
-	else:  return response(request, 'accounts/login.html')
 
 def logout_view(request):
 	logout(request)
@@ -35,9 +41,11 @@ def logout_view(request):
 def register_view(request, role): # [UnitTest]
 	if request.method=='POST':
 		rec=recorded(request,'accounts:register')
+		pubkey, privkey = RSA_LOGIN_KEY
+		pw = decrypt(request.POST['password'].decode('hex'), privkey)
 		try:
 			username,profile=request.POST['username'],dict(
-				password=request.POST['password'],
+				password=pw,
 				email=request.POST['email'],
 				last_name = request.POST['last_name'],
 				first_name = request.POST['first_name'],
@@ -47,11 +55,14 @@ def register_view(request, role): # [UnitTest]
 			elif role=='lawyer': 
 				Lawyer.objects.register(username,**profile)
 		except: 
+			traceback.print_exc()
 			messages.error(request, u'注册失败') # [UnitTest]
 			rec.error(u'{0}注册失败'.format(username))
+			return response_jquery({'r':'error'})
 		else: 
 			messages.success(request, u'注册成功')
 			rec.success(u'{0}注册成功'.format(username)) # [UnitTest]
+			return response_jquery({'r':'success'})
 		return redirect('accounts:login')
 	else: return response(request, 'accounts/register.html', register_form=RegisterForm())
 

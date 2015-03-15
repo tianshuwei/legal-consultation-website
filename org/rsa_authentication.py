@@ -11,20 +11,20 @@ class RSABackend(ModelBackend):
 		try:
 			pubkey, privkey = RSA_LOGIN_KEY
 			user = UserModel._default_manager.get_by_natural_key(username)
-			if user.check_password(RSABackend.decrypt(password.decode('hex'), privkey)):
+			if user.check_password(decrypt(password.decode('hex'), privkey)):
 				return user
-		except UserModel.DoesNotExist:
+		except:
 			UserModel().set_password(password) # disguise timing
 
-	@staticmethod
-	def decrypt(crypto, priv_key):
-		"""This has been created to work with its javascript counterpart RSA.js."""
-		blocksize = common.byte_size(priv_key.n)
-		encrypted = transform.bytes2int(crypto)
-		decrypted = core.decrypt_int(encrypted, priv_key.d, priv_key.n)
-		cleartext = transform.int2bytes(decrypted, blocksize)[25:]
-		try:
-			sep_idx = cleartext.rindex(b('\x00'))
-			return cleartext[sep_idx+1:]
-		except ValueError:
-			return cleartext
+
+def decrypt(crypto, priv_key):
+	"""This has been created to work with its javascript counterpart RSA.js."""
+	blocksize = common.byte_size(priv_key.n)
+	encrypted = transform.bytes2int(crypto)
+	decrypted = core.decrypt_int(encrypted, priv_key.d, priv_key.n)
+	cleartext = transform.int2bytes(decrypted, blocksize)[25:]
+	try:
+		sep_idx = cleartext.rindex(b('\x00'))
+		return cleartext[sep_idx+1:]
+	except ValueError:
+		return cleartext
