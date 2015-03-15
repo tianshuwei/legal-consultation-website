@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
-"""
-Jan 2015 (C) Alex
-"""
+# Copyright 2015 Alex Yang <aleozlx@126.com>
 
 from bisect import bisect, bisect_left
 from StringIO import StringIO
@@ -11,11 +8,11 @@ from re import compile as R
 # = Requirements ===============
 from docx import Document
 """
-Documentation 
+Documentation
 	https://python-docx.readthedocs.org/en/latest
 Python Packages
 	https://pypi.python.org/pypi/python-docx/0.7.6
-Installation 
+Installation
 	https://python-docx.readthedocs.org/en/latest/user/install.html#install
 """
 # ==============================
@@ -74,11 +71,11 @@ class StableParagraph(object):
 		self.o = o
 
 	@lazy
-	def index(self): 
+	def index(self):
 		return make_index(self.o.runs)
 
 	@lazy
-	def var_spans(self): 
+	def var_spans(self):
 		return find(self.o.text)
 
 	def truncate(self):
@@ -112,18 +109,17 @@ class StableParagraph(object):
 				elif len(rr)==1:
 					first.text = r_VARIABLE.sub(lambda m: val if m.group(1)==var else m.group(), first.text)
 
-class DocxTemplate(Document):
-	def __init__(self, fname=None):
-		if fname==None: super(DocxTemplate, self).__init__()
-		else: super(DocxTemplate, self).__init__(fname)
+class DocxTemplate(object):
+	def __init__(self, fname):
+		self.inner_docx=Document(fname)
 
 	def get_vars(self):
-		a=[str(s) for s in r_VARIABLE.findall(text(self))]
+		a=[str(s) for s in r_VARIABLE.findall(text(self.inner_docx))]
 		return {var:a.count(var) for var in set(a)}
 
 	def render(self, **bindings):
 		s = StringIO()
-		self.save(s)
+		self.inner_docx.save(s)
 		doc = Document(s)
 		substitute(doc, bindings)
 		return doc

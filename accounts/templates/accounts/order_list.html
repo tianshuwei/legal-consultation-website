@@ -8,76 +8,43 @@
 </script>
 {% endblock %}
 {% block main_col %}
+<div class="panel panel-border animated fadeInDown animation-delay-8" style="border-left-color: #eee;">
+{% for order in orders %}
+    <div class="panel-body">
+        <h4 href="#" class="section-title no-margin-top"> {{ order.product }} <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
+        <div class="clearfix"></div>
 
-                <!--order part-->
-                <div class="panel panel-border animated fadeInDown animation-delay-8" style="border-left-color: #eee;">
-                    <!--one order-->
-                    <div class="panel-body">
-                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
-                        <div class="clearfix"></div>
+        <div class="row context  animated fadeInDown animation-delay-8">
+            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>日期：&nbsp;</strong>{{ order.publish_date }}</p></div>
+            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>价格：&nbsp;</strong>￥{{ order.product.price }}</p></div>
+        </div>
 
-                        <div class="row context  animated fadeInDown animation-delay-8">
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Date:</strong> 2014-12-31</p></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Price:</strong> $369.99</p></div>
-                        </div>
+        <div class="row context animated fadeInDown animation-delay-8 ">
+        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
+            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
+        </div>
+        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
+        {% if order.is_finished %}
+            <button class="btn btn-ar btn-sm btn-royal"><i class="fa fa-star"></i>remark</button>
+            <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
+        {% elif order.is_unpaid %}
+            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 "><i class="fa fa-dollar"></i>pay now!</button>
+            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
+            <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-info"></i>info</button>
+        {% elif order.is_in_business %}
+            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
+            <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-question"></i>help</button>
+        {% endif %}
+        </div>
+        </div>
+    </div>
+{% if not forloop.last %}
+    <hr class="dashed">
+{% endif %}
+{% empty %}
+<!-- TODO orders is empty -->
+{% endfor %}
+</div>
 
-                        <div class="row context animated fadeInDown animation-delay-8 ">
-                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
-                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
-                        </div>
-                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
-                            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 "><i class="fa fa-dollar"></i>pay now!</button>
-                            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
-                            <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-info"></i>info</button>
-                        </div>
-                        </div>
-                    </div>
-
-                    <hr class="dashed">
-
-                    <!--anoter order-->
-                    <div class="panel-body">
-                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
-                        <div class="clearfix"></div>
-
-                        <div class="row context  animated fadeInDown animation-delay-8">
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Date:</strong> 2014-12-31</p></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Price:</strong> $369.99</p></div>
-                        </div>
-
-                        <div class="row context animated fadeInDown animation-delay-8 ">
-                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
-                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
-                        </div>
-                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
-                            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
-                            <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-question"></i>help</button>
-                        </div>
-                        </div>
-                    </div>
-
-                    <hr class="dashed">
-
-                    <!--anoter order-->
-                    <div class="panel-body">
-                        <h4 href="#" class="section-title no-margin-top"> Product name <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
-                        <div class="clearfix"></div>
-
-                        <div class="row context  animated fadeInDown animation-delay-8">
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Date:</strong> 2014-12-31</p></div>
-                            <div class="col-md-6 col-sm-6 col-xs-6"><p class="section-lines no-margin-top"><strong>Price:</strong> $369.99</p></div>
-                        </div>
-
-                        <div class="row context animated fadeInDown animation-delay-8 ">
-                        <div class="col-md-offset-2 col-md-5 col-sm-5 col-xs-12 text-right">
-                            <p style="margin-top: 5px;margin-bottom: 5px;">maybe some infomation here</p>
-                        </div>
-                        <div class="col-md-5 col-sm-6 col-xs-12 btn-group">
-                            <button class="btn btn-ar btn-sm btn-royal"><i class="fa fa-star"></i>remark</button>
-                            <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-                <!--order part end-->
+<!-- TODO paginator here -->
 {% endblock %}

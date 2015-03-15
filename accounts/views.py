@@ -34,6 +34,18 @@ def login_view(request): # [UnitTest]
 		else:  
 			return response(request, 'accounts/login.html')
 
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+def siege_view(request):
+	# $.post('/accounts/login4siege/',{username:'lawyer0',password:'1234'});
+	# siege -A "org-under-siege" "http://localhost:8000/accounts/login4siege/ POST username=lawyer0&password=1234"
+	if request.method=='POST' and request.META['HTTP_USER_AGENT']=="org-under-siege":
+		username,password = request.POST['username'],request.POST['password']
+		user = authenticate(username=username, password=password)
+		if user is not None: login(request, user)
+		return HttpResponse('HELLO')
+	else: raise Http404
+
 def logout_view(request):
 	logout(request)
 	return redirect('index:index')
@@ -74,9 +86,7 @@ def lawyerlist_view(request):
 def usercenter_view(request):
 	u = get_role(request.user)
 	if type(u) is Client or type(u) is Lawyer:
-		return response(request, 'accounts/usercenter.html',
-			orders=paginated(lambda: request.GET.get('page'), 10, 
-				u.order_set.order_by('-publish_date')),)
+		return response(request, 'accounts/usercenter.html')
 	else: raise Http404
 
 @login_required
@@ -90,7 +100,12 @@ def questions_view(request):
 
 @login_required
 def orders_view(request):
-	return response(request, 'accounts/order_list.html')
+	u = get_role(request.user)
+	if type(u) is Client or type(u) is Lawyer:
+		return response(request, 'accounts/order_list.html',
+			orders=paginated(lambda: request.GET.get('page'), 10, 
+				u.order_set.order_by('-publish_date')),test=True)
+	else: raise Http404
 
 class ProfileEditForm(forms.ModelForm):
 	class Meta:
@@ -124,33 +139,6 @@ def question_view(request, pk_question):
 		question=question,
 		question_texts=Question_text.objects.filter(question_id=pk_question)
 	)
-
-
-@login_required
-def order_detail_view(request, pk_order):
-	order = get_object_or_404(Order, pk=pk_order)
-	if request.method=='POST':
-		try:
-			if request.user.client==order.client:
-				order.text=request.POST['text']
-				order.save()
-			else: raise Exception
-		except: messages.error(request, u'备注修改失败')
-		else: messages.success(request, u'备注修改成功')
-		return redirect('accounts:order_detail', pk_order=pk_order)
-	else: return response(request, 'accounts/order_detail.html', order=order)
-
-@login_required
-def order_delete_view(request, pk_order): # TODO use post in template
-	order = get_object_or_404(Order, pk=pk_order)
-	if request.method=='POST':
-		try:
-			if request.user.client==order.client: order.delete()
-			else: raise Exception			
-		except: messages.error(request, u'取消订单失败')	
-		else: messages.success(request, u'取消订单成功')
-		return redirect('accounts:usercenter')
-	else: raise Http404
 
 from decimal import Decimal
 @login_required

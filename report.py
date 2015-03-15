@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""MTV Report Jan 2015 (C) Alex"""
+"""MTV Report
+Copyright 2015 Alex Yang
+"""
 
 import os, sys, re, linecache, itertools, operator, org.settings
 r_urlref = re.compile(r"'(\w+:\w+)'")
@@ -152,6 +154,14 @@ class Application(object):
 			'ids': [m.group('val') for m in grep(r_template_ids,fname)],
 		} for ext, fname in find(['.html','.js'], self.d_templates)]
 
+@section('Copyrights and licenses')
+def l_copyright():
+	r_LICENSE = re.compile(r'(?i)(licensed\x20under|copyright.*\d{4})')
+	llen=lambda x: x if x>=0 else 0
+	for ext, fname in find(['.py','.js','.css','.html']):
+		for l,m in linematch(r_LICENSE, fname):
+			print F(fname,l), m.string.strip()[:llen(120-len(fname))]
+
 @section('Model Layer')
 def __model():
 	print 'Entity Summary:', sum(len(a.models) for a in apps)
@@ -259,7 +269,7 @@ def __source():
 	print 'total lines:', sum((src_wc[ext][1] for ext in src_wc))
 
 @section('Todo list')
-def l_todo():
+def z_todo():
 	for a in apps:
 		for view in (view for view in a.views if view['TODO']):
 			print '\t%(F)s %(V)s' % dict(view, F=F(view['file'],view['line']), V=V(view['func_name']))
@@ -270,6 +280,19 @@ def l_todo():
 			for i,(l,todo) in enumerate(a.models_todo):
 				print '\t%d. %s %s' % (i+1,todo,LINE(l))
 
+def get_options():
+	import argparse
+	parser = argparse.ArgumentParser()
+	for section in sections:
+		parser.add_argument('-%s'%section['short'], '--%s'%section['long'],
+			action='store_true', dest=section['long'], default=False, 
+			help='show %s section'%section['title'])
+	parser.add_argument('--all',
+		action='store_true', dest='all_sections', default=False, 
+		help='show all sections')
+	# option conflict regex /^def (x_\w+|__x\w*)\(\)/
+	return parser.parse_args()
+
 if __name__ == '__main__':
 	os.environ.setdefault("DJANGO_SETTINGS_MODULE", "org.settings")
 	apps = [Application(app) for app in org.settings.INSTALLED_APPS if os.path.isdir(app) and os.path.exists(os.path.join(app,'urls.py'))]
@@ -277,7 +300,9 @@ if __name__ == '__main__':
 	print 'Apps:', [app.name for app in apps]
 	url_refs_templates = reduce(operator.ior, [a.url_refs['templates'] for a in apps]+[
 		set(m.group(1) for ext, fname in find(['.html', '.js'], 'templates') for m in grep(r_urlref,fname))])
+	options = get_options()
 	for section in sections:
-		print SECTION(section['title'])
-		section['func']()
+		if options.all_sections or getattr(options, section['long']):
+			print SECTION(section['title'])
+			section['func']()
 	print 'EOF'

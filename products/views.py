@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
-from products.models import Product,Comment,Order
+from products.models import Product,Comment,Order,EnumOrderState
 from accounts.models import Lawyer,Client
 from django.views import generic
 
@@ -33,7 +33,7 @@ def new_order_view(request, pk_product):
 				client=cl,
 				product=pr,
 				lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
-				state=0,
+				state=EnumOrderState.UNPAID,
 				text=request.POST['text']
 			).save()
 		else:
@@ -46,11 +46,28 @@ def new_order_view(request, pk_product):
 		messages.success(request, u'订单提交成功')
 		return response_jquery({ 'success': True })
 
+@login_required
+def order_detail_view(request, pk_order):
+	order = get_object_or_404(Order, pk=pk_order)
+	if request.method=='POST':
+		try:
+			if request.user.client==order.client:
+				order.text=request.POST['text']
+				order.save()
+			else: raise Exception
+		except: messages.error(request, u'备注修改失败')
+		else: messages.success(request, u'备注修改成功')
+		return redirect('accounts:order_detail', pk_order=pk_order)
+	else: return response(request, 'accounts/order_detail.html', order=order)
 
 @login_required
-def delete_order_view(request, pk_product):
-	cl=request.user.client
-	pr=Product.objects.get(pk=pk_product)
-	order_delete = Order.objects.filter(client_id=cl.id,product_id=pr.id)
-	order_delete.delete()
-	return redirect('accounts:usercenter')
+def order_delete_view(request, pk_order): # TODO use post in template
+	order = get_object_or_404(Order, pk=pk_order)
+	if request.method=='POST':
+		try:
+			if request.user.client==order.client: order.delete()
+			else: raise Exception			
+		except: messages.error(request, u'取消订单失败')	
+		else: messages.success(request, u'取消订单成功')
+		return redirect('accounts:usercenter')
+	else: raise Http404
