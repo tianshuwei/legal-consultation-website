@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from urllib import quote
-#
 from org.tools import *
 
 mk_disposition = lambda filename: '\x20'.join([ # according to RFC 6266

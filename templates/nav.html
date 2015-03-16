@@ -48,25 +48,23 @@
                 <button type="button" class="btn btn-ar btn-success" id="login" onclick="rsalogin()">Sign in</button>
             <a href="{% url 'accounts:register' 'client' %}" class="btn btn-ar btn-primary">Sign up</a>
             </form>
-            <!--<script type="text/javascript">$("#pom").submit(function(){$("#qom").val(encrypt($("#qom").val()));})</script>-->
     {% endif %}
     </div>
-<script type="text/javascript">
-    function rsalogin()
-    {
-      var r = $fetch("#for1");
-      r.password=encrypt(r.password);
-      $.post("{% url 'accounts:login' %}",r,
-function  (data,status) {
-  if(status=="success")
-    if(data.r=="success")
-          window.location.reload();
-    else
-      alert("用户名密码错误！");
-}
-        );
-}
-</script>
+    <script type="text/javascript">
+        function rsalogin()
+        {
+          var r = $fetch("#for1");
+          r.password=encrypt(r.password);
+          $.post("{% url 'accounts:login' %}",r,
+          function  (data,status) {
+            if(status=="success")
+              if(data.r=="success")
+                    window.location.reload();
+              else
+                alert("用户名密码错误！");
+          });
+        }
+    </script>
     </div><!--/.navbar-collapse -->
 </nav>
 <!-- <div style="margin-bottom:151px"></div> -->
