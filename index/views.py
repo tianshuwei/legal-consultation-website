@@ -17,6 +17,11 @@ def transaction_record_view(request):
 		records=TransactionRecord.objects.all()
 	)
 
+def login_pubkey_view(request):
+	from org.settings import RSA_LOGIN_KEY
+	pubkey, privkey = RSA_LOGIN_KEY
+	return HttpResponse(hex(pubkey.n)[2:-1], content_type="text/plain")
+
 def mod_view(request, name):
 	"""templates/mod下的*.html文件允许访问，URL是 /mod/*/"""
 	try: return response(request, 'mod/{0}.html'.format(name))

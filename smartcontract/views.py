@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from urllib import quote
-from org.docxrenderer import DocxTemplate
 from org.tools import *
 
 mk_disposition = lambda filename: '\x20'.join([ # according to RFC 6266
@@ -16,6 +15,8 @@ mk_disposition = lambda filename: '\x20'.join([ # according to RFC 6266
 mk_random = lambda l: ''.join(random.choice('QWERTYUIOPASDFGHJKLZXCVBNMZY') for i in xrange(l))
 
 def test_render_view(request):
+	# TODO Unkown error: DocTemplate
+	from org.docxrenderer import DocxTemplate
 	if request.method=='POST':
 		template=DocxTemplate(request.FILES['docxtemplate'])
 		r=template.get_vars()

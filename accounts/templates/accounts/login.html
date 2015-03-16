@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>{% block title %}Index{% endblock %}</title>
+    <title>登入</title>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -17,6 +17,10 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- RSA加密文件。务必在utils.js 之前引入 -->
+    <script src="{% static "js/BigInt.js"%}"></script>
+    <script src="{% static "js/Barrett.js"%}"></script>
+    <script src="{% static "js/RSA.js"%}"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="{% static "js/bootstrap.js"%}"></script>
     <script src="{% static "js/utils.js"%}"></script>
@@ -40,7 +44,57 @@
     <link rel="stylesheet" href="{% static "css/bootstrap-table.css" %}">
     <script src="{% static "js/bootstrap-table.js" %}"></script>
     <script src="{% static "js/locale/bootstrap-table-zh-CN.js" %}"></script>
-    {% block headextra %}{% endblock %}
+    <script type="text/javascript">
+    function rsalogin()
+    {
+      var r = $fetch("#for1");
+      r.password=encrypt(r.password);
+      r.next=getUrlParam('next');
+      //r.csrfmiddlewaretoken=$.cookie('csrftoken');
+      //$('form').submit();
+      $.post("{% url 'accounts:login' %}",r,
+        function  (data,status) {
+          if(status=="success")
+            if(data.r=="success")
+                  window.location.href=data.redirect;
+        });
+    }
+
+    function rsaregister()
+    {
+      var r = $fetch("#for2");
+      if(r.pw1==r.pw2)
+      {
+        r.password=encrypt(r.pw1);
+        r.pw1='';
+        r.pw2='';
+        if(r.role=='client')
+        {
+          $.post("{% url 'accounts:register' 'client' %} ",r,
+          function  (data,status) {
+            if(status=="success")
+              if(data.r=="success")
+                alert("注册成功！");
+              if(data.r=="error")
+                alert("注册失败！");
+          });
+        }
+        else
+        {
+          $.post("{% url 'accounts:register' 'lawyer' %} ",r,
+          function  (data,status) {
+            if(status=="success")
+              if(data.r=="success")
+                alert("注册成功！");
+              if(data.r=="error")
+                alert("注册失败！");
+          });
+        }
+      }
+      else
+        alert("两次密码输入不一致！");
+    }
+    </script>
   </head>
 
 <body ryt12699="1" style="overflow: visible;"><div id="sb-site"><div id="preloader" style="display: none;">
@@ -60,41 +114,43 @@
                 <!-- Tab panes -->
                 <div class="tab-content">
                   <div class="tab-pane" id="home">
-                    <form role="form">
-                        <div class="form-group">
+                    <form role="form"  id="for1" method="post">
+                      {% csrf_token %} {{ "login"|transacserial }}
+                        <div class="form-grou">
                             <div class="input-group login-input">
                                 <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                <input type="text" class="form-control" placeholder="Username">
+                                <input type="text" class="form-control" placeholder="Username" name="username">
                             </div>
                             <br>
                             <div class="input-group login-input">
                                 <span class="input-group-addon"><i class="fa fa-lock"></i></span>
-                                <input type="password" class="form-control" placeholder="Password">
+                                <input type="password" class="form-control" placeholder="Password" name="password">
                             </div>
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox"> Remember me
                                 </label>
                             </div>
-                            <button type="submit" class="btn btn-ar btn-primary pull-right">Login</button>
+                            <button type="button" class="btn btn-ar btn-primary pull-right" onclick="rsalogin()">Login</button>
                             <div class="clearfix"></div>
                         </div>
                     </form>
                   </div>
                   <div class="tab-pane" id="profile">
-                      <form role="form">
+                      <form role="form" id="for2">
+                        {% csrf_token %} {{ "login"|transacserial }}
                           <div class="form-group">
                                 <label for="chreacteroption">chreacter<sup>*</sup></label>
                                 <div >
                                       <div class="radio">
                                         <label>
-                                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+                                          <input type="radio" name="role" id="optionsRadios1" value="lawyer" checked="">
                                           I'm lawyer
                                         </label>
                                       </div>
                                       <div class="radio">
                                         <label>
-                                          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                                          <input type="radio" name="role" id="optionsRadios2" value="client">
                                           I'm client
                                         </label>
                                       </div>
@@ -102,31 +158,31 @@
                             </div>
                           <div class="form-group">
                               <label for="InputUserName">User Name<sup>*</sup></label>
-                              <input type="text" class="form-control" id="InputUserName">
+                              <input type="text" class="form-control" id="InputUserName" name="username">
                           </div>
                           <div class="form-group">
                               <label for="InputFirstName">First Name</label>
-                              <input type="text" class="form-control" id="InputFirstName">
+                              <input type="text" class="form-control" id="InputFirstName" name="first_name">
                           </div>
                           <div class="form-group">
                               <label for="InputLastName">Last Name</label>
-                              <input type="text" class="form-control" id="InputLastName">
+                              <input type="text" class="form-control" id="InputLastName" name="last_name">
                           </div>
                           <div class="form-group">
                               <label for="InputEmail">Email<sup>*</sup></label>
-                              <input type="email" class="form-control" id="InputEmail">
+                              <input type="email" class="form-control" id="InputEmail" name="email">
                           </div>
                           <div class="row">
                               <div class="col-md-6">
                                   <div class="form-group">
                                       <label for="InputPassword">Password<sup>*</sup></label>
-                                      <input type="password" class="form-control" id="InputPassword">
+                                      <input type="password" class="form-control" id="InputPassword" name="pw1">
                                   </div>
                               </div>
                               <div class="col-md-6">
                                   <div class="form-group">
                                       <label for="InputConfirmPassword">Confirm Password<sup>*</sup></label>
-                                      <input type="password" class="form-control" id="InputConfirmPassword">
+                                      <input type="password" class="form-control" id="InputConfirmPassword" name="pw2">
                                   </div>
                               </div>
                           </div>
@@ -137,13 +193,14 @@
                                   </label>
                               </div>
                               <div class="col-md-4">
-                                  <button type="submit" class="btn btn-ar btn-primary pull-right">Register</button>
+                                  <button type="button" class="btn btn-ar btn-primary pull-right" onclick="rsaregister()">Register</button>
                               </div>
                           </div>
                       </form>
                   </div>
                   <div class="tab-pane active" id="messages">
-                    <form role="form">
+                    <form role="form" method="post">
+                      {% csrf_token %}
                         <div class="form-group">
                             <label for="InputUserName">User Name<sup>*</sup></label>
                             <input type="text" class="form-control" id="InputUserName">

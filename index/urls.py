@@ -7,5 +7,6 @@ urlpatterns = patterns('',
     url(r'^index/$', views.index_view, name='index'),
     url(r'^mod/(?P<name>.+)/$', views.mod_view),
     url(r'^transactions/$', views.transaction_record_view),
+    url(r'^lpub.hex$', views.login_pubkey_view),
 )
 

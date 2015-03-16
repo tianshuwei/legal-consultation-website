@@ -8,9 +8,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
-from deployment import *
+from org.deployment import *
 
-import os
+import os, rsa
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 site_join = lambda rpath: os.path.join(BASE_DIR, rpath).replace('\\','/')
 
@@ -53,6 +53,11 @@ MIDDLEWARE_CLASSES = (
 	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware'
+)
+
+AUTHENTICATION_BACKENDS = (
+    'org.rsa_authentication.RSABackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 ROOT_URLCONF = 'org.urls'
@@ -149,3 +154,8 @@ LOGGING = {
         },
     },
 }
+
+# Adjust with caution #bits, on which these depend:
+#   static/js/utils.js: function encrypt(m)
+#   org/rsa_authentication.py: def decrypt(crypto, priv_key)
+RSA_LOGIN_KEY = rsa.newkeys(300)
