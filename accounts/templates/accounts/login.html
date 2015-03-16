@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-    <title>{% block title %}Index{% endblock %}</title>
+    <title>登入</title>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -44,7 +44,59 @@
     <link rel="stylesheet" href="{% static "css/bootstrap-table.css" %}">
     <script src="{% static "js/bootstrap-table.js" %}"></script>
     <script src="{% static "js/locale/bootstrap-table-zh-CN.js" %}"></script>
-    {% block headextra %}{% endblock %}
+    <script type="text/javascript">
+    function rsalogin()
+    {
+      var r = $fetch("#for1");
+      r.password=encrypt(r.password);
+      r.next=getUrlParam('next');
+      //r.csrfmiddlewaretoken=$.cookie('csrftoken');
+      //$('form').submit();
+      $.post("{% url 'accounts:login' %}",r,
+        function  (data,status) {
+          if(status=="success")
+            if(data.r=="success")
+                  window.location.href=data.redirect;
+        });
+    }
+
+  
+    function rsaregister()
+    {
+      var r = $fetch("#for2");
+      if(r.pw1==r.pw2)
+      {
+        r.password=encrypt(r.pw1);
+        r.pw1='';
+        r.pw2='';
+        if(for2.client.checked)
+        {
+          $.post("{% url 'accounts:register' 'client' %} ",r,
+          function  (data,status) {
+            if(status=="success")
+              if(data.r=="success")
+                alert("注册成功！");
+              if(data.r=="error")
+                alert("注册失败！");
+          });
+        }
+        else
+        {
+          $.post("{% url 'accounts:register' 'lawyer' %} ",r,
+          function  (data,status) {
+            if(status=="success")
+              if(data.r=="success")
+                alert("注册成功！");
+              if(data.r=="error")
+                alert("注册失败！");
+          });
+        }
+      }
+      else
+        alert("两次密码输入不一致！");
+    }
+
+    </script>
   </head>
 
 <body ryt12699="1" style="overflow: visible;"><div id="sb-site"><div id="preloader" style="display: none;">
@@ -86,24 +138,6 @@
                         </div>
                     </form>
                   </div>
-                  <!--<script type="text/javascript">$("#for1").submit(function(){$("#pw").val(encrypt($("#pw").val()));})</script>-->
-<script type="text/javascript">
-    function rsalogin()
-    {
-      var r = $fetch("#for1");
-      r.password=encrypt(r.password);
-      r.next=getUrlParam('next');
-      //r.csrfmiddlewaretoken=$.cookie('csrftoken');
-      //$('form').submit();
-      $.post("{% url 'accounts:login' %}",r,
-function  (data,status) {
-  if(status=="success")
-    if(data.r=="success")
-          window.location.href=data.redirect;
-}
-        );
-}
-</script>
                   <div class="tab-pane" id="profile">
                       <form role="form" id="for2">
                         {% csrf_token %} {{ "login"|transacserial }}
@@ -166,43 +200,6 @@ function  (data,status) {
                           </div>
                       </form>
                   </div>
-<script type="text/javascript">
-    function rsaregister()
-    {
-      var r = $fetch("#for2");
-      if(r.pw1==r.pw2)
-      {
-        r.password=encrypt(r.pw1);
-        r.pw1='';
-        r.pw2='';
-        if(for2.client.checked)
-        {
-          $.post("{% url 'accounts:register' 'client' %} ",r,
-          function  (data,status) {
-            if(status=="success")
-              if(data.r=="success")
-                alert("注册成功！");
-              if(data.r=="error")
-                alert("注册失败！");
-          });
-        }
-        else
-        {
-          $.post("{% url 'accounts:register' 'lawyer' %} ",r,
-          function  (data,status) {
-            if(status=="success")
-              if(data.r=="success")
-                alert("注册成功！");
-              if(data.r=="error")
-                alert("注册失败！");
-          });
-        }
-      }
-      else
-        alert("两次密码输入不一致！");
-    }
-
-</script>
                   <div class="tab-pane active" id="messages">
                     <form role="form" method="post">
                       {% csrf_token %}

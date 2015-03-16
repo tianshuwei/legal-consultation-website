@@ -67,7 +67,6 @@ def register_view(request, role): # [UnitTest]
 			elif role=='lawyer': 
 				Lawyer.objects.register(username,**profile)
 		except: 
-			traceback.print_exc()
 			messages.error(request, u'注册失败') # [UnitTest]
 			rec.error(u'{0}注册失败'.format(username))
 			return response_jquery({'r':'error'})

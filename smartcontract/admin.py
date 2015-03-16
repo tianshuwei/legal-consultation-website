@@ -1,3 +1,6 @@
 from django.contrib import admin
+from smartcontract.models import SmartContractCategory, SmartContract, SmartContractInstance
 
-# Register your models here.
+admin.site.register(SmartContractCategory)
+admin.site.register(SmartContract)
+admin.site.register(SmartContractInstance)
