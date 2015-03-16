@@ -60,6 +60,7 @@
         });
     }
 
+  
     function rsaregister()
     {
       var r = $fetch("#for2");
@@ -68,7 +69,7 @@
         r.password=encrypt(r.pw1);
         r.pw1='';
         r.pw2='';
-        if(r.role=='client')
+        if(for2.client.checked)
         {
           $.post("{% url 'accounts:register' 'client' %} ",r,
           function  (data,status) {
@@ -94,6 +95,7 @@
       else
         alert("两次密码输入不一致！");
     }
+
     </script>
   </head>
 
@@ -144,13 +146,13 @@
                                 <div >
                                       <div class="radio">
                                         <label>
-                                          <input type="radio" name="role" id="optionsRadios1" value="lawyer" checked="">
+                                          <input type="radio" name="role" id="lawyer" value="lawyer" checked="">
                                           I'm lawyer
                                         </label>
                                       </div>
                                       <div class="radio">
                                         <label>
-                                          <input type="radio" name="role" id="optionsRadios2" value="client">
+                                          <input type="radio" name="role" id="client" value="client">
                                           I'm client
                                         </label>
                                       </div>
