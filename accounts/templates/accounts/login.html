@@ -112,13 +112,13 @@ function  (data,status) {
                                 <div >
                                       <div class="radio">
                                         <label>
-                                          <input type="radio" name="role" id="optionsRadios1" value="lawyer" checked="">
+                                          <input type="radio" name="role" id="lawyer" value="lawyer" checked="">
                                           I'm lawyer
                                         </label>
                                       </div>
                                       <div class="radio">
                                         <label>
-                                          <input type="radio" name="role" id="optionsRadios2" value="client">
+                                          <input type="radio" name="role" id="client" value="client">
                                           I'm client
                                         </label>
                                       </div>
@@ -175,7 +175,7 @@ function  (data,status) {
         r.password=encrypt(r.pw1);
         r.pw1='';
         r.pw2='';
-        if(r.role=='client')
+        if(for2.client.checked)
         {
           $.post("{% url 'accounts:register' 'client' %} ",r,
           function  (data,status) {
