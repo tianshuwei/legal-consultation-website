@@ -1,10 +1,30 @@
 {% extends 'accounts/base_usercenter.html' %}
 {% load staticfiles %}
 {% block headextra %}
+{% load tagtools %}
 <script type="text/javascript">
   $(function () {
     select_nav("Orders");
   });
+
+  function delete_order(_url)
+  {
+    var r=$fetch("#frmDelete");
+    $.post(
+        _url,
+        r,
+        function(data,status){
+            if(status=="success")
+            {
+                if(data.r=="success")
+                {
+                    showModal("提示", "订单成功删除", ["*确定"],
+                    function(r){window.location.reload();});
+                }
+            }
+        }
+    );
+  }
 </script>
 {% endblock %}
 {% block main_col %}
@@ -29,10 +49,13 @@
             <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
         {% elif order.is_unpaid %}
             <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 "><i class="fa fa-dollar"></i>pay now!</button>
-            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
+            <form id="frmDelete">
+                {% csrf_token %} {{ "order_delete"|transacserial }}
+            </form>
+            <button class="btn btn-ar btn-sm btn-warning" onclick="delete_order('{% url "products:order_delete" order.id %}')"><i class="fa fa-remove"></i>cancel</button>
             <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-info"></i>info</button>
         {% elif order.is_in_business %}
-            <button class="btn btn-ar btn-sm btn-warning"><i class="fa fa-remove"></i>cancel</button>
+            <button class="btn btn-ar btn-sm btn-warning"  ><i class="fa fa-remove"></i>cancel</button>
             <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-question"></i>help</button>
         {% endif %}
         </div>

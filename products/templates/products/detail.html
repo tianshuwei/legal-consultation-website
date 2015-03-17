@@ -3,6 +3,7 @@
 {% block title %}
 Product detail -- {{ product.name }}
 {% endblock %}
+{% load tagtools %}
 
 {% block head %}
 <header class="main-header">
@@ -13,13 +14,13 @@ Product detail -- {{ product.name }}
             <li><a href="#">￥{{ product.price }}</a></li>
             {% if user.is_authenticated %}
 			{% if is_client %}
-            <button type="submit" class="btn btn-danger" onclick="new_order()">buy now!</button>
+            <button type="button" class="btn btn-danger" onclick="new_order()">buy now!</button>
             <script type="text/javascript">
 			function new_order()
 			{
 				showModal(
                     "确认订购",
-                    "{% csrf_token %}"+
+                    "{% csrf_token %} "+ '{{ "product_new_order"|transacserial }}' +
                     '<select name="lawyer_id">'+
                     {% for lawyer in lawyers %}
                     '<option value="{{lawyer.id}}">{{lawyer.user.username}}</option>'+
@@ -31,11 +32,7 @@ Product detail -- {{ product.name }}
                         if(typeof r=="object"){ 
                             $.post(
                                 "{% url 'products:new_order' product.id %}",
-                                {
-                                    lawyer_id:r.lawyer_id,
-                                    text:r.text,
-                                    csrfmiddlewaretoken:$.cookie('csrftoken')
-                                },
+                                r,
                                 function(data,status){
                                     alert(data.success);
                                     window.location.reload();

@@ -40,11 +40,14 @@ def new_order_view(request, pk_product):
 					text=request.POST['text']
 				)
 				order.save()
-		except Exception, e: 
+		except Product.DoesNotExist:
+			messages.error(request,u'产品不存在')
+			rec.error(u'{0}产品不存在'.format(request.user.username))
 			# TODO 提交者不是客户/产品不存在/违反完整性约束约束 这些异常要区分开记录
 			# TODO 取消注释下面一行可以看Exception类型，except里面加以区分
-			# traceback.print_exc() # 最后要注释掉或删掉，不要保留这一行
+			#traceback.print_exc() # 最后要注释掉或删掉，不要保留这一行
 			# TODO rec.error(...
+		except Exception, e: 
 			messages.error(request, u'订单提交失败')
 			# TODO 必要时调用 handle_illegal_access 参考org/tools.py中的文档
 			return response_jquery({ 'success': False })
@@ -57,6 +60,7 @@ def new_order_view(request, pk_product):
 @login_required
 def order_detail_view(request, pk_order):
 	# TODO 按照上面new_order_view修改
+	rec=recorded(request, 'products:order_detail')
 	order = get_object_or_404(Order, pk=pk_order)
 	if request.method=='POST':
 		try:
@@ -65,20 +69,27 @@ def order_detail_view(request, pk_order):
 				order.save()
 			else: raise Exception
 		except: messages.error(request, u'备注修改失败')
-		else: messages.success(request, u'备注修改成功')
+		else: 
+			messages.success(request, u'备注修改成功')
+			rec.success(u'{0} 订单备注修改成功 {1}'.format(request.user.username, order.serial))
 		return redirect('accounts:order_detail', pk_order=pk_order)
 	else: return response(request, 'accounts/order_detail.html', order=order)
 
 @login_required
 def order_delete_view(request, pk_order):
 	# TODO 按照上面new_order_view修改
+	rec=recorded(request, 'products:order_delete')
 	order = get_object_or_404(Order, pk=pk_order)
 	if request.method=='POST':
 		try:
-			if request.user.client==order.client: order.delete()
+			if request.user.client==order.client: 
+				serial_d=order.serial
+				order.delete()
 			else: raise Exception			
 		except: messages.error(request, u'取消订单失败')	
-		else: messages.success(request, u'取消订单成功')
+		else: 
+			messages.success(request, u'取消订单成功')
+			rec.success(u'{0} 订单删除成功 {1}'.format(request.user.username, serial_d))
 		# TODO 应该return response_jquery(...
-		return redirect('accounts:usercenter')
+		return response_jquery({'r':'success'})
 	else: raise Http404
