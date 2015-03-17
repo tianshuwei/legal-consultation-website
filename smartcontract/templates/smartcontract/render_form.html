@@ -1,0 +1,42 @@
+{% extends 'smartcontract/base.html' %}
+{% load tagtools %}{% load staticfiles %}
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    page_title("org.docxrenderer test");
+  });
+</script>
+{% endblock %}
+{% block contexts %}
+<h1>Render form: {{contract.name}}</h1>
+<div class="col-md-9 ">
+<ul class="timeline-2">
+
+{% for step in steps %}
+<li class="animated fadeInRight animation-delay-10">
+  <time class="timeline-time" datetime="">Step <span>{{ forloop.counter }}</span> </time>
+  <i class="timeline-2-point"></i>
+  <div class="panel panel-default">
+      <div class="panel-heading">{{ step.name }}</div>
+      <div class="panel-body">
+        <form method="post" class="form-horizontal" role="form">
+       {% for v in step.content %}
+       <div class="form-group">
+          {% include 'smartcontract/widgets.html' %}
+        </div>
+       {% endfor %}
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-ar btn-primary">save</button>
+          </div>
+        </div>
+      </form> <!-- end form -->
+      </div>
+  </div>
+</li>
+{% endfor %}
+</ul>
+</div>
+
+{% endblock %}
