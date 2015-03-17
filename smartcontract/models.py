@@ -26,6 +26,8 @@ class SmartContract(models.Model):
 	name = models.CharField(max_length=255)
 	publish_date = models.DateTimeField(auto_now=True)
 	state = models.IntegerField(default=EnumSmartContractState.DEFAULT, choices=EnumSmartContractState.get_choices())
+	template = models.FileField(upload_to='smart/', max_length=255, null=True)
+	config = models.TextField(blank=True)
 
 	class Meta:
 		verbose_name = u'合同模板'
