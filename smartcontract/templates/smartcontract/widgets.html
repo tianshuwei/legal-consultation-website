@@ -3,15 +3,11 @@
 {% if i.widget == 'radio' or i.widget == 'checkbox' %}
 	<label class="col-sm-2 control-label">{{ i.label }}</label>
 	<div class="col-sm-10 col-md-10">
-	{% if i.values %}
 	{% for val in i.values %}
 	<div class="{{i.widget}}">
 	<label><input type="{{i.widget}}" name="var_{{v.name}}" value="{{val}}">{{val}}</label>
 	</div>
 	{% endfor %}
-	{% else %}
-
-	{% endif %}
 	</div>
 {% elif i.widget == 'agree' %}
 	<div class="col-sm-offset-2 col-sm-10">
