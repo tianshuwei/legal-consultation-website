@@ -16,6 +16,7 @@ class Client(models.Model):
 	user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
 	balance = models.DecimalField(max_digits=16, decimal_places=3, default=0)
 	points = models.IntegerField(default=0)
+	avatar = models.ImageField(upload_to='avatar.client/', max_length=255, null=True)
 	# comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
 
 	objects = ClientManager()
@@ -59,9 +60,10 @@ class Lawyer(models.Model):
 	balance = models.DecimalField(max_digits=16, decimal_places=3, default=0)
 	blacklist = models.BooleanField(default=False)
 	score = models.IntegerField(default=0)
+	avatar = models.ImageField(upload_to='avatar.lawyer/', max_length=255, null=True)
 	# TODO 注释下面两行，确保其他代码没有引用到它们
-	remarks = models.ManyToManyField(Client, through="Remark", through_fields=("lawyer","client"), related_name="c_l_remarks")
-	questions = models.ManyToManyField(Client, through="Question", through_fields=("lawyer","client"), related_name="c_l_questions")
+	# remarks = models.ManyToManyField(Client, through="Remark", through_fields=("lawyer","client"), related_name="c_l_remarks")
+	# questions = models.ManyToManyField(Client, through="Question", through_fields=("lawyer","client"), related_name="c_l_questions")
 
 	objects = LawyerManager()
 
@@ -87,32 +89,12 @@ class Remark(models.Model):
 	def __unicode__(self):
 		return str(self.grade)
 
-class EnumQuestionState(Enum):
-	OPEN = 0
-	CLOSED = 1	
+class EnumActivityState(Enum):
+	NEW = 0
+	VIEWED = 1
 
-class Question(models.Model):
-	lawyer = models.ForeignKey(Lawyer)
-	client = models.ForeignKey(Client)
+class Activity(models.Model):
+	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	title = models.CharField(max_length=255)
-	description = models.TextField(blank=True)
-	publish_date = models.DateTimeField(auto_now=True)
-	state = models.IntegerField(default=EnumQuestionState.OPEN, choices=EnumQuestionState.get_choices())
-
-	def __unicode__(self):
-		return self.title
-
-	def finish(self):
-		self.state=EnumQuestionState.CLOSED
-		self.save()
-
-class Question_text(models.Model):
-	question = models.ForeignKey(Question)
-	# TODO 为user_flag定义Enum
-	user_flag = models.IntegerField(default=0)
-	text = models.TextField()
-	publish_date = models.DateTimeField(auto_now=True)
-
-	def __unicode__(self):
-		return self.text[:20]
-
+	state = models.IntegerField(default=EnumActivityState.NEW, choices=EnumActivityState.get_choices())
+	publish_date = models.DateTimeField(auto_now=True, null=True)

@@ -43,6 +43,7 @@ INSTALLED_APPS = (
 	'accounts',
 	'blogs',
 	'smartcontract',
+    'questions',
 )
 
 MIDDLEWARE_CLASSES = (
