@@ -61,3 +61,7 @@ def test_render_form_view(request, pk_contract):
 	contract = SmartContract.objects.get(id=pk_contract)
 	return response(request, 'smartcontract/render_form.html', contract=contract, 
 		steps=steps_spliter(filter(bool,(i.strip() for i in contract.config.replace('\r','').split('\n')))))
+
+def test_pdf_view(request, pk_contract):
+	contract = SmartContract.objects.get(id=pk_contract)
+	return response(request, 'smartcontract/pdf.js.html')

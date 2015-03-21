@@ -159,4 +159,5 @@ LOGGING = {
 #   static/js/utils.js: function encrypt(m)
 #   org/rsa_authentication.py: def decrypt(crypto, priv_key)
 RSA_LOGIN_KEY = rsa.newkeys(300)
+
 MEDIA_URL = '/media/'
