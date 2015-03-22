@@ -41,6 +41,12 @@ class Client(models.Model):
 		self.save()
 		return 1
 
+	@transaction.atomic
+	def add_balance(self,count): 
+		self.balance+=count
+		self.save()
+		return 1
+
 
 class LawyerManager(models.Manager):
 	@transaction.atomic

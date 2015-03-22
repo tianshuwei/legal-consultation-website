@@ -84,12 +84,36 @@ def order_delete_view(request, pk_order):
 		try:
 			if request.user.client==order.client: 
 				serial_d=order.serial
-				order.delete()
+				a=order.cancel()
+				if a==2:
+					order.client.add_balance(order.product.price)
 			else: raise Exception			
-		except: messages.error(request, u'取消订单失败')	
+		except: 
+			messages.error(request, u'取消订单失败')	
+			return response_jquery({'r':'false'})
 		else: 
 			messages.success(request, u'取消订单成功')
 			rec.success(u'{0} 订单删除成功 {1}'.format(request.user.username, serial_d))
-		# TODO 应该return response_jquery(...
-		return response_jquery({'r':'success'})
+			return response_jquery({'r':'success'})
 	else: raise Http404
+
+@login_required
+def order_pay_view(request, pk_order):
+	rec=recorded(request, 'products:order_pay')
+	order = get_object_or_404(Order, pk=pk_order)
+	if request.method=='POST':	
+		try:
+			if request.user.client==order.client:
+				a=order.client.minus_balance(order.product.price)
+				if a==1:
+					order.start()
+					messages.success(request, u'订单付款成功')
+					rec.success(u'{0} 订单付款成功 {1}'.format(request.user.username, order.serial))
+					return response_jquery({'r':'success'})
+				else:
+					messages.error(request, u'账户余额不足')
+					rec.success(u'{0} 订单付款余额不足 {1}'.format(request.user.username, order.serial))
+					return response_jquery({'r':'balance_false'})
+		except:
+			messages.error(request, u'订单取消失败')
+			return response_jquery({'r':'false'})

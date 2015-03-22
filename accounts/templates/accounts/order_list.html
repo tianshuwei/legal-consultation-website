@@ -21,6 +21,43 @@
                     showModal("提示", "订单成功删除", ["*确定"],
                     function(r){window.location.reload();});
                 }
+                else
+                {
+                    showModal("提示", "订单删除失败", ["*确定"],
+                    function(r){window.location.reload();});
+                }
+            }
+        }
+    );
+  }
+
+  function pay(_url)
+  {
+     var r=$fetch("#frmPay");
+    $.post(
+        _url,
+        r,
+        function(data,status){
+            if(status=="success")
+            {
+                if(data.r=="success")
+                {
+                    showModal("提示", "订单付款成功", ["*确定"],
+                    function(r){window.location.reload();});
+                }
+                else
+                {
+                    if(data.r=="balance_false")
+                    {
+                        showModal("提示", "账户余额不足", ["*确定"],
+                        function(r){window.location.reload();});
+                    }
+                    else
+                    {
+                        showModal("提示", "订单付款失败", ["*确定"],
+                        function(r){window.location.reload();});
+                    }
+                }
             }
         }
     );
@@ -48,14 +85,17 @@
             <button class="btn btn-ar btn-sm btn-royal"><i class="fa fa-star"></i>remark</button>
             <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
         {% elif order.is_unpaid %}
-            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 "><i class="fa fa-dollar"></i>pay now!</button>
+            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 " onclick="pay('{% url "products:order_pay" order.id %}')"><i class="fa fa-dollar"></i>pay now!</button>
+             <form id="frmPay">
+                {% csrf_token %} {{ "order_pay"|transacserial }}
+            </form>
             <form id="frmDelete">
                 {% csrf_token %} {{ "order_delete"|transacserial }}
             </form>
             <button class="btn btn-ar btn-sm btn-warning" onclick="delete_order('{% url "products:order_delete" order.id %}')"><i class="fa fa-remove"></i>cancel</button>
             <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-info"></i>info</button>
         {% elif order.is_in_business %}
-            <button class="btn btn-ar btn-sm btn-warning"  ><i class="fa fa-remove"></i>cancel</button>
+            <button class="btn btn-ar btn-sm btn-warning"  onclick="delete_order('{% url "products:order_delete" order.id %}')"><i class="fa fa-remove"></i>cancel</button>
             <button class="btn btn-ar btn-sm btn-info"><i class="fa fa-question"></i>help</button>
         {% endif %}
         </div>

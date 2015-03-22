@@ -59,9 +59,14 @@ class Order(models.Model):
 
 	@transaction.atomic
 	def cancel(self):
-		if self.state==EnumOrderState.UNPAID or self.state==EnumOrderState.IN_BUSINESS:
+		if self.state==EnumOrderState.UNPAID:
 			self.state=EnumOrderState.CANCELLED
 			self.save()
+			return 1
+		if self.state==EnumOrderState.IN_BUSINESS:
+			self.state=EnumOrderState.CANCELLED
+			self.save()
+			return 2
 		else: raise CustomException(u"状态转换异常")
 
 	@transaction.atomic
