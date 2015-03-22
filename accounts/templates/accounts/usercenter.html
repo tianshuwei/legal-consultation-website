@@ -17,7 +17,7 @@ $document.ready(){
 
 {% endblock %}
 {% block head %}
-<header class="main-header">
+<header class="main-header" style="margin-bottom:80px">
     <div class="container">
         <h1 class="page-title">{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}</h1>
     </div>

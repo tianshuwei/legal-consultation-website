@@ -1,28 +1,43 @@
-{% extends 'base.html' %}
-{% block title %}提问{% endblock %}
-{% block main %}
-<h1>提问</h1>
-<div>客户 <a href="{% url 'accounts:profile' question.client.user.id %}">{{ question.client.user.username }}</a></div>
-<div>律师 <a href="{% url 'accounts:profile' question.lawyer.user.id %}">{{ question.lawyer.user.username }}</a></div>
-<div>标题 {{ question.title }}</div>
-<div>描述 {{ question.description }}</div>
-<div>日期 {{ question.publish_date }}</div>
+{% extends 'accounts/base.html' %}
+{% block title %}问题正文-{{ question.title }}{% endblock %}
+{% block contexts %}
+<h2 class="section-title" style="margin-top:0">{{ question.title }}</h2>
+<div class="panel panel-default">
+	<div class="panel-body">
+		{{ question.description }}
+	</div>
+	<div class="panel-footer">
+	<strong>客户:</strong><a href="{% url 'accounts:profile' question.client.user.id %}">{{ question.client.user.username }}</a> <strong>日期:</strong>{{ question.publish_date }}
+	</div>
+</div>
+
 
 {% for question_text in question_texts %}
 <div>
-	<p> {% if question_text.user_flag %} 追问:  
-		{% else %} 回答: 
+	<p> {% if question_text.user_flag %} 追问:
+		{% else %} 回答:
 		{% endif %}
-	 {{question_text.text}} </p> 
-	<p> {{comment.publish_date}} </p> 
+	 {{question_text.text}} </p>
+	<p> {{comment.publish_date}} </p>
 </div>
 {% endfor %}
 
-<form action="{% url 'accounts:new_question_text' question.id %}" method="post" >
-	{% csrf_token %}
-	<textarea name="txt_question"></textarea>
-	<input type="submit"/>
-</form>
+<section class="comment-form">
+    <h2 class="section-title">回答</h2>
+    <form iaction="{% url 'accounts:new_question_text' question.id %}" method="post" role="form">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        <div class="form-group">
+            <textarea class="form-control" id="inputMessage" rows="6" name="txt_question"></textarea>
+        </div>
+        <button type="submit" class="btn btn-ar pull-right btn-primary">Submit</button>
+    {% else %}
+    	<div class="form-group">
+            <label for="inputName">please <a href="#">login</a>or <a href="#">sign up</a> before answer question.</label>
+        </div>
+    {% endif %}
+    </form>
+</section>
 
 {% if question.state %}
 <div>已满意</div>

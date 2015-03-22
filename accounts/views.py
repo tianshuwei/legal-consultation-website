@@ -216,15 +216,15 @@ def new_question_view(request):
 			handle_illegal_access(request)
 		except: # Untestable!
 			# TODO log trackback
-			handle_illegal_access(request, False)
 			messages.error(request, u'问题创建失败')
 			rec.error(u'{0} 创建问题失败'.format(request.user.username))
-		else: 
+			handle_illegal_access(request)
+		else:
 			messages.success(request, u'问题创建成功')
 			rec.success(u'{0} 创建问题 {1} 成功'.format(request.user.username, question.title))
-		return redirect('accounts:question',pk_question=question.id)
-	else: 
-		return response(request, 'accounts/new_question.html', 
+			return redirect('accounts:question',pk_question=question.id)
+	else:
+		return response(request, 'accounts/new_question.html',
 			question_create=QuestionForm())
 
 @login_required
