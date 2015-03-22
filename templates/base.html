@@ -51,8 +51,8 @@
     <header id="header-full-top" class="hidden-xs header-full" style="z-index:100">
     <div class="container">
         <div class="header-full-title">
-            <h1 class="animated fadeInRight"><a href="{% url 'index:index' %}">artificial <span>reason</span></a></h1>
-            <p class="animated fadeInRight">Clean and elegant theme</p>
+            <h1 class="animated fadeInRight"><a href="{% url 'index:index' %}">律橙 <span>法律服务</span></a></h1>
+            <p class="animated fadeInRight">提供专业一流的法律咨询</p>
         </div>
 
         <!--social bar-->
@@ -128,23 +128,7 @@
     <div class="container">
       <!-- Example row of columns -->
       {% block main %}
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-        </div>
-      </div>
+
         {% endblock %}
 
     </div> <!-- /container -->
@@ -152,33 +136,29 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h3 class="footer-widget-title">Sitemap</h3>
+                    <h3 class="footer-widget-title">站点地图</h3>
                     <ul class="list-unstyled three_cols">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="blog.html">Blog</a></li>
-                        <li><a href="portfolio_sidebar.html">Portafolio</a></li>
-                        <li><a href="portfolio_topvar.html">Works</a></li>
-                        <li><a href="page_timeline_left.html">Timeline</a></li>
-                        <li><a href="page_pricing.html">Pricing</a></li>
-                        <li><a href="page_about2.html">About Us</a></li>
-                        <li><a href="page_team.html">Our Team</a></li>
-                        <li><a href="page_services.html">Services</a></li>
-                        <li><a href="page_support.html">FAQ</a></li>
-                        <li><a href="page_login_full.html">Login</a></li>
-                        <li><a href="page_contact.html">Contact</a></li>
+                        <li><a href="index.html">主页</a></li>
+                        <li><a href="blog.html">律师</a></li>
+                        <li><a href="portfolio_sidebar.html">个人中心</a></li>
+                        <li><a href="portfolio_topvar.html">法律咨询</a></li>
+                        <li><a href="page_support.html">有关问题</a></li>
+                        <li><a href="page_login_full.html">登陆</a></li>
+                        <li><a href="page_about2.html">关于我们</a></li>
+                        <li><a href="page_contact.html">联系我们</a></li>
                     </ul>
-                    <h3 class="footer-widget-title">Subscribe</h3>
-                    <p>Lorem ipsum Amet fugiat elit nisi anim mollit minim labore ut esse Duis ullamco ad dolor veniam velit.</p>
+                    <h3 class="footer-widget-title">订阅</h3>
+                    <p>如果您希望通过邮箱接受最新优惠与活动信息,请在下方提交邮箱地址</p>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Email Adress">
+                        <input type="text" class="form-control" placeholder="邮箱地址">
                         <span class="input-group-btn">
-                            <button class="btn btn-ar btn-primary" type="button">Subscribe</button>
+                            <button class="btn btn-ar btn-primary" type="button">提交</button>
                         </span>
                     </div><!-- /input-group -->
                 </div>
                 <div class="col-md-4">
                     <div class="footer-widget">
-                        <h3 class="footer-widget-title">Recent Post</h3>
+                        <h3 class="footer-widget-title">最新文章</h3>
                         <div class="media">
                             <a class="pull-left" href="#"><img class="media-object" src="{% static 'assets/img/demo/m2.jpg' %}" width="75" height="75" alt="image"></a>
                             <div class="media-body">
@@ -204,7 +184,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="footer-widget">
-                        <h3 class="footer-widget-title">Recent Works</h3>
+                        <h3 class="footer-widget-title">最新用户</h3>
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
                                 <a href="#" class="thumbnail"><img src="{% static 'assets/img/demo/wf1.jpg' %}" class="img-responsive" alt="Image"></a>
