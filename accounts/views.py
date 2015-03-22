@@ -128,8 +128,17 @@ def profile_self_view(request):
 def profile_view(request, pk_user):
 	user = get_object_or_404(User, pk=pk_user)
 	u = get_role(user)
+	if request.user.id==user.id: 
+		bMaster=True
+	else:
+		bMaster=False
+	print request.user.id
+	print pk_user
+	print bMaster
 	if type(u) is Client or type(u) is Lawyer:
-		return response(request, 'accounts/profile.html', role=u)
+		return response(request, 'accounts/profile.html',
+		role=u,
+		is_master=bMaster)
 	else: raise Http404
 
 @login_required
