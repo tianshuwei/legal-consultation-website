@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
 from django.contrib.auth.models import User
-from accounts.models import Lawyer, Client
+from accounts.models import Lawyer, Client, Activity
 from questions.models import Question, Question_text, EnumUser_flag
 
 @login_required
@@ -66,7 +66,7 @@ def new_question_text_view(request, pk_question):
 		question=q
 	)
 	q_text.save()
-	print q_text
+	Activity.objects.notify_new_reply(q.client.user, q_text)
 	return redirect('questions:question', pk_question=q.id)
 
 @login_required

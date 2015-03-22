@@ -93,8 +93,57 @@ class EnumActivityState(Enum):
 	NEW = 0
 	VIEWED = 1
 
+class ActivityManager(models.Manager):
+	use_for_related_fields = True
+
+	@transaction.atomic
+	def notify_new_reply(self, user, reply):
+		r = self.create(
+			user=user, 
+			title=u'{0} 回复了您提出的问题 {1}'.format(
+				reply.replier.username, 
+				reply.question.title
+			),
+			tags='question_new_reply'
+		)
+		r.save()
+
+	@transaction.atomic
+	def notify_new_blog_comment(self, user, comment):
+		r = self.create(
+			user=user, 
+			title=u'{0} 评论了您的博客文章 {1}'.format(
+				comment.user.username, 
+				comment.article.title
+			),
+			tags='blog_comment'
+		)
+		r.save()
+
+	@transaction.atomic
+	def notify_order_update(self, user, order):
+		from products.models import EnumOrderState
+		translation = {
+			EnumOrderState.UNPAID: u'创建',
+			EnumOrderState.IN_BUSINESS: u'支付',
+			EnumOrderState.FINISHED: u'完成',
+			EnumOrderState.CANCELLED: u'取消',
+		}
+		r = self.create(
+			user=user, 
+			title=u'您的订单 {0} 已{1}'.format(
+				order.serial, 
+				translation[order.state]
+			),
+			tags='order_update'
+		)
+		r.save()
+
 class Activity(models.Model):
 	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	title = models.CharField(max_length=255)
+	tags = models.CharField(max_length=255, blank=True, default='')
 	state = models.IntegerField(default=EnumActivityState.NEW, choices=EnumActivityState.get_choices())
 	publish_date = models.DateTimeField(auto_now=True, null=True)
+
+	objects = ActivityManager()
