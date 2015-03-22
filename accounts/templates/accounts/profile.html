@@ -115,7 +115,7 @@
                         </form>
                   </div>
 <div class="tab-pane" id="test_profile_edit">
-<form method="post" class="form-horizontal" role="form">
+<form method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
 {% csrf_token %} {{ 'accounts:profile'|transacserial }}
   <div class="form-group">
     <label for="id_last_name" class="col-sm-2 control-label">姓</label>
