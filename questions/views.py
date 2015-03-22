@@ -16,11 +16,6 @@ class QuestionForm(forms.ModelForm):
 	class Meta:
 		model = Question
 		fields = ['title', 'lawyer', 'description']
-		labels = {
-			'title' : u'标题',
-			'lawyer' : u'律师',
-			'description' : u'描述',
-		}
 
 @login_required
 def new_question_view(request):

@@ -118,7 +118,6 @@ class ProfileEditForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ['last_name', 'first_name', 'email', 'avatar']
-		labels = {'last_name':u'姓', 'first_name':u'名', 'email':u'邮箱'}
 
 @login_required
 def profile_self_view(request):
@@ -160,7 +159,6 @@ class RemarkForm(forms.ModelForm):
 	class Meta:
 		model = Remark
 		fields = ['grade']
-		labels = { 'grade' : u'评分' }
 
 @login_required
 def remark_view(request, pk_lawyer):

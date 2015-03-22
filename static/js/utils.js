@@ -67,7 +67,7 @@ function $fetch (obj) {
 	obj 		表单父容器
 */
 function $djform (obj) {
-	$(obj).find(".form-group label").addClass("col-sm-1 control-label");
+	// $(obj).find(".form-group label").addClass("col-sm-1 control-label");
 	$(obj).find(".form-group input,textarea,select").addClass("form-control");
 }
 

@@ -8,12 +8,6 @@ class ArticleForm(forms.ModelForm):
 	class Meta:
 		model = BlogArticle
 		fields = ['title', 'category', 'tags', 'text']
-		labels = {
-			'title' : u'标题',
-			'category' : u'分类',
-			'tags' : u'标签',
-			'text' : u'正文',
-		}
 		widgets = {
 			'category': BlogCategorySelect,
 			'text': BootstrapWYSIWYG(attrs={'class': 'form-control', 'id': 'editor'}), 
