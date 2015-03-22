@@ -155,6 +155,15 @@ def balance_view(request):
 		return redirect('accounts:balance')
 	else: return response(request, 'accounts/balance.html', role=u)
 
+@login_required
+def pay_view(request, pk_order):
+	order = get_object_or_404(Order, pk=pk_order)
+	if request.method=='POST':
+		request.POST['bankid']
+		messages.success(request, u'支付成功')
+		return redirect('accounts:order_list')
+	else: return response(request, 'accounts/pay.html', order=order)
+
 class RemarkForm(forms.ModelForm):
 	class Meta:
 		model = Remark
