@@ -24,7 +24,7 @@
 
 <section class="comment-form">
     <h2 class="section-title">回答</h2>
-    <form iaction="{% url 'accounts:new_question_text' question.id %}" method="post" role="form">
+    <form action="{% url 'questions:new_question_text' question.id %}" method="post" role="form">
     {% csrf_token %}
     {% if user.is_authenticated %}
         <div class="form-group">
@@ -42,7 +42,7 @@
 {% if question.state %}
 <div>已满意</div>
 {% else %}
-<a href="{% url 'accounts:satisfied' question.id %}"><button>满意</button></a>
+<a href="{% url 'questions:satisfied' question.id %}"><button>满意</button></a>
 {% endif %}
 
 <a href="{% url 'accounts:usercenter' %}">返回用户中心</a>

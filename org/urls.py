@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 	url(r'^products/', include('products.urls',namespace='products')),
 	url(r'^blogs/', include('blogs.urls',namespace='blogs')),
 	url(r'^smartcontract/', include('smartcontract.urls',namespace='smartcontract')),
+	url(r'^questions/', include('questions.urls',namespace='questions')),
 )
 
 if DEBUG:

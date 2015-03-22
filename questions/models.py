@@ -26,14 +26,14 @@ class EnumQuestionState(Enum):
 	OPEN = 0
 	CLOSED = 1
 
-class EnumUser_flagState(Enum):
+class EnumUser_flag(Enum):
 	ANSWER = 0
 	ASK = 1
 
 class Question_text(models.Model):
 	replier = models.ForeignKey(User, null=True)
 	question = models.ForeignKey(Question)
-	user_flag = models.IntegerField(default=EnumUser_flagState.ANSWER, choices=EnumUser_flagState.get_choices())
+	user_flag = models.IntegerField(default=EnumUser_flag.ANSWER, choices=EnumUser_flag.get_choices())
 	text = models.TextField()
 	publish_date = models.DateTimeField(auto_now=True)
 

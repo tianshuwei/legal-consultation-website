@@ -14,7 +14,7 @@
 {% block main_col %}
 <h1>提新问题</h1>
 <form id="frmQuestion" method="post" role="form" class="form-horizontal">
-    {% csrf_token %} {{ 'accounts:new_question'|transacserial }}
+    {% csrf_token %} {{ 'questions:new_question'|transacserial }}
     <div class="form-group" >
     {{ question_create.title.label_tag }}<div class="col-sm-5 col-md-6">{{ question_create.title }}</div>
     {{ question_create.lawyer.label_tag }}<div class="col-sm-4 col-md-3">{{ question_create.lawyer }}</div>
