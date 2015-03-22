@@ -14,6 +14,8 @@ urlpatterns = patterns('',
 	url(r'^usercenter/balance/$', views.balance_view, name='balance'),
 	url(r'^usercenter/orders/$',  views.orders_view, name='order_list'),
 	url(r'^usercenter/profile/$', views.profile_self_view, name='profile_self'),
-	url(r'^usercenter/questions/$', views.questions_view , name='question_list'),
+	url(r'^usercenter/questions/$', views.questions_view, name='question_list'),
+
+	url(r'^new-activities\.mod$', views.new_activities_counts_view, name='new_activities'),
 )
 

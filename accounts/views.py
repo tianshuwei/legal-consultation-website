@@ -2,7 +2,7 @@
 from org.tools import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from accounts.models import Lawyer, Client, Remark
+from accounts.models import Lawyer, Client, Remark, Activity
 from products.models import Order
 from org.settings import RSA_LOGIN_KEY
 from org.rsa_authentication import decrypt
@@ -85,8 +85,14 @@ def lawyerlist_view(request):
 def usercenter_view(request):
 	u = get_role(request.user)
 	if type(u) is Client or type(u) is Lawyer:
-		return response(request, 'accounts/usercenter.html')
+		return response(request, 'accounts/usercenter.html',
+			activities = request.user.activity_set.all()
+		)
 	else: raise Http404
+
+@login_required
+def new_activities_counts_view(request):
+	return response_jquery(str(list(Activity.objects.count_new_activities(request.user.id))))
 
 @login_required
 def questions_view(request):

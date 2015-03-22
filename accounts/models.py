@@ -2,6 +2,10 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from org.types import Enum
+from org.settings import DATABASES
+from org.dbtools import rawsql
+
+POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
 
 class ClientManager(models.Manager):
 	@transaction.atomic
@@ -97,6 +101,25 @@ class ActivityManager(models.Manager):
 	use_for_related_fields = True
 
 	@transaction.atomic
+	def mark_viewed(self):
+		self.update(state=EnumActivityState.VIEWED)
+
+	def count_new_activities(self, pk_user):
+		def compatible_way(dataset):
+			z = [tag for article in dataset for tag in article.get_tags()]
+			return [{'name': tag, 'count': z.count(tag)} for tag in sorted(set(z))]
+		if POSTGRESQL:
+			return rawsql(['name','count'],
+			"""SELECT regexp_split_to_table(tags::text, ', *'::text), COUNT(*)
+				FROM accounts_activity
+				WHERE state = %s AND user_id = %s
+				GROUP BY regexp_split_to_table(tags::text, ', *'::text)
+				ORDER BY regexp_split_to_table(tags::text, ', *'::text);""",
+			params=[EnumActivityState.NEW, pk_user])
+		else:
+			return compatible_way(self.filter(state=EnumActivityState.NEW, user__id=pk_user))
+
+	@transaction.atomic
 	def notify_new_reply(self, user, reply):
 		r = self.create(
 			user=user, 
@@ -147,3 +170,8 @@ class Activity(models.Model):
 	publish_date = models.DateTimeField(auto_now=True, null=True)
 
 	objects = ActivityManager()
+
+	@transaction.atomic
+	def mark_viewed(self):
+		self.state=EnumActivityState.VIEWED
+		self.save()
