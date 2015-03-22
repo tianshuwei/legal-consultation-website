@@ -113,9 +113,11 @@ def orders_view(request):
 	else: raise Http404
 
 class ProfileEditForm(forms.ModelForm):
+	avatar = forms.ImageField()
+
 	class Meta:
 		model = User
-		fields = ['last_name', 'first_name', 'email']
+		fields = ['last_name', 'first_name', 'email', 'avatar']
 		labels = {'last_name':u'姓', 'first_name':u'名', 'email':u'邮箱'}
 
 @login_required
@@ -123,6 +125,10 @@ def profile_self_view(request):
 	if request.method=='POST':
 		form=ProfileEditForm(request.POST, instance=request.user)
 		form.save()
+		u = get_role(request.user)
+		if type(u) is Client or type(u) is Lawyer:
+			u.avatar = form.avatar
+		else: raise Http404
 		messages.success(request, u'个人资料编辑成功')
 		return redirect('accounts:profile_self')
 	else: return response(request, 'accounts/profile.html', 
