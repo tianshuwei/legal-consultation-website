@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles %}{% load tagtools %}
 {% block title %}{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}{% endblock %}
 {% block headextra %}
 <script type="text/javascript">
@@ -26,7 +26,8 @@
                 <div class="col-md-3 col-sm-3">
                 <div class="profile-bg">
                     <div class="animated fadeInDown animation-delay-8 profile-box">
-                            <img src="{% static "img/sample/user.jpg" %}" alt="" class="face">
+                    <img src="{{request.user|avatarurl}}" class="face">
+                    <!-- <img src="{% static 'img/sample/user.jpg' %}" alt="" class="face"> -->
                             <p class="title">Lorem ipsum</p>
                     </div>
                 </div>
