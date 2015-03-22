@@ -1,3 +1,22 @@
-from django.test import TestCase
+from org.testingtools import *
 
-# Create your tests here.
+class QuestionTest(UnitTestCase):
+	fixtures = [
+		'fixtures/accounts.json',
+	]
+
+	def test_new_question(self):
+		self.login('client0')
+		self.assertTrue(self.post({
+			'title':'New Question',
+			'lawyer':'3',
+			'description':'New Question Content',
+		},'questions:new_question'))
+
+	def test_new_question_by_lawyer_attempt(self):
+		self.login('lawyer0')
+		self.assertFalse(self.post({
+			'title':'New Question',
+			'lawyer':'3',
+			'description':'New Question Content',
+		},'questions:new_question'))

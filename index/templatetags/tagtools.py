@@ -38,3 +38,16 @@ from org.antixss import antiXSS_BootstrapWYSIWYS
 def antixss_filter(html):
 	try: return antiXSS_BootstrapWYSIWYS(html)
 	except: return '<antiXSS_BootstrapWYSIWYS failure>'
+
+from org.settings import DEFAULT_AVATAR_URL
+@register.filter(name='avatarurl')
+def avatarurl(user):
+	from org.tools import get_role
+	u = get_role(user)
+	if type(u) is Client or type(u) is Lawyer:
+		try:
+			return u.avatar.url
+		except Exception, e:
+			return DEFAULT_AVATAR_URL
+	else: return DEFAULT_AVATAR_URL
+

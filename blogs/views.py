@@ -1,19 +1,13 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
 from org.widgets import BootstrapWYSIWYG, BlogCategorySelect
-from accounts.models import Lawyer
+from accounts.models import Lawyer, Activity
 from blogs.models import BlogArticle, BlogComment, BlogCategory, BlogSettings
 
 class ArticleForm(forms.ModelForm):
 	class Meta:
 		model = BlogArticle
 		fields = ['title', 'category', 'tags', 'text']
-		labels = {
-			'title' : u'标题',
-			'category' : u'分类',
-			'tags' : u'标签',
-			'text' : u'正文',
-		}
 		widgets = {
 			'category': BlogCategorySelect,
 			'text': BootstrapWYSIWYG(attrs={'class': 'form-control', 'id': 'editor'}), 
@@ -164,12 +158,14 @@ def new_comment_view(request, pk_text):
 		except BlogArticle.DoesNotExist, e: # [UnitTest]
 			rec.error(u'{0} 评论文章失败'.format(request.user.username))
 			handle_illegal_access(request)
-		BlogComment.objects.create( 
+		comment=BlogComment.objects.create( 
 			user=request.user, 
 			article=article,
 			text=request.POST['txt_comment']
-		).save()
+		)
+		comment.save()
 		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest] [UnitTest]
+		Activity.objects.notify_new_blog_comment(article.author.user, comment)
 		return redirect('blogs:text', pk_text=article.id)
 	else: handle_illegal_access(request)
 

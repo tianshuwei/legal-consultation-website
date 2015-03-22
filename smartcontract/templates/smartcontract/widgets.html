@@ -1,0 +1,37 @@
+{% with i=v.content %}
+<div class="form-group">
+{% if i.widget == 'radio' or i.widget == 'checkbox' %}
+	<label class="col-sm-2 control-label">{{ i.label }}</label>
+	<div class="col-sm-10 col-md-10">
+	{% for val in i.values %}
+	<div class="{{i.widget}}">
+	<label><input type="{{i.widget}}" name="var_{{v.name}}" value="{{val}}">{{val}}</label>
+	</div>
+	{% endfor %}
+	</div>
+{% elif i.widget == 'agree' %}
+	<div class="col-sm-offset-2 col-sm-10">
+	<div class="checkbox">
+	<label><input type="checkbox" name="var_{{v.name}}" value="{{i.label}}">{{i.label}}</label>
+	</div>
+	</div>
+{% elif i.widget == 'select' %}
+	<label class="col-sm-2 control-label">{{ i.label }}</label>
+	<div class="col-sm-5 col-md-2">
+	<select class="form-control" id="var_{{v.name}}" name="var_{{v.name}}">
+		{% for val in i.values %}
+		<option value="{{val}}">{{val}}</option>
+		{% endfor %}
+	</select>
+	</div>
+{% elif i.widget == 'textarea' %}
+	<label for="var_{{v.name}}" class="col-sm-2 control-label">{{ i.label }}</label>
+	<div class="col-sm-9 col-md-9">
+	<textarea class="form-control" id="var_{{v.name}}" name="var_{{v.name}}"></textarea>
+	</div>
+{% else %}
+	<label for="var_{{v.name}}" class="col-sm-2 control-label">{{ i.label }}</label>
+	<div class="col-sm-8 col-md-5"><input name="var_{{v.name}}" type="{{i.widget}}" required="{{i.required}}" class="form-control" id="var_{{v.name}}" placeholder="{{i.help_text}}"></div>
+{% endif %}
+</div>
+{% endwith %}

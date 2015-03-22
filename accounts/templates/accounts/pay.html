@@ -1,0 +1,91 @@
+{% extends 'accounts/base_usercenter.html' %}
+{% block headextra %}
+<script type="text/javascript">
+  $(function () {
+    select_nav("Money");
+  });
+</script>
+{% endblock %}
+{% load staticfiles %}{% load tagtools %}
+<!-- 此处可以根据出现的场合 套用全局base或者用户中心的base,之后再做update -->
+
+{% block title %}pay{% endblock %}
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">pay for order</h1>
+    </div>
+</header>
+{% endblock %}
+
+{% block main_col %} {# {%block main %} #}
+
+<div class="row">
+    <div class="content-box box-default">
+        <div class="col-md-offset-2 col-md-4">
+            <i class="fa fa-check-circle-o fa-5x" style="margin-top:12px"></i>
+            <p>支付订单 {{order.serial}}<strong><br>产品{{order.product}} <br>￥{{order.product.price}}</strong></p>
+        </div>
+      <!--   <div class="col-md-4">
+            <h4 class="content-box-title">1 click to finish!</h4>
+
+            <a href="#" class="btn btn-ar btn-primary">pay with balance</a>
+        </div> -->
+    </div>
+</div>
+<h5>其他支付方式:</h5>
+<form method="post" row="form">
+{% csrf_token %}{{ 'accounts:pay'|transacserial }}
+<div class="row panel panel-primary">
+	<div class="panel-body">
+
+	<div class="row">
+		<div class="col-md-2">
+			<p><strong>支付平台</strong></p>
+					<p><small>(推荐使用支付宝支付)</small></p>
+		</div>
+		<div class="col-md-10 radio-list">
+			<ul class="radio-list">
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+			</ul>
+		</div>
+	</div>
+
+	<hr class="dashed">
+
+	<div class="row">
+		<div class="col-md-2">
+			<p><strong>网上银行</strong></p>
+					<p>Lorem ipsum dolor sit amet.</p>
+		</div>
+		<div class="col-md-10">
+			<ul class="radio-list">
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+				<li><input type="radio" name="bankid" value="-1"><img src="{% static "img/banks/alipay.gif" %}" alt="支付宝"></li>
+			</ul>
+		</div>
+	</div>
+	</div>
+</div>
+<button class="btn btn-ar btn-primary" type="submit">next step</button>
+</form>
+
+<script type="text/javascript">
+$(function(){
+	$(".radio-list li").click(function(){
+		$(".radio-list li").removeClass("on");
+		$(this).addClass("on");
+		$(this).find(":radio").attr("checked","checked");
+	});
+});
+</script>
+{% endblock %}
+

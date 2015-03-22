@@ -16,6 +16,7 @@ $document.ready(){
 </script>
 
 {% endblock %}
+
 {% block head %}
 <header class="main-header" style="margin-bottom:80px">
     <div class="container">
@@ -23,11 +24,20 @@ $document.ready(){
     </div>
 </header>
 {% endblock %}
-    {% block main_col %}
-    <h1>something interesting~~:)</h1>
-    {% endblock %}
 
+{% block main_col %}
+<h1>new_activities</h1>
+这个传给左边标数字
+<pre id="new_activities"></pre>
+<h1>all_activities</h1>
+<div class="list-group animated fadeInRight animation-delay-8">
+{% for activity in activities %}
+<a class="list-group-item" href="#">{{activity.title}}</a>
+{% endfor %}
+</div>
+<script type="text/javascript">
+$load("new_activities", "{% url 'accounts:new_activities' %}");
 
-
-
+</script>
+{% endblock %}
 

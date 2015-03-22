@@ -2,7 +2,7 @@
 from org.tools import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from accounts.models import Lawyer, Client, Remark, Question, Question_text
+from accounts.models import Lawyer, Client, Remark, Activity
 from products.models import Order
 from org.settings import RSA_LOGIN_KEY
 from org.rsa_authentication import decrypt
@@ -85,8 +85,14 @@ def lawyerlist_view(request):
 def usercenter_view(request):
 	u = get_role(request.user)
 	if type(u) is Client or type(u) is Lawyer:
-		return response(request, 'accounts/usercenter.html')
+		return response(request, 'accounts/usercenter.html',
+			activities = request.user.activity_set.all()
+		)
 	else: raise Http404
+
+@login_required
+def new_activities_counts_view(request):
+	return response_jquery(str(list(Activity.objects.count_new_activities(request.user.id))))
 
 @login_required
 def questions_view(request):
@@ -108,16 +114,21 @@ def orders_view(request):
 	else: raise Http404
 
 class ProfileEditForm(forms.ModelForm):
+	avatar = forms.ImageField(required=False)
+
 	class Meta:
 		model = User
-		fields = ['last_name', 'first_name', 'email']
-		labels = {'last_name':u'姓', 'first_name':u'名', 'email':u'邮箱'}
+		fields = ['last_name', 'first_name', 'email', 'avatar']
 
 @login_required
 def profile_self_view(request):
 	if request.method=='POST':
-		form=ProfileEditForm(request.POST, instance=request.user)
+		form=ProfileEditForm(request.POST, request.FILES, instance=request.user)
 		form.save()
+		u = get_role(request.user)
+		if (type(u) is Client or type(u) is Lawyer) and form.cleaned_data['avatar']:
+			u.avatar = form.cleaned_data['avatar']
+			u.save()
 		messages.success(request, u'个人资料编辑成功')
 		return redirect('accounts:profile_self')
 	else: return response(request, 'accounts/profile.html', 
@@ -141,14 +152,6 @@ def profile_view(request, pk_user):
 		is_master=bMaster)
 	else: raise Http404
 
-@login_required
-def question_view(request, pk_question):
-	question=get_object_or_404(Question, pk=pk_question)
-	return response(request, 'accounts/question.html',
-		question=question,
-		question_texts=Question_text.objects.filter(question_id=pk_question)
-	)
-
 from decimal import Decimal
 @login_required
 def balance_view(request):
@@ -162,11 +165,19 @@ def balance_view(request):
 		return redirect('accounts:balance')
 	else: return response(request, 'accounts/balance.html', role=u)
 
+@login_required
+def pay_view(request, pk_order):
+	order = get_object_or_404(Order, pk=pk_order)
+	if request.method=='POST':
+		request.POST['bankid']
+		messages.success(request, u'支付成功')
+		return redirect('accounts:order_list')
+	else: return response(request, 'accounts/pay.html', order=order)
+
 class RemarkForm(forms.ModelForm):
 	class Meta:
 		model = Remark
 		fields = ['grade']
-		labels = { 'grade' : u'评分' }
 
 @login_required
 def remark_view(request, pk_lawyer):
@@ -184,60 +195,3 @@ def remark_view(request, pk_lawyer):
 			remark=remark,
 			remark_form=RemarkForm(instance=remark), 
 		)
-
-class QuestionForm(forms.ModelForm):
-	class Meta:
-		model = Question
-		fields = ['title', 'lawyer', 'description']
-		labels = {
-			'title' : u'标题',
-			'lawyer' : u'律师',
-			'description' : u'描述',
-		}
-
-@login_required
-def new_question_view(request):
-	if request.method=='POST':
-		rec=recorded(request,'blogs:delete_article')
-		try:
-			with transaction.atomic():
-				question=Question.objects.create(
-					client=request.user.client,
-					title=request.POST['title'],
-					lawyer=Lawyer.objects.get(id=request.POST['lawyer']),
-					description=request.POST['description']
-				)
-				question.save()
-				request.user.client.minus_points()
-		# TODO 律师可以为None，这种情况表示所有律师可以回答
-		except ObjectDoesNotExist,e: 
-			messages.error(request, u'问题创建失败')
-			rec.error(u'{0} 创建问题失败，因为客户不存在'.format(request.user.username))
-			handle_illegal_access(request)
-		except: # Untestable!
-			# TODO log trackback
-			messages.error(request, u'问题创建失败')
-			rec.error(u'{0} 创建问题失败'.format(request.user.username))
-			handle_illegal_access(request)
-		else:
-			messages.success(request, u'问题创建成功')
-			rec.success(u'{0} 创建问题 {1} 成功'.format(request.user.username, question.title))
-			return redirect('accounts:question',pk_question=question.id)
-	else:
-		return response(request, 'accounts/new_question.html',
-			question_create=QuestionForm())
-
-@login_required
-def new_question_text_view(request, pk_question):
-	q = get_object_or_404(Question, pk=pk_question)
-	q_text = Question_text.objects.create(text=request.POST['txt_question'], user_flag=1 if get_role(request.user).is_client else 0, question=q)
-	q_text.save()
-	return redirect('accounts:question', pk_question=q.id)
-
-@login_required
-def question_satisfied(request, pk_question):
-	qu = get_object_or_404(Question, pk=pk_question)
-	qu.finish()
-	la = get_object_or_404(Lawyer, pk=qu.lawyer_id)
-	la.plus_score()
-	return redirect('accounts:question', pk_question=qu.id)
