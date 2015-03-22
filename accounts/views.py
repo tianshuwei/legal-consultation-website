@@ -100,6 +100,7 @@ def questions_view(request):
 @login_required
 def orders_view(request):
 	u = get_role(request.user)
+	print u
 	if type(u) is Client or type(u) is Lawyer:
 		return response(request, 'accounts/order_list.html',
 			orders=paginated(lambda: request.GET.get('page'), 10, 
