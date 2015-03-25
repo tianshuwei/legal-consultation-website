@@ -68,8 +68,8 @@ class LawyerManager(models.Manager):
 		from blogs.models import BlogSettings, BlogCategory, EnumBlogCategoryState
 		BlogSettings.objects.create(lawyer=lawyer).save()
 		BlogCategory.objects.create(lawyer=lawyer, name=u"默认", state=EnumBlogCategoryState.SYSTEM).save()
-		from index.models import SiteActivity
-		SiteActivity.objects.notify_new_user(user)
+		# from index.models import SiteActivity
+		# SiteActivity.objects.notify_new_user(user)
 		return lawyer
 
 class Lawyer(models.Model):
