@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from org.types import Enum
@@ -16,11 +17,15 @@ class ClientManager(models.Manager):
 		SiteActivity.objects.notify_new_user(user)
 		return client
 
+	def get_latest_reg_user(self):
+		return self.order_by('-register_date')[:4]
+
 class Client(models.Model):
 	user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
 	balance = models.DecimalField(max_digits=16, decimal_places=3, default=0)
 	points = models.IntegerField(default=0)
 	avatar = models.ImageField(upload_to='avatar.client/', max_length=255, null=True)
+	register_date = models.DateTimeField(default=datetime.now)
 	# comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
 
 	objects = ClientManager()
@@ -73,7 +78,7 @@ class Lawyer(models.Model):
 	blacklist = models.BooleanField(default=False)
 	score = models.IntegerField(default=0)
 	avatar = models.ImageField(upload_to='avatar.lawyer/', max_length=255, null=True)
-	# TODO 注释下面两行，确保其他代码没有引用到它们
+	register_date = models.DateTimeField(default=datetime.now)
 	# remarks = models.ManyToManyField(Client, through="Remark", through_fields=("lawyer","client"), related_name="c_l_remarks")
 	# questions = models.ManyToManyField(Client, through="Question", through_fields=("lawyer","client"), related_name="c_l_questions")
 

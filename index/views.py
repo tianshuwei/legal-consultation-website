@@ -2,7 +2,9 @@
 from org.tools import *
 from accounts.models import Lawyer
 from products.models import Product
+from accounts.models import Client
 from index.models import TransactionRecord
+from blogs.models import BlogArticle
 
 def index_view(request):
 	return response(request,'index/index.html',
@@ -26,3 +28,11 @@ def mod_view(request, name):
 	"""templates/mod下的*.html文件允许访问，URL是 /mod/*/"""
 	try: return response(request, 'mod/{0}.html'.format(name))
 	except: handle_illegal_access(request)
+
+def popular_blog_articles_mod_view(request):
+	return response(request, 'popular_blog_articles.mod.html',
+		popular_blog_articles=BlogArticle.objects.get_popular_articles())
+
+def new_members_mod_view(request):
+	return response(request, 'new_members.mod.html',
+		new_members=Client.objects.get_latest_reg_user())

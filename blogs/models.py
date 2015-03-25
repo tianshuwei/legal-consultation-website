@@ -58,7 +58,7 @@ class BlogArticleManager(models.Manager):
 		return self.filter(category__isnull=False).order_by('-clicks')[:6]
 
 	def get_popular_articles(self):
-		return self.order_by('-clicks')[:6]
+		return self.order_by('-clicks')[:3]
 
 	def get_archived_articles(self, year, month):
 		return self.filter(publish_date__year=year, publish_date__month=month).order_by('-publish_date')

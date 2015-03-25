@@ -22,16 +22,14 @@ class TransactionRecord(models.Model):
 		self.save()
 
 class SiteActivityManager(models.Manager):
-	@transaction.atomic
-	def notify_new_user(self, user):
-		r = self.create(
-			title=user.username,
-			tags='register'
-		)
-		r.save()
-
-	def get_latest_reg_user(self):
-		self.filter(tags='register').order_by('-publish_date')[:3]
+	pass
+	# @transaction.atomic
+	# def notify_new_user(self, user):
+	# 	r = self.create(
+	# 		title=user.username,
+	# 		tags='register'
+	# 	)
+	# 	r.save()
 
 class EnumSiteActivityState(Enum):
 	NEW = 0

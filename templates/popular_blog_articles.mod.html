@@ -1,0 +1,10 @@
+{% load staticfiles %}
+{% for article in popular_blog_articles %}
+<div class="media">
+    <a class="pull-left" href="#"><img class="media-object" src="{% static 'assets/img/demo/m2.jpg' %}" width="75" height="75" alt="image"></a>
+    <div class="media-body">
+        <h4 class="media-heading"><a href="#">{{article.title}}<br/><br/></a></h4>
+        <small>{{article.publish_date}}<!-- August 18, 2013 --></small>
+    </div>
+</div>
+{% endfor %}

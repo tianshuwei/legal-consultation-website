@@ -45,6 +45,12 @@
     <script src="{% static "js/bootstrap-table.js" %}"></script>
     <script src="{% static "js/locale/bootstrap-table-zh-CN.js" %}"></script>
     {% block headextra %}{% endblock %}
+    <script type="text/javascript">
+    $(function () {
+        $load("base_popular_blog_articles", "{% url 'index:popular_blog_articles_mod' %}");
+        $load("base_new_members", "{% url 'index:new_members_mod' %}");
+    });
+    </script>
   </head>
 
   <body ryt12699="1">
@@ -159,6 +165,8 @@
                 <div class="col-md-4">
                     <div class="footer-widget">
                         <h3 class="footer-widget-title">最新文章</h3>
+                        <div id="base_popular_blog_articles"></div>
+                        {% comment %} <!-- 
                         <div class="media">
                             <a class="pull-left" href="#"><img class="media-object" src="{% static 'assets/img/demo/m2.jpg' %}" width="75" height="75" alt="image"></a>
                             <div class="media-body">
@@ -180,12 +188,14 @@
                                 <small>October 9, 2013</small>
                             </div>
                         </div>
+                        --> {% endcomment %}
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="footer-widget">
                         <h3 class="footer-widget-title">最新用户</h3>
-                        <div class="row">
+                        <div class="row" id="base_new_members">
+                        {% comment %} <!-- 
                             <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
                                 <a href="#" class="thumbnail"><img src="{% static 'assets/img/demo/wf1.jpg' %}" class="img-responsive" alt="Image"></a>
                             </div>
@@ -198,6 +208,7 @@
                             <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
                                 <a href="#" class="thumbnail"><img src="{% static 'assets/img/demo/wf4.jpg' %}" class="img-responsive" alt="Image"></a>
                             </div>
+                        --> {% endcomment %}
                         </div>
                     </div>
                 </div>
