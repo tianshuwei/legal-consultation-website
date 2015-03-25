@@ -3,12 +3,9 @@ from datetime import datetime
 from django.db import models, transaction
 from django.db.models import Q
 from django.contrib.auth.models import User
-from org.settings import DATABASES
+from org.settings import EN_FULLTEXTSEARCH, POSTGRESQL
 from org.dbtools import rawsql
 from org.types import Enum, CustomException
-
-POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
-EN_FULLTEXTSEARCH = False
 
 class BlogCategoryManager(models.Manager):
 	use_for_related_fields = True
@@ -59,6 +56,9 @@ class BlogArticleManager(models.Manager):
 
 	def get_favourite_articles(self):
 		return self.filter(category__isnull=False).order_by('-clicks')[:6]
+
+	def get_popular_articles(self):
+		return self.order_by('-clicks')[:6]
 
 	def get_archived_articles(self, year, month):
 		return self.filter(publish_date__year=year, publish_date__month=month).order_by('-publish_date')
@@ -133,7 +133,7 @@ class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)
 	title = models.CharField(max_length=255)
 	modify_date = models.DateTimeField(auto_now=True, null=True)
-	publish_date = models.DateTimeField()
+	publish_date = models.DateTimeField(default=datetime.now)
 	clicks = models.IntegerField(default=0, editable=False)
 	category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True)
 	tags = models.CharField(max_length=255, blank=True)

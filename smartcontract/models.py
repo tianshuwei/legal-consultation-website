@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from org.types import Enum
@@ -24,7 +25,7 @@ class EnumSmartContractState(Enum):
 class SmartContract(models.Model):
 	category = models.ForeignKey(SmartContractCategory)
 	name = models.CharField(max_length=255)
-	publish_date = models.DateTimeField(auto_now=True)
+	publish_date = models.DateTimeField(default=datetime.now)
 	state = models.IntegerField(default=EnumSmartContractState.DEFAULT, choices=EnumSmartContractState.get_choices())
 	template = models.FileField(upload_to='smart/', max_length=255, null=True)
 	config = models.TextField(blank=True)

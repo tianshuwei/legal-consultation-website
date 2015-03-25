@@ -59,7 +59,7 @@ def new_article_view(request):
 				from org.antixss import antiXSS_BootstrapWYSIWYS as antixss
 				article = ArticleForm(request.POST).save(commit=False)
 				article.author = request.user.lawyer
-				article.publish_date = datetime.now()
+				# article.publish_date = datetime.now()
 				article.text = antixss(article.text, strip=True)
 				article.save()
 		except BlogCategory.DoesNotExist, e: 
