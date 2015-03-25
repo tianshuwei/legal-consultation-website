@@ -2647,8 +2647,13 @@ textarea.form-control:focus {
 }
 .panel-primary .panel-heading,
 .panel-primary .panel-footer {
-  background-color: #BB2A2A;
+  background-color: #BB2A2A !important;
   color: #fff;
+  border-color: #BB2A2A;
+  background-image: -webkit-linear-gradient(top,#CA4242 0,#BD3535 100%);
+  background-image: -o-linear-gradient(top,#CA4242 0,#BD3535 100%);
+  background-image: -webkit-gradient(linear,left top,left bottom,from(#CA4242),to(#BD3535));
+  background-image: linear-gradient(to bottom,#CA4242 0,#BD3535 100%);
 }
 .panel-heading {
   border-radius: 0;

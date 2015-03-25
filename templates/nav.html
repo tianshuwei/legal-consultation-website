@@ -18,7 +18,7 @@
               <li id="nav_li_Blog">
               <a href="{% url 'blogs:home' %}" >博客</a></li>
               {% endif %}
-              <li id="nav_li_smartcontract"><a href="{% url 'smartcontract:test' %}">智能合同</a></li>
+              <li id="nav_li_smartcontract"><a href="{% url 'smartcontract:index' %}">智能合同</a></li>
           </ul>
     {% if user.is_authenticated %}
     <ul class="nav navbar-nav navbar-right">
