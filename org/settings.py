@@ -163,3 +163,6 @@ RSA_LOGIN_KEY = rsa.newkeys(300)
 
 MEDIA_URL = '/media/'
 DEFAULT_AVATAR_URL = '/static/img/portrait.gif'
+
+EN_FULLTEXTSEARCH = False
+POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
