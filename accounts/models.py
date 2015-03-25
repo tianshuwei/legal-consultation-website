@@ -2,10 +2,8 @@
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from org.types import Enum
-from org.settings import DATABASES
+from org.settings import POSTGRESQL
 from org.dbtools import rawsql
-
-POSTGRESQL = 'postgresql' in DATABASES['default']['ENGINE']
 
 class ClientManager(models.Manager):
 	@transaction.atomic
@@ -14,6 +12,8 @@ class ClientManager(models.Manager):
 		user.save()
 		client=Client.objects.create(user=user)
 		client.save()
+		from index.models import SiteActivity
+		SiteActivity.objects.notify_new_user(user)
 		return client
 
 class Client(models.Model):
@@ -63,6 +63,8 @@ class LawyerManager(models.Manager):
 		from blogs.models import BlogSettings, BlogCategory, EnumBlogCategoryState
 		BlogSettings.objects.create(lawyer=lawyer).save()
 		BlogCategory.objects.create(lawyer=lawyer, name=u"默认", state=EnumBlogCategoryState.SYSTEM).save()
+		from index.models import SiteActivity
+		SiteActivity.objects.notify_new_user(user)
 		return lawyer
 
 class Lawyer(models.Model):
