@@ -102,20 +102,20 @@
 <body ryt12699="1" style="overflow: visible;"><div id="sb-site"><div id="preloader" style="display: none;">
     <div id="status" style="display: none;">&nbsp;</div>
 </div>
-<div class="paper-back-full" style="min-height: 925px;">
+<div class="paper-back-full" style="min-height: 975px;">
     <div class="login-form-full">
         <div class="fix-box">
-            <div class="text-center title-logo animated fadeInDown animation-delay-5">artificial<span>reason</span></div>
+            <div class="text-center title-logo animated fadeInDown animation-delay-5">律橙<span>法律服务</span></div>
             <div class="transparent-div no-padding animated fadeInUp animation-delay-8">
                 <ul class="nav nav-tabs nav-tabs-transparent">
-                  <li class=""><a href="#home" data-toggle="tab" aria-expanded="false">Login</a></li>
-                  <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">Register</a></li>
-                  <li class="active"><a href="#messages" data-toggle="tab" aria-expanded="true">Recovery Pass</a></li>
+                  <li class="active"><a href="#home" data-toggle="tab" aria-expanded="false">登录</a></li>
+                  <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">注册</a></li>
+                  <li class=""><a href="#messages" data-toggle="tab" aria-expanded="true">忘记密码</a></li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                  <div class="tab-pane" id="home">
+                  <div class="tab-pane  active" id="home">
                     <form role="form"  id="for1" method="post">
                       {% csrf_token %} {{ "login"|transacserial }}
                         <div class="form-grou">
@@ -130,10 +130,10 @@
                             </div>
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox"> Remember me
+                                    <input type="checkbox">记住我
                                 </label>
                             </div>
-                            <button type="button" class="btn btn-ar btn-primary pull-right" onclick="rsalogin()">Login</button>
+                            <button type="button" class="btn btn-ar btn-primary pull-right" onclick="rsalogin()">确定</button>
                             <div class="clearfix"></div>
                         </div>
                     </form>
@@ -142,32 +142,32 @@
                       <form role="form" id="for2">
                         {% csrf_token %} {{ "login"|transacserial }}
                           <div class="form-group">
-                                <label for="chreacteroption">chreacter<sup>*</sup></label>
+                                <label for="chreacteroption">角色<sup>*</sup></label>
                                 <div >
                                       <div class="radio">
                                         <label>
                                           <input type="radio" name="role" id="lawyer" value="lawyer" checked="">
-                                          I'm lawyer
+                                          我是律师
                                         </label>
                                       </div>
                                       <div class="radio">
                                         <label>
                                           <input type="radio" name="role" id="client" value="client">
-                                          I'm client
+                                          我是客户
                                         </label>
                                       </div>
                                  </div>
                             </div>
                           <div class="form-group">
-                              <label for="InputUserName">User Name<sup>*</sup></label>
+                              <label for="InputUserName">用户名<sup>*</sup></label>
                               <input type="text" class="form-control" id="InputUserName" name="username">
                           </div>
                           <div class="form-group">
-                              <label for="InputFirstName">First Name</label>
+                              <label for="InputFirstName">名</label>
                               <input type="text" class="form-control" id="InputFirstName" name="first_name">
                           </div>
                           <div class="form-group">
-                              <label for="InputLastName">Last Name</label>
+                              <label for="InputLastName">姓</label>
                               <input type="text" class="form-control" id="InputLastName" name="last_name">
                           </div>
                           <div class="form-group">
@@ -177,13 +177,13 @@
                           <div class="row">
                               <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="InputPassword">Password<sup>*</sup></label>
+                                      <label for="InputPassword">密码<sup>*</sup></label>
                                       <input type="password" class="form-control" id="InputPassword" name="pw1">
                                   </div>
                               </div>
                               <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="InputConfirmPassword">Confirm Password<sup>*</sup></label>
+                                      <label for="InputConfirmPassword">确认密码<sup>*</sup></label>
                                       <input type="password" class="form-control" id="InputConfirmPassword" name="pw2">
                                   </div>
                               </div>
@@ -191,38 +191,39 @@
                           <div class="row">
                               <div class="col-md-8">
                                   <label class="checkbox-inline">
-                                      <input type="checkbox" id="inlineCheckbox1" value="option1"> I read <a href="#">Terms and Conditions</a>.
+                                      <input type="checkbox" id="inlineCheckbox1" value="option1">我已经阅读并同意<a href="#">网站守则</a>.
                                   </label>
                               </div>
                               <div class="col-md-4">
-                                  <button type="button" class="btn btn-ar btn-primary pull-right" onclick="rsaregister()">Register</button>
+                                  <button type="button" class="btn btn-ar btn-primary pull-right" onclick="rsaregister()">提交</button>
                               </div>
                           </div>
                       </form>
                   </div>
-                  <div class="tab-pane active" id="messages">
+                  <div class="tab-pane" id="messages">
                     <form role="form" method="post">
                       {% csrf_token %}
                         <div class="form-group">
-                            <label for="InputUserName">User Name<sup>*</sup></label>
+                            <label for="InputUserName">用户名<sup>*</sup></label>
                             <input type="text" class="form-control" id="InputUserName">
                         </div>
                         <div class="form-group">
                             <label for="InputEmail">Email<sup>*</sup></label>
                             <input type="email" class="form-control" id="InputEmail">
                         </div>
-                        <button type="submit" class="btn btn-ar btn-primary pull-right">Send Password</button>
+                        <button type="submit" class="btn btn-ar btn-primary pull-right">重置密码</button>
                     </form>
                   </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
     <footer id="footer-full">
     <p>© 2014 <a href="#">org_dev</a>, inc. All rights reserved.</p>
 </footer>
 </div>
+    </div>
+
 </body>
 
 </html>
