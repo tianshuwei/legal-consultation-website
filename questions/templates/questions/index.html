@@ -1,4 +1,13 @@
 {% extends 'smartcontract/base.html' %}
+{% block headextra %}
+{{ block.super }}
+<script type="text/javascript">
+  $(function () {
+    select_nav("QuestionList");
+    $djform("#frmQuestion");
+  });
+</script>
+{% endblock %}
 
 {% block contexts %}
 <div class="row">
