@@ -45,12 +45,7 @@ img.face{
 #footer-full {
   padding: 17px 0;
   text-align: center;
-  margin-top: -50px;
-}
-@media (min-width: 990px){
-  #footer-full {
-  margin-top: -70px;
-}
+
 }
 
 li i.fa{

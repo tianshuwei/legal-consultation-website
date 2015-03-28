@@ -65,3 +65,6 @@ def test_render_form_view(request, pk_contract):
 def test_pdf_view(request, pk_contract):
 	contract = SmartContract.objects.get(id=pk_contract)
 	return response(request, 'smartcontract/pdf.js.html')
+
+def index_view(request):
+	return response(request,'smartcontract/index.html')

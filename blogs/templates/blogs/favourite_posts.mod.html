@@ -1,7 +1,6 @@
 {% load staticfiles %}
 {% for article in articles %}
 <li class="media">
-    <a class="pull-left" href="#"><img class="media-object" src="{% static 'assets/img/demo/m2.jpg' %}" width="80" height="80" alt="image"></a>
     <div class="media-body">
         <p class="media-heading"><a href="{% url 'blogs:text' article.id %}">{{article.title}}</a></p>
         <p><small><i class="fa fa-folder-open"></i> <a href="{% url 'blogs:index_category' article.category.id %}">{{article.category}}</a>
