@@ -27,7 +27,7 @@ class SmartContract(models.Model):
 	name = models.CharField(max_length=255)
 	publish_date = models.DateTimeField(default=datetime.now)
 	state = models.IntegerField(default=EnumSmartContractState.DEFAULT, choices=EnumSmartContractState.get_choices())
-	template = models.FileField(upload_to='smart/', max_length=255, null=True)
+	template = models.FileField(upload_to='smart/', max_length=255, null=True, blank=True)
 	config = models.TextField(blank=True)
 
 	class Meta:

@@ -24,7 +24,7 @@ class Client(models.Model):
 	user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
 	balance = models.DecimalField(max_digits=16, decimal_places=3, default=0)
 	points = models.IntegerField(default=0)
-	avatar = models.ImageField(upload_to='avatar.client/', max_length=255, null=True)
+	avatar = models.ImageField(upload_to='avatar.client/', max_length=255, null=True, blank=True)
 	register_date = models.DateTimeField(default=datetime.now)
 	# comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
 
@@ -77,8 +77,10 @@ class Lawyer(models.Model):
 	balance = models.DecimalField(max_digits=16, decimal_places=3, default=0)
 	blacklist = models.BooleanField(default=False)
 	score = models.IntegerField(default=0)
-	avatar = models.ImageField(upload_to='avatar.lawyer/', max_length=255, null=True)
+	avatar = models.ImageField(u'头像', upload_to='avatar.lawyer/', max_length=255, null=True, blank=True)
 	register_date = models.DateTimeField(default=datetime.now)
+	job_title = models.CharField(u'职称', max_length=25, blank=True)
+	intro = models.TextField(u'个人介绍', blank=True)
 	# remarks = models.ManyToManyField(Client, through="Remark", through_fields=("lawyer","client"), related_name="c_l_remarks")
 	# questions = models.ManyToManyField(Client, through="Question", through_fields=("lawyer","client"), related_name="c_l_questions")
 
