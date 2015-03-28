@@ -27,8 +27,8 @@ class EnumBlogCategoryState(Enum):
 
 class BlogCategory(models.Model):
 	lawyer = models.ForeignKey("accounts.Lawyer")
-	name = models.CharField(max_length=255)
-	state = models.IntegerField(default=EnumBlogCategoryState.PUBLIC, choices=EnumBlogCategoryState.get_choices())
+	name = models.CharField(u'分类名称', max_length=255)
+	state = models.IntegerField(u'分类状态', default=EnumBlogCategoryState.PUBLIC, choices=EnumBlogCategoryState.get_choices())
 
 	objects = BlogCategoryManager()
 
@@ -131,13 +131,13 @@ class BlogArticleManager(models.Manager):
 
 class BlogArticle(models.Model):
 	author = models.ForeignKey("accounts.Lawyer", on_delete=models.SET_NULL, null=True)
-	title = models.CharField(max_length=255)
-	modify_date = models.DateTimeField(auto_now=True, null=True)
-	publish_date = models.DateTimeField(default=datetime.now)
-	clicks = models.IntegerField(default=0, editable=False)
+	title = models.CharField(u'文章标题', max_length=255)
+	modify_date = models.DateTimeField(u'修改日期', auto_now=True, null=True)
+	publish_date = models.DateTimeField(u'发表日期', default=datetime.now)
+	clicks = models.IntegerField(u'点击量', default=0, editable=False)
 	category = models.ForeignKey(BlogCategory, on_delete=models.SET_NULL, null=True)
-	tags = models.CharField(max_length=255, blank=True)
-	text = models.TextField()
+	tags = models.CharField(u'标签', max_length=255, blank=True)
+	text = models.TextField(u'正文')
 
 	objects = BlogArticleManager()
 
@@ -177,9 +177,9 @@ class BlogCommentManager(models.Manager):
 
 class BlogComment(models.Model):
 	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-	publish_date = models.DateTimeField(auto_now=True)
+	publish_date = models.DateTimeField(u'评论日期', auto_now=True)
 	article = models.ForeignKey(BlogArticle)
-	text = models.TextField()
+	text = models.TextField(u'正文')
 
 	objects=BlogCommentManager()
 
@@ -199,8 +199,8 @@ class EnumBlogSettingsState(Enum):
 
 class BlogSettings(models.Model):
 	lawyer = models.OneToOneField("accounts.Lawyer")
-	state = models.IntegerField(default=EnumBlogSettingsState.PUBLIC, choices=EnumBlogSettingsState.get_choices())
-	items_per_page = models.IntegerField(default=15)
+	state = models.IntegerField(u'博客状态', default=EnumBlogSettingsState.PUBLIC, choices=EnumBlogSettingsState.get_choices())
+	items_per_page = models.IntegerField(u'每页显示文章', default=15)
 
 	objects = BlogSettingsManager()
 

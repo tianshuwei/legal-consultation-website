@@ -28,13 +28,17 @@ class QuestionManager(models.Manager):
 class Question(models.Model):
 	lawyer = models.ForeignKey('accounts.Lawyer', null=True)
 	client = models.ForeignKey('accounts.Client')
-	title = models.CharField(max_length=255)
-	clicks = models.IntegerField(default=0, editable=False)
-	description = models.TextField(blank=True)
-	publish_date = models.DateTimeField(default=datetime.now)
-	state = models.IntegerField(default=EnumQuestionState.OPEN, choices=EnumQuestionState.get_choices())
+	title = models.CharField(u'问题标题', max_length=255)
+	clicks = models.IntegerField(u'问题点击量', default=0, editable=False)
+	description = models.TextField(u'问题描述', blank=True)
+	publish_date = models.DateTimeField(u'提问日期', default=datetime.now)
+	state = models.IntegerField(u'问题状态', default=EnumQuestionState.OPEN, choices=EnumQuestionState.get_choices())
 
 	objects = QuestionManager()
+
+	class Meta:
+		verbose_name = u'问题咨询'
+		verbose_name_plural = u'问题咨询'
 
 	def __unicode__(self):
 		return self.title
@@ -54,9 +58,9 @@ class EnumUser_flag(Enum):
 class Question_text(models.Model):
 	replier = models.ForeignKey(User, null=True)
 	question = models.ForeignKey(Question)
-	user_flag = models.IntegerField(default=EnumUser_flag.ANSWER, choices=EnumUser_flag.get_choices())
-	text = models.TextField()
-	publish_date = models.DateTimeField(default=datetime.now)
+	user_flag = models.IntegerField(u'追问/回答', default=EnumUser_flag.ANSWER, choices=EnumUser_flag.get_choices())
+	text = models.TextField(u'正文')
+	publish_date = models.DateTimeField(u'发布日期', default=datetime.now)
 
 	def __unicode__(self):
 		return self.text[:20]

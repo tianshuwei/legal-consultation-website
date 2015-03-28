@@ -9,8 +9,8 @@ class EnumSmartContractCategoryState(Enum):
 
 class SmartContractCategory(models.Model):
 	user = models.ForeignKey(User)
-	name = models.CharField(max_length=120)
-	state = models.IntegerField(default=EnumSmartContractCategoryState.PUBLIC, choices=EnumSmartContractCategoryState.get_choices())
+	name = models.CharField(u'合同分类名称', max_length=120)
+	state = models.IntegerField(u'合同分类状态', default=EnumSmartContractCategoryState.PUBLIC, choices=EnumSmartContractCategoryState.get_choices())
 
 	class Meta:
 		verbose_name = u'合同分类'
@@ -24,11 +24,11 @@ class EnumSmartContractState(Enum):
 
 class SmartContract(models.Model):
 	category = models.ForeignKey(SmartContractCategory)
-	name = models.CharField(max_length=255)
-	publish_date = models.DateTimeField(default=datetime.now)
-	state = models.IntegerField(default=EnumSmartContractState.DEFAULT, choices=EnumSmartContractState.get_choices())
-	template = models.FileField(upload_to='smart/', max_length=255, null=True, blank=True)
-	config = models.TextField(blank=True)
+	name = models.CharField(u'合同名称', max_length=255)
+	publish_date = models.DateTimeField(u'创建日期', default=datetime.now)
+	state = models.IntegerField(u'合同状态', default=EnumSmartContractState.DEFAULT, choices=EnumSmartContractState.get_choices())
+	template = models.FileField(u'DOCX模板', upload_to='smart/', max_length=255, null=True, blank=True)
+	config = models.TextField(u'合同表单设计', blank=True)
 
 	class Meta:
 		verbose_name = u'合同模板'
@@ -72,7 +72,7 @@ class SmartContract(models.Model):
 class SmartContractInstance(models.Model):
 	contract = models.ForeignKey(SmartContract)
 	user = models.ForeignKey(User)
-	data = models.TextField(blank=True)
+	data = models.TextField(u'合同数据', blank=True)
 
 	class Meta:
 		verbose_name = u'合同实例'

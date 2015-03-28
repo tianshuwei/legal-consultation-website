@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 from django.db import models, transaction
 from django.contrib.auth.models import User
 from org.types import Enum, CustomException
 
 class Product(models.Model):
-	name = models.CharField(max_length=255)
-	publish_date = models.DateTimeField(auto_now=True)
-	description = models.TextField(blank=True)
-	price = models.DecimalField(max_digits=16, decimal_places=3, default=0)
+	name = models.CharField(u'产品名称', max_length=255)
+	publish_date = models.DateTimeField(u'发布日期', default=datetime.now)
+	description = models.TextField(u'产品描述', blank=True)
+	price = models.DecimalField(u'定价', max_digits=16, decimal_places=3, default=0)
 
 	class Meta:
 		verbose_name = u'产品'
@@ -19,8 +20,8 @@ class Product(models.Model):
 class Comment(models.Model):
 	user = models.ForeignKey(User)
 	product = models.ForeignKey(Product)
-	text = models.TextField()
-	publish_date = models.DateTimeField(auto_now=True)
+	text = models.TextField(u'正文')
+	publish_date = models.DateTimeField(u'评论日期', auto_now=True)
 
 	def __unicode__(self):
 		return self.text[:20]
@@ -39,10 +40,10 @@ class Order(models.Model):
 	client = models.ForeignKey('accounts.Client', on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True)
-	serial = models.CharField(max_length=25, default=gen_order_serial, editable=False)
-	state = models.IntegerField(default=EnumOrderState.UNPAID, choices=EnumOrderState.get_choices())
-	text = models.TextField(blank=True)
-	publish_date = models.DateTimeField(auto_now=True)
+	serial = models.CharField(u'订单号', max_length=25, default=gen_order_serial, editable=False)
+	state = models.IntegerField(u'订单状态', default=EnumOrderState.UNPAID, choices=EnumOrderState.get_choices())
+	text = models.TextField(u'订单备注', blank=True)
+	publish_date = models.DateTimeField(u'创建日期', default=datetime.now)
 
 	class Meta:
 		verbose_name = u'订单'

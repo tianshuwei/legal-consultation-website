@@ -22,10 +22,10 @@ class ClientManager(models.Manager):
 
 class Client(models.Model):
 	user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
-	balance = models.DecimalField(max_digits=16, decimal_places=3, default=0)
-	points = models.IntegerField(default=0)
-	avatar = models.ImageField(upload_to='avatar.client/', max_length=255, null=True, blank=True)
-	register_date = models.DateTimeField(default=datetime.now)
+	balance = models.DecimalField(u'余额', max_digits=16, decimal_places=3, default=0)
+	points = models.IntegerField(u'积分', default=0)
+	avatar = models.ImageField(u'头像', upload_to='avatar.client/', max_length=255, null=True, blank=True)
+	register_date = models.DateTimeField(u'注册日期', default=datetime.now)
 	# comments = models.ManyToManyField("products.Product", through="products.Comment", through_fields=("client","product"), related_name="c_p_comments")
 
 	objects = ClientManager()
@@ -74,11 +74,11 @@ class LawyerManager(models.Manager):
 
 class Lawyer(models.Model):
 	user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
-	balance = models.DecimalField(max_digits=16, decimal_places=3, default=0)
-	blacklist = models.BooleanField(default=False)
+	balance = models.DecimalField(u'余额', max_digits=16, decimal_places=3, default=0)
+	blacklist = models.BooleanField(u'加入黑名单', default=False)
 	score = models.IntegerField(default=0)
 	avatar = models.ImageField(u'头像', upload_to='avatar.lawyer/', max_length=255, null=True, blank=True)
-	register_date = models.DateTimeField(default=datetime.now)
+	register_date = models.DateTimeField(u'注册日期', default=datetime.now)
 	job_title = models.CharField(u'职称', max_length=25, blank=True)
 	intro = models.TextField(u'个人介绍', blank=True)
 	# remarks = models.ManyToManyField(Client, through="Remark", through_fields=("lawyer","client"), related_name="c_l_remarks")
@@ -102,8 +102,8 @@ class Lawyer(models.Model):
 class Remark(models.Model):
 	lawyer = models.ForeignKey(Lawyer)
 	client = models.ForeignKey(Client)
-	grade = models.IntegerField(default=0)
-	publish_date = models.DateTimeField(auto_now=True)
+	grade = models.IntegerField(u'评分', default=0)
+	publish_date = models.DateTimeField(u'评分日期', auto_now=True)
 
 	def __unicode__(self):
 		return str(self.grade)
