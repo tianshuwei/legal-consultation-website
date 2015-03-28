@@ -13,8 +13,8 @@ class ClientManager(models.Manager):
 		user.save()
 		client=Client.objects.create(user=user)
 		client.save()
-		from index.models import SiteActivity
-		SiteActivity.objects.notify_new_user(user)
+		# from index.models import SiteActivity
+		# SiteActivity.objects.notify_new_user(user)
 		return client
 
 	def get_latest_reg_user(self):

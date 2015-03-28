@@ -26,6 +26,14 @@ class AuthTest(UnitTestCase):
 			'password':'just_a_guess'
 		},'accounts:login'))
 
+class RegisterTest(UnitTestCase):
+	fixtures = [
+		'fixtures/accounts.json',
+	]
+
+	def setUp(self):
+		self.client = Client()
+
 	def test_register_lawyer(self):
 		self.assertTrue(self.post({
 			'username':'lawyer100',
