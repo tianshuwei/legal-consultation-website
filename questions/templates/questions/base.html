@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load tagtools %}
+
+{% block headextra %}
+<script type="text/javascript">
+  function page_title (title) {
+    $("header.main-header .page-title").text(title);
+  }
+
+  function breadcrumb (label, url) {
+    $("header.main-header .breadcrumb").append('<li><a href="'+url+'">'+label+'</a></li>');
+  }
+
+  $(function () {
+    select_nav("QuestionList");
+  });
+
+  function search_action (url) {
+    $("#frmSearch").attr("action",url);
+  }
+</script>
+{% endblock %}
+
+{%block toolbar %}
+
+{% endblock %}
+
+{% block head %}
+<header class="main-header">
+    <div class="container">
+        <h1 class="page-title">问答</h1>
+        <ol class="breadcrumb pull-right">
+        </ol>
+    </div>
+</header>
+{% endblock %}
+
+{% block main %}
+<h1></h1>
+<div class="container">
+    <div class="row">
+
+        {% block contexts %}
+        <h1>contexts here</h1>
+        {% endblock %}
+
+    </div>
+</div>
+{% endblock %}

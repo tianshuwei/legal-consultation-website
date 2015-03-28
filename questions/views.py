@@ -72,3 +72,9 @@ def question_satisfied(request, pk_question):
 	la = get_object_or_404(Lawyer, pk=qu.lawyer_id)
 	la.plus_score()
 	return redirect('questions:question', pk_question=qu.id)
+
+def index_view(request):
+	return response(request, 'questions/index.html',
+		latest_questions_list=Question.objects.order_by('-publish_date'),
+		#TODO sort by the amount of question_text
+		hot_question=Question.objects.order_by('-publish_date') )

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 {% extends 'base.html' %}
 {% load staticfiles %}
-{% block title %}Index{% endblock %}
+{% block title %}{{ role.user.username }}{% endblock %}
 {% block headextra %}
 <script type="text/javascript">
   $(function () {
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="profile-avatar-container">
-                <img class="profile-avatar" src="../assets/img/demo/avatar230.jpg" alt="">
+                <img class="profile-avatar" src="{# {{request.user|avatarurl}} #}" alt="">
             </div>
         </div>
     </div>

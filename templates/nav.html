@@ -13,7 +13,7 @@
             <li id="nav_li_Home"><a href="{% url 'index:index' %}">首页</a></li>
             <li id="nav_li_Product"><a href="{% url 'products:index' %}">产品</a></li>
             <li id="nav_li_LawyerList"><a href="{% url 'accounts:lawyerlist' %}">律师</a></li>
-            <li id="nav_li_LawyerList"><a href="{% url 'accounts:lawyerlist' %}">问答</a></li>
+            <li id="nav_li_QuestionList"><a href="{% url 'questions:index' %}">问答</a></li>
               {% if is_lawyer %}
               <li id="nav_li_Blog">
               <a href="{% url 'blogs:home' %}" >博客</a></li>
