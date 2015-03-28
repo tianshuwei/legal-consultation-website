@@ -1,0 +1,23 @@
+[
+{
+  "fields": {
+    "state": 0,
+    "user": 1,
+    "name": "ccccc"
+  },
+  "model": "smartcontract.smartcontractcategory",
+  "pk": 1
+},
+{
+  "fields": {
+    "category": 1,
+    "name": "cccccsdsdsa",
+    "state": 0,
+    "publish_date": "2015-03-17T20:14:53.448",
+    "template": "smart/\u6d4b\u8bd5\u6587\u6863.docx",
+    "config": "\r\n\r\n>>>>>>>>>>>>>>>>>\u7b2c\u4e00\u6b65\r\n\r\n[username]\r\nwidget=text\r\nlabel=\u7528\u6237\u540d\r\nhelp_text=\u8bf7\u8f93\u5165\u7528\u6237\u540d\r\n\r\n[text]\r\nwidget=textarea\r\nlabel=\u6b63\u6587\r\n\r\n[duration]\r\nwidget=radio\r\nlabel=\u671f\u9650\r\nvalues=\u516d\u4e2a\u6708,\u4e00\u5e74,\u4e24\u5e74\r\n\r\n[version]\r\nwidget=select\r\nlabel=\u6b3e\u5f0f\r\nvalues=\u767d\u8272,\u84dd\u8272\r\n\r\n>>>>>>>>>>>>>>>>>\u7b2c\u4e8c\u6b65\r\n\r\n[price]\r\nwidget=number\r\nlabel=\u4ef7\u683c\r\n\r\n[agree]\r\nwidget=agree\r\nlabel=\u540c\u610f\u6761\u6b3e\r\n\r\n[network]\r\nwidget=checkbox\r\nlabel=\u7f51\u7edc\u7c7b\u578b\r\nvalues=GSM,WCDMA\r\n"
+  },
+  "model": "smartcontract.smartcontract",
+  "pk": 1
+}
+]
