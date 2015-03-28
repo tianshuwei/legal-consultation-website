@@ -1,124 +1,99 @@
-<!DOCTYPE HTML>
-{% extends 'base.html' %}
-{% load staticfiles %}
-{% block title %}Index{% endblock %}
+{% extends 'accounts/base_usercenter.html' %}
+{% load staticfiles %}{% load tagtools %}
 {% block headextra %}
 <script type="text/javascript">
   $(function () {
-    select_nav("Home");
+    select_nav("Profile");
+    $djform("#test_profile_edit")
   });
 </script>
 {% endblock %}
-
- {% block head %}
- <header class="services-header no-margin-bottom">
-    <div class="primary-dark-div">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-push-4 col-md-7 col-md-push-5 col-sm-6 col-sm-push-6">
-                    <div class="profile-header-text">
-                        <h1>{{ role.user.username }}</h1>
-                        <!-- <h2>@artificialreason</h2> -->
-                    </div>
+ {% block main_col %}
+ <h1>个人资料 - {{ role.user.username }}</h1>
+{% if is_master %}
+ <!-- Nav tabs -->
+              <ul class="nav nav-tabs nav-tabs-ar nav-tabs-ar-white">
+                  <li class="active"><a href="#profile_edit" data-toggle="tab">资料</a></li>
+                  <li><a href="#password" data-toggle="tab">修改密码</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                  <div class="tab-pane" id="password">
+						<form method="post" class="form-horizontal" role="form">
+							{% csrf_token %}
+                          <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">旧密码</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="password" class="form-control" id="old" placeholder="Password">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">新密码</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="password" class="form-control" id="new" placeholder="Password">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">确认密码</label>
+                            <div class="col-sm-8 col-md-5">
+                              <input type="password" class="form-control" id="confirm" placeholder="Password">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                              <button type="submit" class="btn btn-ar btn-primary">change!</button>
+                            </div>
+                          </div>
+                        </form>
+                  </div>
+            <div class="tab-pane active" id="profile_edit">
+            <form method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+            {% csrf_token %} {{ 'accounts:profile'|transacserial }}
+              <div class="form-group">
+                <label for="id_last_name" class="col-sm-2 control-label">姓</label>
+                <div class="col-sm-8 col-md-5">
+                  {{profile_edit.last_name}}
                 </div>
+              </div>
+              <div class="form-group">
+                <label for="id_first_name" class="col-sm-2 control-label">名</label>
+                <div class="col-sm-8 col-md-5">
+                  {{profile_edit.first_name}}
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="id_email" class="col-sm-2 control-label">邮箱</label>
+                <div class="col-sm-8 col-md-5">
+                  {{profile_edit.email}}
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="id_avatar" class="col-sm-2 control-label">头像</label>
+                <div class="col-sm-8 col-md-5">
+                  {{profile_edit.avatar}}
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" class="btn btn-ar btn-primary">修改</button>
+                </div>
+              </div>
+            </form>
             </div>
-            <div class="profile-avatar-container">
-                <img class="profile-avatar" src="../assets/img/demo/avatar230.jpg" alt="">
-            </div>
-        </div>
-    </div>
-</header>
-<nav class="nav-profile">
-    <div class="container">
-        <div class="col-lg-8 col-lg-push-4 col-md-7 col-md-push-5 col-sm-6 col-sm-push-6">
-            <ul class="profile-counters">
-                <li><a href="#">14 <span>Posts</span></a></li>
-                <li><a href="#">75 <span>Comments</span></a></li>
-                <li><a href="#">148 <span>Tweets</span></a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+                </div>
+{% else %}
+				<dl class="dl-horizontal">
+                    <dt>name</dt>
+                    <dd>{{ role.user.last_name }}{{ role.user.first_name }}</dd>
+                    <dt>email</dt>
+                    <dd>{{ role.user.email }}</dd>
+                    <dt>address</dt>
+                    <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Distinctio, aspernatur.</dd>
+                    <dt>other</dt>
+                    <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
+                    <dt>Felis euismod semper</dt>
+                    <dd>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</dd>
+                </dl>
+
+{% endif %}
 {% endblock %}
-
-      {% block main %}
-    <div class="clearfix"></div>
-<div class="row">
-        <div class="col-md-5">
-            <h2 class="right-line">个人信息</h2>
-            <section>
-                <div class="panel panel-primary">
-                    <div class="panel-heading"><i class="fa fa-user"></i>介绍</div>
-                    <table class="table table-striped">
-                        <tbody>
-                        <tr>
-                            <th>全名</th>
-                            <td{{profile_edit.last_name}}{{profile_edit.first_name}}</td>
-                        </tr>
-                        <tr>
-                            <th>Email</th>
-                            <td><a href="#">{{profile_edit.email}}</a></td>
-                        </tr>
-                        <tr>
-                            <th>简介</th>
-                            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, officiis, doloribus. Vitae consequatur labore dolorum laborum quibusdam et veniam distinctio doloremque suscipit cumque necessitatibus, quis quos ea, maiores, placeat iusto inventore tempore laboriosam esse fugit, cupiditate. Delectus perspiciatis unde officiis vero blanditiis magni, magnam quasi laboriosam voluptatem odio necessitatibus suscipit assumenda culpa, iure ipsum possimus libero. Laudantium repudiandae aliquid, aut non perspiciatis reprehenderit architecto officiis? Id natus non velit, repellendus corrupti fuga odio ipsa. Ex, officia provident. Officia et ipsum neque inventore enim minus, rem sunt! Maiores dolorem alias illum quo praesentium hic, molestias iusto beatae qui quia eum pariatur.</td>
-                        </tr>
-                    </tbody></table>
-                </div>
-            </section>
-        </div>
-        <div class="col-md-7">
-            <h2 class="right-line">最新动态</h2>
-            <ul class="timeline-2">
-                <li class="wow fadeInRight animated" style="visibility: visible;">
-                    <time class="timeline-time" datetime="">14/1/2012 <span>Junuary</span></time>
-                    <i class="timeline-2-point"></i>
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><i class="fa fa-comment-o"></i> Comment in <a href="#">Title post or article</a></div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, illum aspernatur placeat eveniet ullam modi asperiores perspiciatis labore animi odio ea dicta consectetur similique. Soluta officiis facilis velit sunt rem.</p>
-                        </div>
-                    </div>
-                </li>
-                <li class="wow fadeInRight animated" style="visibility: visible;">
-                    <time class="timeline-time" datetime="">31/5/2014 <span>May</span></time>
-                    <i class="timeline-2-point"></i>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><i class="fa fa-picture-o"></i> Post an Image</div>
-                        <div class="video">
-                            <img src="../assets/img/demo/office2.jpg" alt="" width="100%" class="img-responsive">
-                        </div>
-                    </div>
-                </li>
-                <li class="wow fadeInRight animated" style="visibility: visible;">
-                    <time class="timeline-time" datetime="">22/10/2012 <span>October</span></time>
-                    <i class="timeline-2-point"></i>
-                    <blockquote class="blockquote-color-bg-primary">
-                        <p><i class="fa fa-quote-right"></i> <strong>Blockquote in timeline!</strong> consectetur adipiscing elit. Integer sodales sagittis magna. consectetur adipiscing elit sed consequat, quam semper libero.</p>
-                        <footer>Someone famous in <cite title="Source Title">Source Title</cite></footer>
-                    </blockquote>
-                </li>
-                <li class="wow fadeInRight animated" style="visibility: visible;">
-                    <time class="timeline-time" datetime="">29/7/2013 <span>July</span></time>
-                    <i class="timeline-2-point"></i>
-                    <div class="panel panel-success">
-                        <div class="panel-heading">Success color in panel event</div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci, illum aspernatur placeat eveniet ullam modi asperiores perspiciatis labore animi odio ea dicta consectetur similique. Soluta officiis facilis velit sunt rem.</p>
-                        </div>
-                    </div>
-                </li>
-                <li class="wow fadeInRight animated" style="visibility: visible;">
-                    <time class="timeline-time" datetime="">15/8/2013 <span>August</span></time>
-                    <i class="timeline-2-point"></i>
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><i class="fa fa-video-camera"></i> Responsive video in timeline</div>
-                        <div class="video">
-                            <iframe src="http://player.vimeo.com/video/50061391?title=0&amp;byline=0&amp;portrait=0"></iframe>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-        {% endblock %}
