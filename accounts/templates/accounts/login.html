@@ -108,14 +108,14 @@
             <div class="text-center title-logo animated fadeInDown animation-delay-5">律橙<span>法律服务</span></div>
             <div class="transparent-div no-padding animated fadeInUp animation-delay-8">
                 <ul class="nav nav-tabs nav-tabs-transparent">
-                  <li class="active"><a href="#home" data-toggle="tab" aria-expanded="false">登录</a></li>
-                  <li class=""><a href="#profile" data-toggle="tab" aria-expanded="false">注册</a></li>
-                  <li class=""><a href="#messages" data-toggle="tab" aria-expanded="true">忘记密码</a></li>
+                  <li class=""><a href="#login" data-toggle="tab" aria-expanded="false">登录</a></li>
+                  <li class="active"><a href="#register" data-toggle="tab" aria-expanded="false">注册</a></li>
+                  <li class=""><a href="#forget" data-toggle="tab" aria-expanded="true">忘记密码</a></li>
                 </ul>
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                  <div class="tab-pane  active" id="home">
+                  <div class="tab-pane" id="login">
                     <form role="form"  id="for1" method="post">
                       {% csrf_token %} {{ "login"|transacserial }}
                         <div class="form-grou">
@@ -138,7 +138,7 @@
                         </div>
                     </form>
                   </div>
-                  <div class="tab-pane" id="profile">
+                  <div class="tab-pane  active" id="register">
                       <form role="form" id="for2">
                         {% csrf_token %} {{ "login"|transacserial }}
                           <div class="form-group">
@@ -200,7 +200,7 @@
                           </div>
                       </form>
                   </div>
-                  <div class="tab-pane" id="messages">
+                  <div class="tab-pane" id="forget">
                     <form role="form" method="post">
                       {% csrf_token %}
                         <div class="form-group">
