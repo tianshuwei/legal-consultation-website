@@ -147,7 +147,7 @@ def profile_view(request, pk_user):
 	print pk_user
 	print bMaster
 	if type(u) is Client or type(u) is Lawyer:
-		return response(request, 'accounts/profile.html',
+		return response(request, 'accounts/other_profile.html',
 		role=u,
 		is_master=bMaster)
 	else: raise Http404
