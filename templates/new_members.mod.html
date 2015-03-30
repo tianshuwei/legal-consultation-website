@@ -1,6 +1,6 @@
 {% load staticfiles %}{% load tagtools %}
 {% for member in new_members %}
 <div class="col-lg-6 col-md-6 col-sm-3 col-xs-6">
-    <a href="#" class="thumbnail"><img src="{{member.user|avatarurl}}" class="img-responsive" alt="{{member.user}}">{{member.user}}</a>
+    <a href="#" class="thumbnail"><img style="height:80px;width:80px;" src="{{member.user|avatarurl}}" class="img-responsive" alt="{{member.user}}">{{member.user}}</a>
 </div>
 {% endfor %}

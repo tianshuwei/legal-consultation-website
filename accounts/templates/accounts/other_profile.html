@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 {% extends 'base.html' %}
-{% load staticfiles %}
+{% load staticfiles %}{% load tagtools %}
 {% block title %}{{ role.user.username }}{% endblock %}
 {% block headextra %}
 <script type="text/javascript">
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="profile-avatar-container">
-                <img class="profile-avatar" src="{# {{request.user|avatarurl}} #}" alt="">
+                <img class="profile-avatar" src="{{ role.user|avatarurl }}" alt="">
             </div>
         </div>
     </div>
@@ -57,11 +57,11 @@
                         </tr>
                         <tr>
                             <th>Email</th>
-                            <td><a href="#">{{profile_edit.email}}</a></td>
+                            <td><a href="#">{{role.user.email}}</a></td>
                         </tr>
                         <tr>
                             <th>简介</th>
-                            <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A, officiis, doloribus. Vitae consequatur labore dolorum laborum quibusdam et veniam distinctio doloremque suscipit cumque necessitatibus, quis quos ea, maiores, placeat iusto inventore tempore laboriosam esse fugit, cupiditate. Delectus perspiciatis unde officiis vero blanditiis magni, magnam quasi laboriosam voluptatem odio necessitatibus suscipit assumenda culpa, iure ipsum possimus libero. Laudantium repudiandae aliquid, aut non perspiciatis reprehenderit architecto officiis? Id natus non velit, repellendus corrupti fuga odio ipsa. Ex, officia provident. Officia et ipsum neque inventore enim minus, rem sunt! Maiores dolorem alias illum quo praesentium hic, molestias iusto beatae qui quia eum pariatur.</td>
+                            <td>{{role.intro}}</td>
                         </tr>
                     </tbody></table>
                 </div>

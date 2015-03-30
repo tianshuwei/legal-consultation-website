@@ -249,7 +249,7 @@ Product detail -- {{ product.name }}
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-lg-10 col-md-9 col-sm-8">
-                                        <i class="fa fa-user"> </i> <a href="#">{{comment.user}}</a> <i class="fa fa-clock-o"></i>{{comment.publish_date}}
+                                        <i class="fa fa-user"> </i> <a href="{% url 'accounts:profile' comment.user.id %}">{{comment.user}}</a> <i class="fa fa-clock-o"></i>{{comment.publish_date}}
                                     </div>
                                     <div class="col-lg-2 col-md-3 col-sm-4">
                                         <a href="#" class="pull-right">回复</a>
