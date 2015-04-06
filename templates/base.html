@@ -50,6 +50,16 @@
         $load("base_popular_blog_articles", "{% url 'index:popular_blog_articles_mod' %}");
         $load("base_new_members", "{% url 'index:new_members_mod' %}");
     });
+
+    {% if messages %}
+    $(function () {
+        var messages = [
+            {% for message in messages %}"{{ message }}"{% if not forloop.last %},{% endif %}{% endfor %}        
+        ];
+        console.log("m"+messages.length);
+        Dialogue.alert(messages.map(function(i){return '<p>'+i+'</p>'}).join('\n'),"系统消息");
+    });
+    {% endif %}
     </script>
   </head>
 

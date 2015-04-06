@@ -182,7 +182,7 @@ function showModal (title, content, buttons, callback) {
 var Dialogue={
 	alert: function(msg, title){
 		if(title==undefined)title=msg;
-		showModal(msg, msg, ["*确定"], function(r){});
+		showModal(title, msg, ["*确定"], function(r){});
 	},
 	confirm: function(msg, title, callback){
 		showModal(title, msg, ["取消","*确定"], callback);
