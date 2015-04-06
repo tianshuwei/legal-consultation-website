@@ -135,14 +135,25 @@ class ActivityManager(models.Manager):
 			return compatible_way(self.filter(state=EnumActivityState.NEW, user__id=pk_user))
 
 	@transaction.atomic
-	def notify_new_reply(self, user, reply):
+	def notify_questions_new_question(self, question):
+		r = self.create(
+			user=question.client.user, 
+			title=u'您提出了问题 {0}'.format(
+				question.title
+			),
+			tags='question_new_question,questions,S'
+		)
+		r.save()
+
+	@transaction.atomic
+	def notify_questions_new_reply(self, user, reply):
 		r = self.create(
 			user=user, 
 			title=u'{0} 回复了您提出的问题 {1}'.format(
 				reply.replier.username, 
 				reply.question.title
 			),
-			tags='question_new_reply'
+			tags='question_new_reply,questions,S'
 		)
 		r.save()
 
@@ -154,7 +165,18 @@ class ActivityManager(models.Manager):
 				comment.user.username, 
 				comment.article.title
 			),
-			tags='blog_comment'
+			tags='blog_comment,blogs,S'
+		)
+		r.save()
+
+	@transaction.atomic
+	def notify_new_blog_article(self, article):
+		r = self.create(
+			user=article.author.user, 
+			title=u'您发表了博客文章 {0}'.format(
+				article.title
+			),
+			tags='blog_article,blogs,S'
 		)
 		r.save()
 
@@ -173,7 +195,7 @@ class ActivityManager(models.Manager):
 				order.serial, 
 				translation[order.state]
 			),
-			tags='order_update'
+			tags='orders,S'
 		)
 		r.save()
 

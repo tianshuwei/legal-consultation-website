@@ -225,6 +225,15 @@ function select_nav (suffix) {
 	$("#nav_li_"+suffix).addClass("active");
 }
 
+function set_actct (name, val) {
+	$("#actct_"+name).text(val);
+	$("#actct_"+name).removeClass("NaN")
+}
+
+function clean_actct () {
+  	$("#actcts>li span.NaN").remove();
+}
+
 function get_public_key () {
 	var z = "";
 	$.ajax({ url: "/lpub.hex", async: false, success: function (r){ z=r; } });
