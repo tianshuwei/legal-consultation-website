@@ -182,7 +182,7 @@ function showModal (title, content, buttons, callback) {
 var Dialogue={
 	alert: function(msg, title){
 		if(title==undefined)title=msg;
-		showModal(msg, msg, ["*确定"], function(r){});
+		showModal(title, msg, ["*确定"], function(r){});
 	},
 	confirm: function(msg, title, callback){
 		showModal(title, msg, ["取消","*确定"], callback);
@@ -225,35 +225,41 @@ function select_nav (suffix) {
 	$("#nav_li_"+suffix).addClass("active");
 }
 
+/**
+最新动态计数
+
+	name 		动态标签
+
+	span元素id命名规则 "#actct_"+name
+*/
+function set_actct (name, val) {
+	$("#actct_"+name).text(val);
+	$("#actct_"+name).removeClass("NaN")
+}
+
+/**
+最新动态计数清理
+清除没有数据的动态计数
+*/
+function clean_actct () {
+  	$("#actcts>li span.NaN").remove();
+}
+
+/**
+获取公钥
+*/
 function get_public_key () {
 	var z = "";
 	$.ajax({ url: "/lpub.hex", async: false, success: function (r){ z=r; } });
 	return z;
 }
 
+/**
+加密
+*/
 function encrypt(m){
 	setMaxDigits(80);
 	var key = new RSAKeyPair("10001", "", get_public_key());
 	return encryptedString(key, m, RSAAPP.PKCS1Padding);
-}
-
-function rsa_encryption(string){
-	setMaxDigits(19);
-	var key = new RSAKeyPair(
- 		"16d1507964604313b5121c52c1051115",  //e
- 		"",  
- 		"70a6c76c3631387e7eaca739f7f5cbe7"   //n
-	);
-	return encryptedString(key,string);
-}
-
-function rsa_decryption(en_string){          //测试时用的解密函数，之后可删
-	setMaxDigits(19);
-	var key = new RSAKeyPair(
- 		"16d1507964604313b5121c52c1051115",  //e
- 		"55afdcf744d8f5fe0c655fee417b3765",  //d
- 		"70a6c76c3631387e7eaca739f7f5cbe7"   //n
-	);
-	return decryptedString(key,en_string);
 }
 

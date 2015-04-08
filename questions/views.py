@@ -44,6 +44,7 @@ def new_question_view(request):
 		else:
 			messages.success(request, u'问题创建成功')
 			rec.success(u'{0} 创建问题 {1} 成功'.format(request.user.username, question.title))
+			Activity.objects.notify_questions_new_question(question)
 			return redirect('questions:question',pk_question=question.id)
 	else:
 		return response(request, 'questions/new_question.html',
@@ -61,7 +62,7 @@ def new_question_text_view(request, pk_question):
 		question=q
 	)
 	q_text.save()
-	Activity.objects.notify_new_reply(q.client.user, q_text)
+	Activity.objects.notify_questions_new_reply(q.client.user, q_text)
 	return redirect('questions:question', pk_question=q.id)
 
 @login_required
