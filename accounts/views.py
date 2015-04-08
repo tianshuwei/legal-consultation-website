@@ -143,13 +143,18 @@ def profile_view(request, pk_user):
 		bMaster=True
 	else:
 		bMaster=False
-	print request.user.id
-	print pk_user
-	print bMaster
+	from accounts.models import Remark
+	if type(u) is Client:
+		remark_count = Remark.objects.filter(client_id=get_role(u).id).count()
+	if type(u) is Lawyer:
+		remark_count = Remark.objects.filter(lawyer_id=get_role(u).id).count()
 	if type(u) is Client or type(u) is Lawyer:
+		d = datetime.now() - get_role(u).register_date
 		return response(request, 'accounts/other_profile.html',
 		role=u,
-		is_master=bMaster)
+		is_master=bMaster,
+		days=d.days,
+		remark_counts=remark_count)
 	else: raise Http404
 
 from decimal import Decimal
