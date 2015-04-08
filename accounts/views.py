@@ -92,7 +92,7 @@ def usercenter_view(request):
 
 @login_required
 def new_activities_counts_view(request):
-	return response_jquery(str(list(Activity.objects.count_new_activities(request.user.id))))
+	return response_jquery(list(Activity.objects.count_new_activities(request.user.id)))
 
 @login_required
 def questions_view(request):

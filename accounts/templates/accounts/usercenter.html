@@ -2,21 +2,6 @@
 {% load staticfiles %}
 {% block title %}{% if is_lawyer %}律师{% else %}用户{% endif %}中心 - {{ request.user.username }}{% endblock %}
 
-{% block headextra %}
-<script type="text/javascript">
-  $(function () {
-    select_nav("UserCenter");
-  });
-</script>
-<script type="text/javascript">
-$document.ready(){
-    $("#profile").removeClass("active");
-    $("#"+getUrlParam("ids")).addClass("active");
-}
-</script>
-
-{% endblock %}
-
 {% block head %}
 <header class="main-header" style="margin-bottom:80px">
     <div class="container">
@@ -26,18 +11,11 @@ $document.ready(){
 {% endblock %}
 
 {% block main_col %}
-<!-- <h1>new_activities</h1>
-这个传给左边标数字
-<pre id="new_activities"></pre> -->
 <h1>近期动态</h1>
 <div class="list-group animated fadeInRight animation-delay-8">
 {% for activity in activities %}
 <a class="list-group-item" href="#">{{activity.title}}</a>
 {% endfor %}
 </div>
-<script type="text/javascript">
-$load("new_activities", "{% url 'accounts:new_activities' %}");
-
-</script>
 {% endblock %}
 

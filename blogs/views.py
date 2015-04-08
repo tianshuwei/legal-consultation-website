@@ -80,6 +80,7 @@ def new_article_view(request):
 		else: 
 			messages.success(request, u'文章创建成功') # [LiveTest] [UnitTest]
 			rec.success(u'{0} 创建文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest]
+			Activity.objects.notify_new_blog_article(article)
 			return response_jquery({ 'success': True, 'redirect': href('blogs:index', pk_lawyer=request.user.lawyer.id)})
 	else: 
 		return response(request, 'blogs/new.html', article_create=ArticleForm())
