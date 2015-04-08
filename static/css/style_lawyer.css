@@ -330,7 +330,7 @@ border:1px solid #e1e1e1;cursor:pointer;
   animation-delay: 3s !important;
 }
 @font-face {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   src: url('../fonts/socialglyphs-webfont.eot');
   src: url('../fonts/socialglyphs-webfont.eot?#iefix') format('embedded-opentype'), url('../fonts/socialglyphs-webfont.woff') format('woff'), url('../fonts/socialglyphs-webfont.ttf') format('truetype'), url('../fonts/socialglyphs-webfont.svg#SocialGlyphsRegular') format('svg');
   font-weight: normal;
@@ -359,7 +359,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 35px;
   line-height: 1.2em;
@@ -383,7 +383,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 33px;
   line-height: 1.3em;
@@ -406,7 +406,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 34px;
   line-height: 1.2em;
@@ -429,7 +429,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 32px;
   line-height: 1.4em;
@@ -451,7 +451,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 35px;
   line-height: 1.2em;
@@ -474,7 +474,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 30px;
   line-height: 1.4em;
@@ -496,7 +496,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 32px;
   text-indent: 0px;
@@ -519,7 +519,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 32px;
   line-height: 1.3em;
@@ -542,7 +542,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 35px;
   line-height: 1.2em;
@@ -564,7 +564,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 32px;
   line-height: 1.4em;
@@ -586,7 +586,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 35px;
   line-height: 1.1em;
@@ -608,7 +608,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 36px;
   line-height: 1.2em;
@@ -630,7 +630,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 35px;
   line-height: 1.2em;
@@ -653,7 +653,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 33px;
   line-height: 1.2em;
@@ -675,7 +675,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 38px;
   line-height: 1.1em;
@@ -697,7 +697,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 38px;
   line-height: 1.1em;
@@ -720,7 +720,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 34px;
   line-height: 1.4em;
@@ -742,7 +742,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 32px;
   line-height: 1.3em;
@@ -764,7 +764,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 36px;
   line-height: 0.9em;
@@ -787,7 +787,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 32px;
   line-height: 1.3em;
@@ -809,7 +809,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 34px;
   line-height: 1.2em;
@@ -831,7 +831,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 36px;
   text-indent: 1px;
@@ -854,7 +854,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 35px;
   line-height: 1.0em;
@@ -876,7 +876,7 @@ a.social:active {
   display: block;
   text-decoration: none;
   /*Text*/
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'SocialGlyphs';
   text-align: center;
   font-size: 33px;
   line-height: 1.3em;
@@ -1220,7 +1220,7 @@ hr.double {
 }
 .blockquote-color-bg-primary:after,
 .blockquote-color-bg-dark:after {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: "FontAwesome";
   content: "\f10e";
   position: absolute;
   left: 10px;
@@ -1248,7 +1248,7 @@ hr.double {
   text-shadow: 1px 1px 0px #ffffff;
 }
 .blockquote-color-bg-light:after {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: "FontAwesome";
   content: "\f10e";
   position: absolute;
   left: 10px;
@@ -1382,7 +1382,7 @@ hr.double {
   background-color: #f3f3f3;
 }
 .sidebar-nav > li > a:after {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'FontAwesome';
   content: "\f107";
   font-size: 1.2em;
   float: right;
@@ -2692,7 +2692,7 @@ textarea.form-control:focus {
   background-color: transparent !important;
 }
 .panel-group .panel > .panel-heading.panel-plus-link a.collapsed:before {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'FontAwesome';
   content: "\f067";
   font-size: 1.4em;
   margin-right: 10px;
@@ -2703,7 +2703,7 @@ textarea.form-control:focus {
   *margin-right: .3em;
 }
 .panel-group .panel > .panel-heading.panel-plus-link a:before {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'FontAwesome';
   content: "\f068";
   font-size: 1.4em;
   margin-right: 10px;
@@ -2783,7 +2783,7 @@ textarea.form-control:focus {
   margin: 0 5px;
 }
 .panel .panel-heading-link a:after {
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: 'FontAwesome';
   content: "\f107";
   font-size: 1.2em;
   float: right;
@@ -2967,7 +2967,7 @@ textarea.form-control:focus {
   position: absolute;
   font-weight: normal;
   display: inline-block;
-  font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', b8bf53, Tahoma, Arial, Helvetica, STHeiti;
+  font-family: FontAwesome;
 }
 .dropdown > a:after {
   top: 18px;
