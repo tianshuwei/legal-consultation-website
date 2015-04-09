@@ -70,17 +70,19 @@
         <div class="col-md-7">
             <h2 class="right-line">最新动态</h2>
             <ul class="timeline-2">
+                {% for activity in activities %}
                 <li class="wow fadeInRight animated" style="visibility: visible;">
-                    <time class="timeline-time" datetime="">14/1/2015 <span>1月</span></time>
+                    <time class="timeline-time" datetime="">{{activity.publish_date|date:"m/d/y"}} <span>{{activity.publish_date|date:"m"}}月</span></time>
                     <i class="timeline-2-point"></i>
                     <div class="panel panel-default">
-						<div class="panel-heading"><i class="fa fa-comment-o"></i> {{ activities.-1.title }}</a></div>
+						<div class="panel-heading"><i class="fa fa-comment-o"></i> {{ activities.0.title }}</a></div>
                         <div class="panel-body">
 							<p>大大缩短开机速度的健康三季度打算速度所第三季度所 飞的撒房间看列第三风力可达所阿飞接口的撒娇分来打开三级阿法拉地洒落开发地洒落可。</p>
                         </div>
                     </div>
                 </li>
-                <li class="wow fadeInRight animated" style="visibility: visible;">
+                {% endfor %}
+                <!-- <li class="wow fadeInRight animated" style="visibility: visible;">
                     <time class="timeline-time" datetime="">10/1/2015 <span>1月</span></time>
                     <i class="timeline-2-point"></i>
                     <div class="panel panel-default">
@@ -119,7 +121,7 @@
                             <p>大家快乐三级阿飞的撒房间看列第三风力可达所阿飞接口的撒娇分来打开三级阿法拉地洒落开发地洒落可。</p>
                         </div>
                     </div>
-                </li>
+                </li> -->
                 <!-- <li class="wow fadeInRight animated" style="visibility: visible;">
                     <time class="timeline-time" datetime="">31/5/2014 <span>May</span></time>
                     <i class="timeline-2-point"></i>

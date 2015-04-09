@@ -147,10 +147,10 @@ def profile_view(request, pk_user):
 	remark_count = BlogComment.objects.filter(user_id=user.id).count()
 	remark_count += Comment.objects.filter(user_id=user.id).count()
 
-	recent_act = Activity.objects.filter(user_id=user.id)
+	recent_act = Activity.objects.tagged_one('C').filter(user_id=user.id)
+	#print (recent_act[0].publish_date.strftime)
 	if type(u) is Client or type(u) is Lawyer:
 		d = datetime.now() - get_role(u).register_date
-		print d.days
 		return response(request, 'accounts/other_profile.html',
 		role=u,
 		is_master=bMaster,
