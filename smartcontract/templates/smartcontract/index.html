@@ -1,6 +1,7 @@
 {% extends 'smartcontract/base.html' %}
 
 {% block contexts %}
+{% with templink='/smartcontract/detail/1/' %}
 <div class="row">
 		<div class="col-md-12" style="margin-bottom:40px" >
             <div class="title-logo animated fadeInDown animation-delay-5"  style="padding-top: 0">全自动<span>合同</span></div>
@@ -15,10 +16,10 @@
                 <p>用于生成日常的企业文书</p>
             </div>
             <div class="pricing-box-content list-group">
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 股权转让协议</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 专利转让合同</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 专利许可协议</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 商标转让合同</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 股权转让协议</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 专利转让合同</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 专利许可协议</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 商标转让合同</a>
             </div>
             <div class="pricing-box-footer">
                 <a href="#" class="btn btn-ar btn-default">请律师代写合同</a>
@@ -33,10 +34,10 @@
                 <p>用于处理日常法律事务</p>
             </div>
             <div class="pricing-box-content list-group">
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 房屋买卖合同</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 房屋抵押借贷合同</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 审核房产租赁合同</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 借款合同</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 房屋买卖合同</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 房屋抵押借贷合同</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 审核房产租赁合同</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 借款合同</a>
             </div>
             <div class="pricing-box-footer">
                 <a href="#" class="btn btn-ar btn-default">请律师代写合同</a>
@@ -51,10 +52,10 @@
                 <p>各种注册文书,帮助您快速高效注册</p>
             </div>
             <div class="pricing-box-content list-group">
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 名称预核准申请表</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 企业登记申请书</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 股东无偿提供场地协议书</a>
-                    <a href="#" class="list-group-item"><i class="fa fa-inbox"></i> 股东会决议</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 名称预核准申请表</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 企业登记申请书</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 股东无偿提供场地协议书</a>
+                    <a href="{{ templink }}" class="list-group-item"><i class="fa fa-inbox"></i> 股东会决议</a>
             </div>
             <div class="pricing-box-footer">
                 <a href="#" class="btn btn-ar btn-default">订购文档套餐</a>
@@ -62,4 +63,5 @@
         </div>
 	</div>
 </div>
+{% endwith %}
 {% endblock %}

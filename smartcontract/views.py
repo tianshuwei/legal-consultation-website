@@ -68,3 +68,35 @@ def test_pdf_view(request, pk_contract):
 
 def index_view(request):
 	return response(request,'smartcontract/index.html')
+
+def download_0409_view(request, pk_contract):
+	# TODO Unkown error: DocTemplate
+	from org.docxrenderer import DocxTemplate
+	if request.method=='POST':
+		contract = SmartContract.objects.get(id=pk_contract)
+		template = DocxTemplate(contract.template)
+		r = template.get_vars()
+		# print contract.template.url
+		# print dir(contract.template)
+
+		"""
+		{'companyName': 3, 'percent': 1, 'companyAdd': 1, 'boss': 2, 'employee': 2, 'idCode': 1, 'time': 1, 'duration': 1, 'employeeAddress': 1}
+		<QueryDict: {u'var_companyName': [u'jlkfds'], u'var_idCode': [u'cdks'], u'var_employeeAddress': [u'kjcewkl'], u'var_duration': [u'43'], u'var_time': [u'654'], u'var_percent': [u'23'], u'var_companyAdd': [u'djsal'], u'var_boss': [u'fds'], u'csrfmiddlewaretoken': [u'nFFgoXGHTIFZHiPiuQwECMZ5w53xCIu5'], u'var_employee': [u'jckldw']}>
+
+		"""
+
+		for var in r: 
+			q_var = 'var_'+var
+			if q_var in request.POST:
+				r[var]= request.POST[q_var]
+		doc=template.render(**r)
+		r=HttpResponse(content_type='application/octet-stream')
+		import os
+		# print quote(unicode(os.path.basename(contract.template.path)))
+		# TODO 文件名编码转换
+		r['Content-Disposition'] = mk_disposition("contract.docx")
+		doc.save(r)
+		return r
+
+		# return redirect('smartcontract:detail', pk_contract=1)
+	else: raise Http404
