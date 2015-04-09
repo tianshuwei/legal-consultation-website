@@ -9,8 +9,10 @@
 </script>
 {% endblock %}
 {% block contexts %}
-<h1>Render form: {{contract.name}}</h1>
+<h1>{{contract.name}}</h1>
 <div class="col-md-9 ">
+<form method="post" class="form-horizontal" role="form" action="/smartcontract/download409/1/">
+{% csrf_token %}
 <ul class="timeline-2">
 
 {% for step in steps %}
@@ -20,23 +22,27 @@
   <div class="panel panel-default">
       <div class="panel-heading">{{ step.name }}</div>
       <div class="panel-body">
-        <form method="post" class="form-horizontal" role="form">
        {% for v in step.content %}
        <div class="form-group">
           {% include 'smartcontract/widgets.html' %}
         </div>
        {% endfor %}
-        <div class="form-group">
+        <!-- <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <button type="submit" class="btn btn-ar btn-primary">save</button>
           </div>
-        </div>
-      </form> <!-- end form -->
+        </div> -->
       </div>
   </div>
 </li>
 {% endfor %}
 </ul>
+<div class="form-group">
+  <div class="col-sm-offset-2 col-sm-10">
+    <button type="submit" class="btn btn-ar btn-primary">下载</button>
+  </div>
+</div>
+</form> <!-- end form -->
 </div>
 
 {% endblock %}
