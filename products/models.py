@@ -9,6 +9,7 @@ class Product(models.Model):
 	publish_date = models.DateTimeField(u'发布日期', default=datetime.now)
 	description = models.TextField(u'产品描述', blank=True)
 	price = models.DecimalField(u'定价', max_digits=16, decimal_places=3, default=0)
+	include_html = models.CharField(u'静态html页面模板路径', max_length=255)
 
 	class Meta:
 		verbose_name = u'产品'
