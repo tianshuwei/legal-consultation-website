@@ -145,16 +145,18 @@ def profile_view(request, pk_user):
 		bMaster=False
 	from blogs.models import BlogComment
 	remark_count = BlogComment.objects.filter(user_id=user.id).count()
-	remark_count += Comment..objects.filter(user_id=user.id).count()
+	remark_count += Comment.objects.filter(user_id=user.id).count()
 
 	recent_act = Activity.objects.filter(user_id=user.id)
 	if type(u) is Client or type(u) is Lawyer:
 		d = datetime.now() - get_role(u).register_date
+		print d.days
 		return response(request, 'accounts/other_profile.html',
 		role=u,
 		is_master=bMaster,
-		days=d.days,
-		remark_counts=remark_count)
+		act_days=d.days,
+		remark_counts=remark_count,
+		activities=recent_act)
 	else: raise Http404
 
 from decimal import Decimal
