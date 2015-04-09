@@ -1,4 +1,5 @@
 {% extends 'questions/base.html' %}
+{% load tagtools %}
 
 {% block contexts %}
 <div class="row">
@@ -8,6 +9,10 @@
              </div>
         </section>
         <div class="col-md-8">
+            <!-- Tim_To_Tin:
+            后台以传出来，example:
+            {% for qu in hot_question %} 
+            链接："{% url 'questions:question' qu.id %}"-->
             <h2 class="section-title">List of Questions</h2>
             <div class="panel-group" id="accordion1">
                 <div class="panel panel-default">
@@ -227,16 +232,24 @@ i律师收费的问题，律师所在地的司法部门会出台专门的收费�
         <div class="col-md-4">
             <h2 class="section-title">还有别的问题？</h2>
 
-            <form role="form">
+            <form role="form" method="post" action="{% url 'questions:new_question'  %}">
+                {% csrf_token %}
+                {{ 'questions:new_question'|transacserial }}
+                {% if user.is_authenticated %}
                 <div class="form-group">
                     <label for="InputName">标题</label>
-                    <input type="email" class="form-control" id="InputName" placeholder="请输入标题">
+                    <input type="text" class="form-control" id="InputName" name="title" placeholder="请输入标题">
                 </div>
                 <div class="form-group">
                     <label for="InputText">正文</label>
-                    <textarea id="InputText" class="form-control" rows="5"></textarea>
+                    <textarea id="InputText" class="form-control" rows="5" name="description"></textarea>
                 </div>
                 <button type="submit" class="btn btn-ar btn-success btn-lg btn-block">发表问题</button>
+                {% else %}
+                    <div class="form-group">
+                        <label>请在 <a href="#">登录</a> 或 <a href="#">注册</a>后进行评论</label>
+                    </div>
+                {% endif%}
             </form>
 
         </div>

@@ -20,7 +20,7 @@ class QuestionForm(forms.ModelForm):
 @login_required
 def new_question_view(request):
 	if request.method=='POST':
-		rec=recorded(request,'blogs:delete_article')
+		rec=recorded(request,'questions:new_question')
 		try:
 			with transaction.atomic():
 				question=Question.objects.create(
@@ -76,6 +76,6 @@ def question_satisfied(request, pk_question):
 
 def index_view(request):
 	return response(request, 'questions/index.html',
-		latest_questions_list=Question.objects.order_by('-publish_date'),
+		latest_questions_list=Question.objects.order_by('-publish_date')[:5],
 		#TODO sort by the amount of question_text
-		hot_question=Question.objects.order_by('-publish_date') )
+		hot_question=Question.objects.order_by('-publish_date')[:5] )
