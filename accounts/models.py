@@ -199,6 +199,29 @@ class ActivityManager(models.Manager):
 		)
 		r.save()
 
+	@transaction.atomic
+	def profile_new_blog_comment(self, user, comment):
+		r = self.create(
+			user=user, 
+			title=u'评论了博客文章 {0}'.format(
+				comment.article.title
+			),
+			tags='blog_comment,blogs,C'
+		)
+		r.save()
+
+	@transaction.atomic
+	def profile_new_product_comment(self, user, product):
+		r = self.create(
+			user=user, 
+			title=u'评论了产品 {0}'.format(
+				product.name
+			),
+			tags='product_comment,products,C'
+		)
+		r.save()
+
+
 class Activity(models.Model):
 	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 	title = models.CharField(max_length=255)
