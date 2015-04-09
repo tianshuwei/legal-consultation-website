@@ -167,6 +167,7 @@ def new_comment_view(request, pk_text):
 		comment.save()
 		rec.success(u'{0} 评论文章 {1} 成功'.format(request.user.username, article.title)) # [LiveTest] [UnitTest]
 		Activity.objects.notify_new_blog_comment(article.author.user, comment)
+		Activity.objects.profile_new_blog_comment(article.author.user, comment)
 		return redirect('blogs:text', pk_text=article.id)
 	else: handle_illegal_access(request)
 
