@@ -54,49 +54,93 @@
 
 <div class="row">
 	<div class="col-md-12">
-            <h2 class="right-line">律师名录</h2>
-        </div>
-        {% for lawyer in lawyers %}
-
-	<div class="col-md-6">
-            <section>
-                <div class="panel panel-default  animated fadeInDown animation-delay-8">
-                    <div class="panel-body">
-                        <h3 href="{% url 'accounts:profile' lawyer.user.id %}" class="section-title no-margin-top">{{ lawyer }}<small class="pull-right">{{ lawyer.job_title }}</small><div class="clearfix"></div></h3>
-                        <div class="clearfix"></div>
-                        <div class="context animated fadeInDown animation-delay-8">
-	                        <div>
-		                        <img src="{{ lawyer.user|avatarurl }}" alt="" style="height: 100px; width: 100px; " class="alignleft imageborder">
-		                        <p class="no-margin-top">{{ lawyer.intro }}</p>
-		                        <!-- <p class="no-margin-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae, illum dolor alias provident officiis. Neque at accusamus quis provident delectus commodi voluptates.</p> -->
-		                        <div class="clearfix"></div>
+        <h2 class="right-line">律师名录</h2>
+    </div>
+    <div class="col-md-6">
+    {% for lawyer in lawyers %}
+    	{% if forloop.counter|divisibleby:'2' %}
+        <section>
+            <div class="panel panel-default  animated fadeInDown animation-delay-8">
+                <div class="panel-body">
+                    <h3 href="{% url 'accounts:profile' lawyer.user.id %}" class="section-title no-margin-top">{{ lawyer }}<small class="pull-right">{{ lawyer.job_title }}</small><div class="clearfix"></div></h3>
+                    <div class="clearfix"></div>
+                    <div class="context animated fadeInDown animation-delay-8">
+                        <div>
+	                        <img src="{{ lawyer.user|avatarurl }}" alt="" style="height: 100px; width: 100px; " class="alignleft imageborder">
+	                        <p class="no-margin-top">{{ lawyer.intro }}</p>
+	                        <!-- <p class="no-margin-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae, illum dolor alias provident officiis. Neque at accusamus quis provident delectus commodi voluptates.</p> -->
+	                        <div class="clearfix"></div>
+	                    </div>
+                    	<div class="caption-ar">
+		                    <div class="caption-content">
+		                        <h4><a href="{% url 'blogs:index' lawyer.id %}" class="animated fadeInDown"><i class="fa fa-circle-o-notch fa-spin"></i>enter blog</a></h4>
 		                    </div>
-                        	<div class="caption-ar">
-			                    <div class="caption-content">
-			                        <h4><a href="{% url 'blogs:index' lawyer.id %}" class="animated fadeInDown"><i class="fa fa-circle-o-notch fa-spin"></i>enter blog</a></h4>
-			                    </div>
-			                </div>
-                        </div>
-                        <p></p>
-                        <!-- <a href="#" class="social-icon-ar sm twitter animated fadeInDown"><i class="fa fa-twitter"></i></a>
-                        <a href="#" class="social-icon-ar sm google-plus animated fadeInDown"><i class="fa fa-google-plus"></i></a>
-                        <a href="#" class="social-icon-ar sm facebook animated fadeInDown"><i class="fa fa-facebook"></i></a>
-                        <a href="#" class="social-icon-ar sm instagram animated fadeInDown"><i class="fa fa-instagram"></i></a>
-                        <a href="#" class="social-icon-ar sm pinterest animated fadeInDown"><i class="fa fa-pinterest"></i></a>
-                        <a href="#" class="social-icon-ar sm linkedin animated fadeInDown"><i class="fa fa-linkedin"></i></a>
-                        <a href="#" class="social-icon-ar sm git animated fadeInDown"><i class="fa fa-github"></i></a> -->
-                        
-                        <!-- add if condition -->
-                        <div class="btn-group pull-right">
-                        	<a href="{% url 'accounts:remark' lawyer.id %}" class="btn btn-ar btn-primary "><i class="fa fa-fw fa-navicon"></i>&nbsp;资料</a>
-                        <a href="{% url 'accounts:remark' lawyer.id %}" class="btn btn-ar btn-danger"><i class="fa fa-fw fa-twitch"></i>&nbsp;评价</a>
-                        </div>
+		                </div>
+                    </div>
+                    <p></p>
+                    <!-- <a href="#" class="social-icon-ar sm twitter animated fadeInDown"><i class="fa fa-twitter"></i></a>
+                    <a href="#" class="social-icon-ar sm google-plus animated fadeInDown"><i class="fa fa-google-plus"></i></a>
+                    <a href="#" class="social-icon-ar sm facebook animated fadeInDown"><i class="fa fa-facebook"></i></a>
+                    <a href="#" class="social-icon-ar sm instagram animated fadeInDown"><i class="fa fa-instagram"></i></a>
+                    <a href="#" class="social-icon-ar sm pinterest animated fadeInDown"><i class="fa fa-pinterest"></i></a>
+                    <a href="#" class="social-icon-ar sm linkedin animated fadeInDown"><i class="fa fa-linkedin"></i></a>
+                    <a href="#" class="social-icon-ar sm git animated fadeInDown"><i class="fa fa-github"></i></a> -->
+                    
+                    <!-- add if condition -->
+                    <div class="btn-group pull-right">
+                    	<a href="{% url 'accounts:remark' lawyer.id %}" class="btn btn-ar btn-primary "><i class="fa fa-fw fa-navicon"></i>&nbsp;资料</a>
+                    <a href="{% url 'accounts:remark' lawyer.id %}" class="btn btn-ar btn-danger"><i class="fa fa-fw fa-twitch"></i>&nbsp;评价</a>
                     </div>
                 </div>
+            </div>
 
-            </section>
-    </div>
-	<div class="col-mid-6"></div>
+        </section>
+        {% endif %}
 	{% endfor %}
+	</div>
+	    <div class="col-md-6">
+    {% for lawyer in lawyers %}
+    	{% if forloop.counter0|divisibleby:'2' %}
+        <section>
+            <div class="panel panel-default  animated fadeInDown animation-delay-8">
+                <div class="panel-body">
+                    <h3 href="{% url 'accounts:profile' lawyer.user.id %}" class="section-title no-margin-top">{{ lawyer }}<small class="pull-right">{{ lawyer.job_title }}</small><div class="clearfix"></div></h3>
+                    <div class="clearfix"></div>
+                    <div class="context animated fadeInDown animation-delay-8">
+                        <div>
+	                        <img src="{{ lawyer.user|avatarurl }}" alt="" style="height: 100px; width: 100px; " class="alignleft imageborder">
+	                        <p class="no-margin-top">{{ lawyer.intro }}</p>
+	                        <!-- <p class="no-margin-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae, illum dolor alias provident officiis. Neque at accusamus quis provident delectus commodi voluptates.</p> -->
+	                        <div class="clearfix"></div>
+	                    </div>
+                    	<div class="caption-ar">
+		                    <div class="caption-content">
+		                        <h4><a href="{% url 'blogs:index' lawyer.id %}" class="animated fadeInDown"><i class="fa fa-circle-o-notch fa-spin"></i>enter blog</a></h4>
+		                    </div>
+		                </div>
+                    </div>
+                    <p></p>
+                    <!-- <a href="#" class="social-icon-ar sm twitter animated fadeInDown"><i class="fa fa-twitter"></i></a>
+                    <a href="#" class="social-icon-ar sm google-plus animated fadeInDown"><i class="fa fa-google-plus"></i></a>
+                    <a href="#" class="social-icon-ar sm facebook animated fadeInDown"><i class="fa fa-facebook"></i></a>
+                    <a href="#" class="social-icon-ar sm instagram animated fadeInDown"><i class="fa fa-instagram"></i></a>
+                    <a href="#" class="social-icon-ar sm pinterest animated fadeInDown"><i class="fa fa-pinterest"></i></a>
+                    <a href="#" class="social-icon-ar sm linkedin animated fadeInDown"><i class="fa fa-linkedin"></i></a>
+                    <a href="#" class="social-icon-ar sm git animated fadeInDown"><i class="fa fa-github"></i></a> -->
+                    
+                    <!-- add if condition -->
+                    <div class="btn-group pull-right">
+                    	<a href="{% url 'accounts:remark' lawyer.id %}" class="btn btn-ar btn-primary "><i class="fa fa-fw fa-navicon"></i>&nbsp;资料</a>
+                    <a href="{% url 'accounts:remark' lawyer.id %}" class="btn btn-ar btn-danger"><i class="fa fa-fw fa-twitch"></i>&nbsp;评价</a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        {% endif %}
+	{% endfor %}
+	</div>
+	
+
 </div>
 {% endblock %}
