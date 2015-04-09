@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
 from products.models import Product,Comment,Order,EnumOrderState
-from accounts.models import Lawyer,Client
+from accounts.models import Lawyer,Client,Activity
 from django.views import generic
 
 def index_view(request):
@@ -20,6 +20,7 @@ def new_comment_view(request, pk_product):
 	p = get_object_or_404(Product, pk=pk_product)
 	comment = Comment.objects.create(text=request.POST['txt_comment'], user=request.user, product=p)
 	comment.save()
+	Activity.objects.profile_new_product_comment(request.user, p)
 	return redirect('products:detail', pk_product=p.id)
 
 @login_required

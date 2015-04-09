@@ -3,7 +3,7 @@ from org.tools import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from accounts.models import Lawyer, Client, Remark, Activity
-from products.models import Order
+from products.models import Order,Comment
 from org.settings import RSA_LOGIN_KEY
 from org.rsa_authentication import decrypt
 
@@ -143,11 +143,11 @@ def profile_view(request, pk_user):
 		bMaster=True
 	else:
 		bMaster=False
-	from accounts.models import Remark
-	if type(u) is Client:
-		remark_count = Remark.objects.filter(client_id=get_role(u).id).count()
-	if type(u) is Lawyer:
-		remark_count = Remark.objects.filter(lawyer_id=get_role(u).id).count()
+	from blogs.models import BlogComment
+	remark_count = BlogComment.objects.filter(user_id=user.id).count()
+	remark_count += Comment..objects.filter(user_id=user.id).count()
+
+	recent_act = Activity.objects.filter(user_id=user.id)
 	if type(u) is Client or type(u) is Lawyer:
 		d = datetime.now() - get_role(u).register_date
 		return response(request, 'accounts/other_profile.html',
