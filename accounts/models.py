@@ -221,6 +221,13 @@ class ActivityManager(models.Manager):
 		)
 		r.save()
 
+	def tagged_one(self, tag):
+		if POSTGRESQL:
+			# return self.filter(tags__regex=''.join([r'\m',tag,r'\M'])) # word boundary used in psql
+			return self.extra(where=["regexp_split_to_array(tags,',\x20*')@>array[%s]"],params=[tag])
+		else:
+			return self.filter(tags__regex=''.join([r'[[:<:]]',tag,r'[[:>:]]'])) # word boundary used in psql
+
 
 class Activity(models.Model):
 	user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
