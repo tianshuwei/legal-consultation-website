@@ -7,9 +7,14 @@ from questions.models import Question, Question_text, EnumUser_flag
 @login_required
 def question_view(request, pk_question):
 	question=get_object_or_404(Question, pk=pk_question)
+	if request.user.id==question.client.user.id:
+		is_master=True
+	else:
+		is_master=False
 	return response(request, 'questions/question.html',
 		question=question,
-		question_texts=Question_text.objects.filter(question_id=pk_question)
+		question_texts=Question_text.objects.filter(question_id=pk_question),
+		is_master=is_master
 	)
 
 class QuestionForm(forms.ModelForm):
