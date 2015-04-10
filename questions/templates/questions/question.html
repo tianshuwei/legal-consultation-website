@@ -1,7 +1,12 @@
 {% extends 'accounts/base.html' %}
+{%load tagtools%}
 {% block title %}问题正文-{{ question.title }}{% endblock %}
 {% block contexts %}
-<h2 class="section-title" style="margin-top:0">{{ question.title }}</h2>
+<h2 class="section-title" style="margin-top:0">{% if question.state %}
+<span class="badge badge-round badge-primary">已满意</span>
+{% else %}
+{#{% if is_master %}#}<a href="{% url 'questions:satisfied' question.id %}"><button class="btn btn-primary">满意</button></a>{#{% endif %}#}
+{% endif %}{{ question.title }}</h2>
 <div class="panel panel-default">
 	<div class="panel-body">
 		{{ question.description }}
@@ -11,19 +16,28 @@
 	</div>
 </div>
 
-
-{% for question_text in question_texts %}
-<div>
-	<p> {% if question_text.user_flag %} 追问:
-		{% else %} 回答:
-		{% endif %}
-	 {{question_text.text}} </p>
-	<p> {{comment.publish_date}} </p>
-</div>
-{% endfor %}
-
 <section class="comment-form">
     <h2 class="section-title">回答</h2>
+    {% for question_text in question_texts %}
+    <ul class="list-unstyled">
+        <li class="comment">
+            <div class="panel {% if question_text.user_flag %}panel-default{% else %}panel-primary{% endif %}">
+                <div class="panel-body">
+                    <img src="{{ question_text.replier|avatarurl }}" alt="avatar" class="imageborder alignleft"  style="width: 100px; height: 100px;">
+                    <p>{{question_text.text}}</p>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-9 col-sm-8">
+                            <i class="fa fa-user"> </i> <a href="{% url 'accounts:profile' question_text.replier.id %}">{{ question_text.replier }}</a> <i class="fa fa-clock-o"></i>{{question_text.publish_date}}
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    {% endfor %}
     <form action="{% url 'questions:new_question_text' question.id %}" method="post" role="form">
     {% csrf_token %}
     {% if user.is_authenticated %}
@@ -33,17 +47,13 @@
         <button type="submit" class="btn btn-ar pull-right btn-primary">Submit</button>
     {% else %}
     	<div class="form-group">
-            <label for="inputName">please <a href="#">login</a>or <a href="#">sign up</a> before answer question.</label>
+            <label for="inputName">请先<a href="#">登录</a>或者<a href="#">注册</a>再回答问题</label>
         </div>
     {% endif %}
     </form>
 </section>
 
-{% if question.state %}
-<div>已满意</div>
-{% else %}
-<a href="{% url 'questions:satisfied' question.id %}"><button>满意</button></a>
-{% endif %}
+
 
 <a href="{% url 'accounts:usercenter' %}">返回用户中心</a>
 {% endblock %}

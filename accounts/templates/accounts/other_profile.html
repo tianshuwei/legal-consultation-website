@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="profile-avatar-container">
-                <img class="profile-avatar" src="{{ role.user|avatarurl }}" alt="">
+                <img class="profile-avatar" src="{{ role.user|avatarurl }}" alt="" style="width: 250px;height: 250px;">
             </div>
         </div>
     </div>
@@ -34,7 +34,6 @@
             <ul class="profile-counters">
                 <li><a href="#">{{ act_days }} <span>活跃天数</span></a></li>
                 <li><a href="#">{{ remark_counts }} <span>评论数</span></a></li>
-                <li><a href="#">148 <span>Tweets</span></a></li>
             </ul>
         </div>
     </div>
@@ -76,9 +75,7 @@
                     <i class="timeline-2-point"></i>
                     <div class="panel panel-default">
 						<div class="panel-heading"><i class="fa fa-comment-o"></i> {{ activities.0.title }}</a></div>
-                        <div class="panel-body">
-							<p>大大缩短开机速度的健康三季度打算速度所第三季度所 飞的撒房间看列第三风力可达所阿飞接口的撒娇分来打开三级阿法拉地洒落开发地洒落可。</p>
-                        </div>
+
                     </div>
                 </li>
                 {% endfor %}
