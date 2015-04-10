@@ -3,7 +3,7 @@
 {% block title %}问题正文-{{ question.title }}{% endblock %}
 {% block contexts %}
 <h2 class="section-title" style="margin-top:0">{% if question.state %}
-<span class="badge badge-round badge-primary">已 </span>
+<span class="badge badge-round badge-primary">已解决 </span>
 {% else %}
 {% if is_master %}<a href="{% url 'questions:satisfied' question.id %}"><button class="btn btn-primary">解决</button></a>{% endif %}
 {% endif %}{{ question.title }}</h2>

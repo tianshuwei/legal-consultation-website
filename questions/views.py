@@ -75,8 +75,8 @@ def question_satisfied(request, pk_question):
 	# TODO 加入容错
 	qu = get_object_or_404(Question, pk=pk_question)
 	qu.finish()
-	la = get_object_or_404(Lawyer, pk=qu.lawyer_id)
-	la.plus_score()
+	#la = get_object_or_404(Lawyer, pk=qu.lawyer_id)
+	#la.plus_score()
 	return redirect('questions:question', pk_question=qu.id)
 
 def index_view(request):
