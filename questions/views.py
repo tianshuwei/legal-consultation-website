@@ -84,3 +84,9 @@ def index_view(request):
 		latest_questions_list=Question.objects.order_by('-publish_date')[:5],
 		#TODO sort by the amount of question_text
 		hot_question=Question.objects.order_by('-publish_date')[:5] )
+
+def question_all_view(request):
+	return response(request, 'questions/index.html',
+		latest_questions_list=Question.objects.order_by('-publish_date'),
+		#TODO sort by the amount of question_text
+		hot_question=Question.objects.order_by('-publish_date') )
