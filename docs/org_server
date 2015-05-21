@@ -1,0 +1,74 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:            
+# Description:       A simple example for daemon app
+### END INIT INFO
+
+
+if [ -f /etc/init.d/functions ]
+then
+    . /etc/init.d/functions
+else
+    . /lib/lsb/init-functions
+fi
+
+NAME=org_server
+DAEMON="/home/tanki/org/manage.py runserver 0.0.0.0:6001"
+LOCKFILE=/var/lock/subsys/$DAEMON
+PIDFILE=/var/run/$NAME.pid
+
+#start function
+start(){
+    echo -n "Starting daemon: "$NAME
+    start-stop-daemon -b --start --quiet --pidfile $PIDFILE --exec $DAEMON
+    echo "."
+}
+#stop function
+stop(){
+    echo "Stopping $DAEMON ..."
+    if pidof $DAEMON > /dev/null; then
+        killall -9 $DAEMON > /dev/null
+        rm -rf $PIDFILE
+        echo "Stop $DAEMON Success..."
+    fi
+}
+
+
+#restart function
+restart(){
+    start
+    stop
+}
+
+#status function 
+status(){
+    if pidof -o %PPID $DAEMON > /dev/null; then
+             echo $NAME" is running..."
+             exit 0
+    else
+             echo $NAME" is not running..."
+             exit 1
+    fi
+}
+
+
+case "$1" in
+start)
+    start
+    ;;
+stop)
+    stop
+    ;;
+reload|restart)
+    stop
+    sleep 2
+    start
+    ;;
+status)
+    status
+    ;;
+*)
+    echo $"Usage: $0 {start|stop|restart|status}"
+    exit 1
+esac
