@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from accounts.models import Lawyer, Client, Remark, Activity
 from products.models import Order,Comment
+from questions.models import Question,EnumQuestionState
 from org.settings import RSA_LOGIN_KEY
 from org.rsa_authentication import decrypt
 
@@ -97,10 +98,14 @@ def new_activities_counts_view(request):
 @login_required
 def questions_view(request):
 	u = get_role(request.user)
+	is_client = (type(u) is Client)
+	qs = Question.objects.filter(state=EnumQuestionState.OPEN)
 	if type(u) is Client or type(u) is Lawyer:
 		return response(request, 'accounts/question_list.html',
 			questions=paginated(lambda: request.GET.get('page'), 10, 
-					u.question_set.order_by('-publish_date')))
+					u.question_set.order_by('-publish_date')),
+			is_client=is_client,
+			qs_all = qs)
 	else: raise Http404
 
 @login_required

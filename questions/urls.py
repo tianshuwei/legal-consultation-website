@@ -8,5 +8,6 @@ urlpatterns = patterns('',
 	url(r'^(?P<pk_question>\d+)/satisfied/$',views.question_satisfied,name='satisfied'),
 	url(r'^new/$', views.new_question_view, name='new_question'),
 	url(r'^index/$', views.index_view, name='index'),
+	url(r'^all/$', views.question_all_view, name='all_question'),
 )
 

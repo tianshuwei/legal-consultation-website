@@ -9,10 +9,19 @@
 </script>
 {% endblock %}
 {% block main_col %}
+{% if is_client %}
 <a href="{% url 'questions:new_question' %}">我要提问</a>
 <div class="list-group animated fadeInLeft animation-delay-8">
 {% for question in questions %}
 <a class="list-group-item" href="{% url 'questions:question' question.id %}">{{question.title}}</a>
 {% endfor %}
 </div>
+{% else %}
+<div class="list-group animated fadeInLeft animation-delay-8">
+{% for question in questions %}
+<a class="list-group-item" href="{% url 'questions:question' question.id %}">{{question.title}}</a>
+{% endfor %}
+</div>
+{% endif %}
+
 {% endblock %}
