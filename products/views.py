@@ -61,9 +61,9 @@ def new_order_view(request, pk_product):
 @login_required
 def order_detail_view(request, pk_order):
 	# TODO 按照上面new_order_view修改
-	rec=recorded(request, 'products:order_detail')
 	order = get_object_or_404(Order, pk=pk_order)
 	if request.method=='POST':
+		rec=recorded(request, 'products:order_detail')
 		try:
 			if request.user.client==order.client:
 				order.text=request.POST['text']
@@ -74,7 +74,9 @@ def order_detail_view(request, pk_order):
 			messages.success(request, u'备注修改成功')
 			rec.success(u'{0} 订单备注修改成功 {1}'.format(request.user.username, order.serial))
 		return redirect('accounts:order_detail', pk_order=pk_order)
-	else: return response(request, 'accounts/order_detail.html', order=order)
+	else: return response(request, 'accounts/order_detail.html', order=order, 
+		EN_ORDERPROCESS=True # 启用Order-Lawyer间的1:n联系OrderProcess
+		)
 
 @login_required
 def order_delete_view(request, pk_order):
