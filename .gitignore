@@ -6,4 +6,4 @@ deployment/*
 templates/mod/*test.html
 */migrations/
 build/
-
+*.out

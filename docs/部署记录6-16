@@ -1,0 +1,9 @@
+locale-gen
+vi /etc/environment
+  LC_ALL="en_US.utf-8"
+settings.py
+  #bootstrap3
+sudo pg_createcluster 9.3 main --start
+sudo service postgresql start
+create role org_dev createdb password 'org_dev' login;
+
