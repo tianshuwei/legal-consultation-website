@@ -49,7 +49,7 @@ class Order(models.Model):
 	client = models.ForeignKey('accounts.Client', on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
 	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True, blank=True)
-	serial = models.CharField(u'订单号', max_length=25, default=gen_order_serial, editable=False)
+	serial = models.CharField(u'订单号', max_length=25, default=gen_order_serial, editable=False, unique=True)
 	state = models.IntegerField(u'订单状态', default=EnumOrderState.UNPAID, choices=EnumOrderState.get_choices())
 	text = models.TextField(u'订单备注', blank=True)
 	publish_date = models.DateTimeField(u'创建日期', default=datetime.now)
