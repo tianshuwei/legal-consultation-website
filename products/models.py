@@ -48,7 +48,7 @@ def gen_order_serial():
 class Order(models.Model):
 	client = models.ForeignKey('accounts.Client', on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True)
+	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True, blank=True)
 	serial = models.CharField(u'订单号', max_length=25, default=gen_order_serial, editable=False)
 	state = models.IntegerField(u'订单状态', default=EnumOrderState.UNPAID, choices=EnumOrderState.get_choices())
 	text = models.TextField(u'订单备注', blank=True)
@@ -96,3 +96,10 @@ class Order(models.Model):
 	def __unicode__(self):
 		return u'{0}: {1}'.format(self.serial, self.product.name)
 
+class OrderProcess(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True)
+
+	class Meta:
+		unique_together = (("order", "lawyer"), )
+		

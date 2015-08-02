@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
-from products.models import Product,Comment,Order,EnumOrderState
+from products.models import Product,Comment,Order,EnumOrderState,OrderProcess
 from accounts.models import Lawyer,Client,Activity
 from django.views import generic
 
@@ -102,7 +102,7 @@ def order_delete_view(request, pk_order):
 def order_pay_view(request, pk_order):
 	rec=recorded(request, 'products:order_pay')
 	order = get_object_or_404(Order, pk=pk_order)
-	if request.method=='POST':	
+	if request.method=='POST':
 		try:
 			if request.user.client==order.client:
 				a=order.client.minus_balance(order.product.price)
@@ -113,8 +113,30 @@ def order_pay_view(request, pk_order):
 					return response_jquery({'r':'success'})
 				else:
 					messages.error(request, u'账户余额不足')
-					rec.success(u'{0} 订单付款余额不足 {1}'.format(request.user.username, order.serial))
+					rec.error(u'{0} 订单付款余额不足 {1}'.format(request.user.username, order.serial))
 					return response_jquery({'r':'balance_false'})
 		except:
 			messages.error(request, u'订单取消失败')
 			return response_jquery({'r':'false'})
+
+@login_required
+def process_new_order_view(request):
+	rec=recorded(request, 'products:order_process')
+	if request.method=='POST':
+		try:
+			serial = request.POST['serial']
+			order = Order.objects.get(serial=serial)
+			lawyer = get_role(request.user)
+			assert type(lawyer) is Lawyer
+			order_process = OrderProcess.objects.create(
+				order=order,
+				lawyer=lawyer
+			)
+			order_process.save()
+			messages.success(request, u'加入订单成功')
+			rec.success(u'{0} 加入订单成功 {1}'.format(request.user.username, serial))			
+		except:
+			messages.error(request, u'加入订单失败')
+			rec.error(u'{0} 加入订单失败 {1}'.format(request.user.username, serial))
+		return redirect('accounts:order_list')
+	else: raise Http404

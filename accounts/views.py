@@ -111,11 +111,15 @@ def questions_view(request):
 @login_required
 def orders_view(request):
 	u = get_role(request.user)
-	print u
-	if type(u) is Client or type(u) is Lawyer:
+	if type(u) is Client:
 		return response(request, 'accounts/order_list.html',
 			orders=paginated(lambda: request.GET.get('page'), 10, 
 				u.order_set.order_by('-publish_date')),test=True)
+	elif type(u) is Lawyer:
+		return response(request, 'accounts/order_list.html',
+			orders=paginated(lambda: request.GET.get('page'), 10, 
+				[order_process.order for order_process in u.orderprocess_set.all()]),
+			test=True)
 	else: raise Http404
 
 class ProfileEditForm(forms.ModelForm):

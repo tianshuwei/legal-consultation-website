@@ -10,5 +10,5 @@ urlpatterns = patterns('',
 	url(r'^order\.(?P<pk_order>\d+)/$', views.order_detail_view, name='order_detail'),
 	url(r'^order\.(?P<pk_order>\d+)/remove/$', views.order_delete_view, name='order_delete'),
 	url(r'^order\.(?P<pk_order>\d+)/pay/$', views.order_pay_view, name='order_pay'),
+	url(r'^orders/process/$', views.process_new_order_view, name='process_new_order'),
 )
-
