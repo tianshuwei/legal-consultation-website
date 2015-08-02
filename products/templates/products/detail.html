@@ -18,7 +18,7 @@ Product detail -- {{ product.name }}
             <script type="text/javascript">
 			function new_order()
 			{
-				showModal(
+				/* showModal(
                     "确认订购",
                     "{% csrf_token %} "+ '{{ "product_new_order"|transacserial }}' +
                     '<select name="lawyer_id">'+
@@ -40,7 +40,24 @@ Product detail -- {{ product.name }}
                             );
                         }
                     }
-                );
+                ); */
+				showModal(
+					"确认订购",
+                    "{% csrf_token %} "+ '{{ "product_new_order"|transacserial }}',
+                    ["取消","$确定"],
+                    function (r) {
+                        if(typeof r=="object"){ 
+                            $.post(
+                                "{% url 'products:new_order' product.id %}",
+                                r,
+                                function(data,status){
+                                    alert(data.success);
+                                    window.location.reload();
+                                }
+                            );
+                        }
+                    }
+				);
 			}
 			</script>
 			{% endif %}

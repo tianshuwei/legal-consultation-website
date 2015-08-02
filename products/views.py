@@ -36,9 +36,9 @@ def new_order_view(request, pk_product):
 				order = Order.objects.create( 
 					client=client,
 					product=product,
-					lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
+					# lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
 					state=EnumOrderState.UNPAID,
-					text=request.POST['text']
+					# text=request.POST['text']
 				)
 				order.save()
 		except Product.DoesNotExist:
