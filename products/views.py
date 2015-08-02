@@ -53,7 +53,7 @@ def new_order_view(request, pk_product):
 			# TODO 必要时调用 handle_illegal_access 参考org/tools.py中的文档
 			return response_jquery({ 'success': False })
 		else: 
-			messages.success(request, u'订单提交成功')
+			messages.success(request, u'订单提交成功 订单号{0}'.format(order.serial))
 			rec.success(u'{0} 订单提交成功 {1}'.format(request.user.username, order.serial))
 			return response_jquery({ 'success': True })
 	else: raise Http404
@@ -128,15 +128,17 @@ def process_new_order_view(request):
 			order = Order.objects.get(serial=serial)
 			lawyer = get_role(request.user)
 			assert type(lawyer) is Lawyer
-			order_process = OrderProcess.objects.create(
-				order=order,
-				lawyer=lawyer
-			)
-			order_process.save()
-			messages.success(request, u'加入订单成功')
-			rec.success(u'{0} 加入订单成功 {1}'.format(request.user.username, serial))			
+			with transaction.atomic():
+				order_process = OrderProcess.objects.create(
+					order=order,
+					lawyer=lawyer
+				)
+				order_process.save()
 		except:
 			messages.error(request, u'加入订单失败')
 			rec.error(u'{0} 加入订单失败 {1}'.format(request.user.username, serial))
+		else:
+			messages.success(request, u'加入订单成功')
+			rec.success(u'{0} 加入订单成功 {1}'.format(request.user.username, serial))			
 		return redirect('accounts:order_list')
 	else: raise Http404
