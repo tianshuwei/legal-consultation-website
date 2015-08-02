@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random, hashlib
 from datetime import datetime
 from django.db import models, transaction
 from django.contrib.auth.models import User
@@ -34,8 +35,15 @@ class EnumOrderState(Enum):
 	CANCELLED = 3
 
 def gen_order_serial():
-	# TODO 设计订单号格式
-	return '='*25
+	serial=[
+		datetime.now().strftime("%Y%m%d%H%M%S"), # len = 14
+		''.join(random.choice('QWERTYUIOPASDFGHJKLZXCVBNMZY') for i in xrange(4)), # len = 4
+	]
+	hashcode=hashlib.md5()
+	for s in serial:
+		hashcode.update(s)
+	serial.append('H%s'%hashcode.hexdigest().upper()[:6]) # len = 7
+	return ''.join(serial) # total len = 25
 
 class Order(models.Model):
 	client = models.ForeignKey('accounts.Client', on_delete=models.SET_NULL, null=True)
