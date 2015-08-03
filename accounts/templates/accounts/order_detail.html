@@ -25,5 +25,37 @@
 	<a href="{% url 'products:order_delete' order.id %}">取消订单</a>
 </div>
 
+
+<h2>文档列表</h2>
+<dl>
+	{% for order_doc in order.orderdoc_set.all %}
+	<dt>{{order_doc}}
+		<button>预览</button>
+		<button>下载</button>
+		{% if is_client %}
+		<form action="{% url 'products:order_del_uploaded' order_doc.id %}" method="post">
+		{% csrf_token %}
+		<input type="submit" value="删除" />
+		</form>
+		{% endif %}
+	</dt>
+	{% endfor %}
+</dl>
+{% if is_client %}
+<form action="{% url 'products:order_upload' order.id %}" enctype="multipart/form-data" method="post">
+	<strong>上传文档</strong>{% csrf_token %}
+	<div>
+		<label for="id_title">文档标题</label>
+		{{ orderdocuploadform.title }}
+	</div>
+	<div>
+		<label for="id_doc">文档上传</label>
+		{{ orderdocuploadform.doc }}
+	</div>
+	<input type="submit" value="上传" />
+</form>
+{% endif %}
+{% if is_lawyer %}
+{% endif %}
 {% endblock %}
 

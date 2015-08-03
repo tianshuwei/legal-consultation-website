@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import random, hashlib
+import random, hashlib, os
 from datetime import datetime
 from django.db import models, transaction
 from django.contrib.auth.models import User
@@ -97,9 +97,16 @@ class Order(models.Model):
 		return u'{0}: {1}'.format(self.serial, self.product.name)
 
 class OrderProcess(models.Model):
-	order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
 	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True)
 
 	class Meta:
 		unique_together = (("order", "lawyer"), )
-		
+
+class OrderDoc(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+	title = models.CharField(u'文档标题', max_length=255, blank=True)
+	doc = models.FileField(upload_to='order/doc/', max_length=255)
+
+	def __unicode__(self):
+		return self.title if self.title else os.path.basename(unicode(self.doc))

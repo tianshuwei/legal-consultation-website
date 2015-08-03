@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
-from products.models import Product,Comment,Order,EnumOrderState,OrderProcess
+from products.models import Product,Comment,Order,EnumOrderState,OrderProcess,OrderDoc
 from accounts.models import Lawyer,Client,Activity
 from django.views import generic
 
@@ -75,7 +75,8 @@ def order_detail_view(request, pk_order):
 			rec.success(u'{0} 订单备注修改成功 {1}'.format(request.user.username, order.serial))
 		return redirect('accounts:order_detail', pk_order=pk_order)
 	else: return response(request, 'accounts/order_detail.html', order=order, 
-		EN_ORDERPROCESS=True # 启用Order-Lawyer间的1:n联系OrderProcess
+		EN_ORDERPROCESS=True, # 启用Order-Lawyer间的1:n联系OrderProcess
+		orderdocuploadform = OrderDocUploadForm()
 		)
 
 @login_required
@@ -143,4 +144,51 @@ def process_new_order_view(request):
 			messages.success(request, u'加入订单成功')
 			rec.success(u'{0} 加入订单成功 {1}'.format(request.user.username, serial))			
 		return redirect('accounts:order_list')
+	else: raise Http404
+
+class OrderDocUploadForm(forms.ModelForm):
+	class Meta:
+		model = OrderDoc
+		fields = ['title', 'doc']
+
+@login_required
+def upload_order_doc(request, pk_order):
+	if request.method=='POST':
+		try:
+			with transaction.atomic():
+				order_doc = OrderDocUploadForm(request.POST, request.FILES).save(commit=False)
+				order_doc.order = get_object_or_404(Order, pk=pk_order)
+				order_doc.save()
+		except: messages.error(request, u'上传失败')
+		else: messages.success(request, u'上传成功')
+		return redirect('products:order_detail', pk_order=pk_order)
+	else: raise Http404
+
+@login_required
+def upload_order_doc(request, pk_order):
+	if request.method=='POST':
+		try:
+			with transaction.atomic():
+				order_doc = OrderDocUploadForm(request.POST, request.FILES).save(commit=False)
+				order_doc.order = get_object_or_404(Order, pk=pk_order)
+				order_doc.save()
+		except: messages.error(request, u'上传失败')
+		else: messages.success(request, u'上传成功')
+		return redirect('products:order_detail', pk_order=pk_order)
+	else: raise Http404
+
+@login_required
+def delete_order_doc(request, pk_orderdoc):
+	if request.method=='POST':
+		try:
+			with transaction.atomic():
+				order_doc = get_object_or_404(OrderDoc, pk=pk_orderdoc)
+				pk_order = order_doc.order.id
+				order_doc.delete()
+		except:
+			messages.error(request, u'删除失败')
+			return redirect('accounts:order_list')
+		else:
+			messages.success(request, u'删除成功')
+			return redirect('products:order_detail', pk_order=pk_order)
 	else: raise Http404
