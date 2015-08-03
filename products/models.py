@@ -110,3 +110,11 @@ class OrderDoc(models.Model):
 
 	def __unicode__(self):
 		return self.title if self.title else os.path.basename(unicode(self.doc))
+
+class OrderProcessContract(models.Model):
+	orderprocess = models.ForeignKey(OrderProcess, on_delete=models.CASCADE)
+	contract = models.ForeignKey('smartcontract.SmartContract', on_delete=models.SET_NULL, null=True)
+
+	def __unicode__(self):
+		return self.contract.name
+		

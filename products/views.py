@@ -192,3 +192,12 @@ def delete_order_doc(request, pk_orderdoc):
 			messages.success(request, u'删除成功')
 			return redirect('products:order_detail', pk_order=pk_order)
 	else: raise Http404
+
+def query_order_contract_templates(request, pk_order):
+	from smartcontract.models import SmartContract
+	key = request.GET['q'].strip() if 'q' in request.GET else ''
+	return response(request, 'products/order_contract_search_result.mod.html',
+		order_contracts=SmartContract.objects.filter(name__contains=key))
+
+def list_orderprocess_contract_templates(request, pk_orderprocess):
+	pass
