@@ -2,10 +2,7 @@
 <dt>{{contract}}
 	{% if is_client %} {# type(contract) is SmartContract #}
 	{% if not contract.filledin %}<span style="color:red;">[未填写]</span>{% endif %}
-	<form action="{#{% url 'products:order_del_uploaded' order_doc.id %}#}" method="post">
-	{% csrf_token %}
-	<input type="submit" value="填写" />
-	</form>
+	<button>填写</button>
 	{% endif %}
 	{% if is_lawyer %} {# type(contract) is OrderProcessContract #}
 	<button onclick="del_contract('{% url 'products:order_del_contract' contract.id %}')">移除</button>

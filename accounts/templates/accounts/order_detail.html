@@ -104,21 +104,18 @@
 {% endif %}
 <dl id="orderprocess_contract_list"></dl>
 
-<!-- <h2>合同实例</h2>
+<h2>合同实例</h2>
 <dl>
 	{% for order_doc in order.orderdoc_set.all %}
-	<dt>{{order_doc}}
+	<dt>合同实例
 		<button>预览</button>
 		<button>下载</button>
 		{% if is_client %}
-		<form action="{% url 'products:order_del_uploaded' order_doc.id %}" method="post">
-		{% csrf_token %}
-		<input type="submit" value="删除" />
-		</form>
+		<button>删除</button>
 		{% endif %}
 	</dt>
 	{% endfor %}
-</dl> -->
+</dl>
 
 {% endblock %}
 
