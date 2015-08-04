@@ -2,6 +2,7 @@
 {% block title %}订单{% endblock %}
 {% block main %}
 <h1>订单</h1>
+<div>订单号 {{ order.serial }}</div>
 <div>客户 <a href="{% url 'accounts:profile' order.client.user.id %}">{{ order.client.user.username }}</a></div>
 {% if EN_ORDERPROCESS %}
 {% for order_process in order.orderprocess_set.all %}
