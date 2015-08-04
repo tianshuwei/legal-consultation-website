@@ -112,6 +112,7 @@ class OrderDoc(models.Model):
 	order = models.ForeignKey(Order, on_delete=models.CASCADE)
 	title = models.CharField(u'文档标题', max_length=255, blank=True)
 	doc = models.FileField(upload_to='order/doc/', max_length=255)
+	publish_date = models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
 		return self.title if self.title else os.path.basename(unicode(self.doc))
