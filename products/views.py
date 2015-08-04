@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
-from products.models import Product,Comment,Order,EnumOrderState,OrderProcess,OrderDoc,OrderProcessContract
+from products.models import Product,Comment,Order,EnumOrderState,OrderProcess,OrderDoc,OrderProcessContract,OrderContract
 from accounts.models import Lawyer,Client,Activity
 from smartcontract.models import SmartContract
 from django.views import generic
@@ -274,10 +274,33 @@ def remove_order_contract_template(request, pk_OPcontract):
 
 @login_required
 def order_contract_form(request, pk_order):
-	from smartcontract.views import steps_spliter
-	if 'pk_contract' not in request.GET: raise Http404
-	contract = get_object_or_404(SmartContract, pk=request.GET['pk_contract'])
 	order = get_object_or_404(Order, pk=pk_order)
-	return response(request, 'products/order_contract_form.html',
-		contract=contract, order=order,
-		steps=steps_spliter(filter(bool,(i.strip() for i in contract.config.replace('\r','').split('\n')))))
+	if 'pk_contract' in request.GET:
+		contract = get_object_or_404(SmartContract, pk=request.GET['pk_contract'])
+	else: raise Http404
+	if request.method=='POST':
+		import json
+		from smartcontract.models import SmartContractInstance
+		content = json.dumps({k:request.POST[k] for k in request.POST if k.startswith('var_')})
+		try:
+			with transaction.atomic():
+				instance = SmartContractInstance.objects.create(
+					contract = contract,
+					user = request.user,
+					data = content
+				)
+				instance.save()
+				order_contract = OrderContract.objects.create(
+					order = order,
+					contract = contract,
+					instance = instance
+				)
+				order_contract.save()
+		except: traceback.print_exc()
+		else: print 1
+		raise Http404
+	else:
+		from smartcontract.views import steps_spliter
+		return response(request, 'products/order_contract_form.html',
+			contract=contract, order=order,
+			steps=steps_spliter(filter(bool,(i.strip() for i in contract.config.replace('\r','').split('\n')))))

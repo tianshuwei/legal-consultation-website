@@ -11,7 +11,7 @@
 {% block contexts %}
 <h1>{{contract.name}}</h1>
 <div class="col-md-9 ">
-<form method="post" class="form-horizontal" role="form" action="/smartcontract/download409/1/">
+<form method="post" class="form-horizontal" role="form" action="{% url 'products:order_contract_form' order.id %}?pk_contract={{contract.id}}">
 {% csrf_token %}
 <ul class="timeline-2">
 
@@ -39,7 +39,7 @@
 </ul>
 <div class="form-group">
   <div class="col-sm-offset-2 col-sm-10">
-    <button type="submit" class="btn btn-ar btn-primary">下载</button>
+    <button type="submit" class="btn btn-ar btn-primary">保存</button>
   </div>
 </div>
 </form> <!-- end form -->
