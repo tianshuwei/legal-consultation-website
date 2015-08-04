@@ -100,7 +100,7 @@
 {% endif %}
 {% for order in orders %}
     <div class="panel-body">
-        <h4 href="#" class="section-title no-margin-top"> {{ order.product }} <span class="label label-danger">new!</span><span class="pull-right">订单号: {{ order.serial }}</span></h4>
+        <h4 href="#" class="section-title no-margin-top"> {{ order.product }} <span class="label label-danger">new!</span><span class="pull-right"><a href="{% url 'products:order_detail' order.id %}">订单号: {{ order.serial }}</a></span></h4>
         <div class="clearfix"></div>
 
         <div class="row context  animated fadeInDown animation-delay-8">
@@ -118,7 +118,7 @@
             <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
         {% elif order.is_unpaid %}
             <!-- <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 " onclick="pay('{% url "products:order_pay" order.id %}')"><i class="fa fa-dollar"></i>pay now!</button> -->
-            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 " onclick="complete('{% url "products:order_pay" order.id %}')"><i class="fa fa-check"></i>compelte</button>
+            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 " onclick="complete('{% url "products:order_complete" order.id %}')"><i class="fa fa-check"></i>compelte</button>
             <!-- <form id="frmPay">
                 {% csrf_token %} {{ "order_pay"|transacserial }}
             </form> -->
