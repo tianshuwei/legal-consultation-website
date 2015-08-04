@@ -57,11 +57,22 @@
 {% endif %}
 
 <h2>合同模板</h2>
-{% if is_lawyer %}
-<hr/>
 <script type="text/javascript">
+	function refresh_contract_templates_list(){
+		$.get("{% url 'products:order_list_contracts' order.id %}", function (data, status) {
+			if(status=="success")$("#orderprocess_contract_list").html(data);
+		});
+	}
 	function add_contract (pk_contract) {
 		$dbg(pk_contract);
+		$.post("{% url 'products:order_add_contract' order.id %}",
+		{csrfmiddlewaretoken:$.cookie("csrftoken"), pk_contract:pk_contract},
+		function (r, status) {
+			if(status=="success"){
+				if(r.ok)refresh_contract_templates_list();
+				alert(r.ok); //TODO
+			}
+		});
 	}
 	$(function () {
 		$("#smartcontractsearch button").click(function () {
@@ -71,8 +82,11 @@
 					if(status=="success")$("#smartcontractsearch>.resultlist:first").html(data);
 				});
 		});
+		refresh_contract_templates_list();
 	});
 </script>
+{% if is_lawyer %}
+<hr/>
 <div id="smartcontractsearch">
 	<input type="text" placeholder="搜索已有合同模板" />
 	<button>搜索</button>

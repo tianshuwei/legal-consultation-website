@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
-from products.models import Product,Comment,Order,EnumOrderState,OrderProcess,OrderDoc
+from products.models import Product,Comment,Order,EnumOrderState,OrderProcess,OrderDoc,OrderProcessContract
 from accounts.models import Lawyer,Client,Activity
+from smartcontract.models import SmartContract
 from django.views import generic
 
 def index_view(request):
@@ -184,19 +185,6 @@ def upload_order_doc(request, pk_order):
 	else: raise Http404
 
 @login_required
-def upload_order_doc(request, pk_order):
-	if request.method=='POST':
-		try:
-			with transaction.atomic():
-				order_doc = OrderDocUploadForm(request.POST, request.FILES).save(commit=False)
-				order_doc.order = get_object_or_404(Order, pk=pk_order)
-				order_doc.save()
-		except: messages.error(request, u'上传失败')
-		else: messages.success(request, u'上传成功')
-		return redirect('products:order_detail', pk_order=pk_order)
-	else: raise Http404
-
-@login_required
 def delete_order_doc(request, pk_orderdoc):
 	if request.method=='POST':
 		try:
@@ -213,10 +201,47 @@ def delete_order_doc(request, pk_orderdoc):
 	else: raise Http404
 
 def query_order_contract_templates(request, pk_order):
-	from smartcontract.models import SmartContract
+	# from smartcontract.models import SmartContract
 	key = request.GET['q'].strip() if 'q' in request.GET else ''
 	return response(request, 'products/order_contract_search_result.mod.html',
 		order_contracts=SmartContract.objects.filter(name__contains=key))
 
-def list_orderprocess_contract_templates(request, pk_orderprocess):
-	pass
+def add_order_contract_template(request, pk_order):
+	if request.method=='POST':
+		try:
+			pk_contract = request.POST['pk_contract']
+			contract = get_object_or_404(SmartContract, pk=pk_contract)
+			order = get_object_or_404(Order, pk=pk_order)
+			lawyer = get_role(request.user)
+			assert type(lawyer) is Lawyer
+			order_process = OrderProcess.objects.filter(lawyer=lawyer).get(order=order)
+			with transaction.atomic():
+				order_contract = OrderProcessContract.objects.create(
+					orderprocess = order_process,
+					contract = contract
+				)
+				order_contract.save()
+		except:
+			return response_jquery({"ok":False})
+			# messages.error(request, u'添加失败')
+		else:
+			return response_jquery({"ok":True})
+			# messages.success(request, u'添加成功')
+		# return redirect('products:order_detail', pk_order=pk_order)
+
+def list_orderprocess_contract_templates(request, pk_order):
+	order = get_object_or_404(Order, pk=pk_order)
+	u = get_role(request.user)
+	if type(u) is Lawyer:
+		lawyer = u
+		order_process = OrderProcess.objects.filter(lawyer=lawyer).get(order=order)
+		return response(request, 'products/orderprocess_contract_list.mod.html',
+			order_contracts=order_process.orderprocesscontract_set.all())
+	elif type(u) is Client:
+		return response(request, 'products/orderprocess_contract_list.mod.html',
+			order_contracts=SmartContract.objects.raw(
+			"""SELECT DISTINCT "id", "name", False AS "filledin" FROM smartcontract_smartcontract
+				WHERE EXISTS(
+				  SELECT * FROM products_orderprocesscontract
+				    INNER JOIN products_orderprocess ON orderprocess_id=products_orderprocess.id
+				  WHERE contract_id=smartcontract_smartcontract.id AND order_id=%s);""", [pk_order]))
