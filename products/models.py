@@ -124,3 +124,10 @@ class OrderProcessContract(models.Model):
 	def __unicode__(self):
 		return self.contract.name
 		
+class OrderContract(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+	contract = models.ForeignKey('smartcontract.SmartContract', on_delete=models.SET_NULL, null=True)
+	instance = models.ForeignKey('smartcontract.SmartContractInstance', on_delete=models.SET_NULL, null=True)
+
+	def __unicode__(self):
+		return self.contract.name

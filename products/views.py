@@ -245,11 +245,22 @@ def list_orderprocess_contract_templates(request, pk_order):
 		return response(request, 'products/orderprocess_contract_list.mod.html',
 			order = order,
 			order_contracts=SmartContract.objects.raw(
-			"""SELECT DISTINCT "id", "name", False AS "filledin" FROM smartcontract_smartcontract
-				WHERE EXISTS(
-				  SELECT * FROM products_orderprocesscontract
-				    INNER JOIN products_orderprocess ON orderprocess_id=products_orderprocess.id
-				  WHERE contract_id=smartcontract_smartcontract.id AND order_id=%s);""", [pk_order]))
+			"""SELECT DISTINCT 
+					smartcontract_smartcontract.id AS "id", 
+					smartcontract_smartcontract.name AS "name", 
+					(products_ordercontract.id IS NOT NULL) AS "filledin"
+				FROM  
+					products_orderprocesscontract
+					INNER JOIN products_orderprocess ON 
+						orderprocess_id=products_orderprocess.id
+					LEFT JOIN products_ordercontract ON 
+						products_ordercontract.order_id=products_orderprocess.order_id AND
+						products_ordercontract.contract_id=products_orderprocesscontract.contract_id
+					INNER JOIN smartcontract_smartcontract ON 
+						smartcontract_smartcontract.id=products_orderprocesscontract.contract_id
+				WHERE 
+					products_orderprocesscontract.contract_id=smartcontract_smartcontract.id AND 
+					products_orderprocess.order_id=%s;""", [pk_order]))
 
 @login_required
 def remove_order_contract_template(request, pk_OPcontract):
