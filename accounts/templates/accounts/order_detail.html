@@ -3,7 +3,13 @@
 {% block main %}
 <h1>订单</h1>
 <div>客户 <a href="{% url 'accounts:profile' order.client.user.id %}">{{ order.client.user.username }}</a></div>
+{% if EN_ORDERPROCESS %}
+{% for order_process in order.orderprocess_set.all %}
+<div>律师 <a href="{% url 'accounts:profile' order_process.lawyer.user.id %}">{{ order_process.lawyer.user.username }}</a></div>
+{% endfor %}
+{% else %}
 <div>律师 <a href="{% url 'accounts:profile' order.lawyer.user.id %}">{{ order.lawyer.user.username }}</a></div>
+{% endif %}
 <div>产品 <a href="{% url 'products:detail' order.product.id %}">{{ order.product.name }}</a></div>
 <div>日期 {{ order.publish_date }}</div>
 <div>状态 {{ order.state }}</div>
@@ -16,8 +22,81 @@
 		</form>
 	</div>
 
-	<a href="{% url 'accounts:order_delete' order.id %}">取消订单</a>
+	<a href="{% url 'products:order_delete' order.id %}">取消订单</a>
 </div>
+
+
+<h2>文档列表</h2>
+<dl>
+	{% for order_doc in order.orderdoc_set.all %}
+	<dt>{{order_doc}}
+		<button>预览</button>
+		<button>下载</button>
+		{% if is_client %}
+		<form action="{% url 'products:order_del_uploaded' order_doc.id %}" method="post">
+		{% csrf_token %}
+		<input type="submit" value="删除" />
+		</form>
+		{% endif %}
+	</dt>
+	{% endfor %}
+</dl>
+{% if is_client %}
+<form action="{% url 'products:order_upload' order.id %}" enctype="multipart/form-data" method="post">
+	<strong>上传文档</strong>{% csrf_token %}
+	<div>
+		<label for="id_title">文档标题</label>
+		{{ orderdocuploadform.title }}
+	</div>
+	<div>
+		<label for="id_doc">文档上传</label>
+		{{ orderdocuploadform.doc }}
+	</div>
+	<input type="submit" value="上传" />
+</form>
+{% endif %}
+
+<h2>合同模板</h2>
+{% if is_lawyer %}
+<hr/>
+<script type="text/javascript">
+	function add_contract (pk_contract) {
+		$dbg(pk_contract);
+	}
+	$(function () {
+		$("#smartcontractsearch button").click(function () {
+			var key=$("#smartcontractsearch input").val();
+			$.get("{% url 'products:order_query_contracts' order.id %}?q="+encodeURIComponent(key),
+				function (data, status) {
+					if(status=="success")$("#smartcontractsearch>.resultlist:first").html(data);
+				});
+		});
+	});
+</script>
+<div id="smartcontractsearch">
+	<input type="text" placeholder="搜索已有合同模板" />
+	<button>搜索</button>
+	<div class="resultlist"></div>
+</div>
+<hr/>
+{% endif %}
+<dl id="orderprocess_contract_list"></dl>
+
+<!-- <h2>合同实例</h2>
+<dl>
+	{% for order_doc in order.orderdoc_set.all %}
+	<dt>{{order_doc}}
+		<button>预览</button>
+		<button>下载</button>
+		{% if is_client %}
+		<form action="{% url 'products:order_del_uploaded' order_doc.id %}" method="post">
+		{% csrf_token %}
+		<input type="submit" value="删除" />
+		</form>
+		{% endif %}
+	</dt>
+	{% endfor %}
+</dl> -->
 
 {% endblock %}
 

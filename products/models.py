@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random, hashlib, os
 from datetime import datetime
 from django.db import models, transaction
 from django.contrib.auth.models import User
@@ -34,14 +35,21 @@ class EnumOrderState(Enum):
 	CANCELLED = 3
 
 def gen_order_serial():
-	# TODO 设计订单号格式
-	return '='*25
+	serial=[
+		datetime.now().strftime("%Y%m%d%H%M%S"), # len = 14
+		''.join(random.choice('QWERTYUIOPASDFGHJKLZXCVBNMZY') for i in xrange(4)), # len = 4
+	]
+	hashcode=hashlib.md5()
+	for s in serial:
+		hashcode.update(s)
+	serial.append('H%s'%hashcode.hexdigest().upper()[:6]) # len = 7
+	return ''.join(serial) # total len = 25
 
 class Order(models.Model):
 	client = models.ForeignKey('accounts.Client', on_delete=models.SET_NULL, null=True)
 	product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True)
-	serial = models.CharField(u'订单号', max_length=25, default=gen_order_serial, editable=False)
+	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True, blank=True)
+	serial = models.CharField(u'订单号', max_length=25, default=gen_order_serial, editable=False, unique=True)
 	state = models.IntegerField(u'订单状态', default=EnumOrderState.UNPAID, choices=EnumOrderState.get_choices())
 	text = models.TextField(u'订单备注', blank=True)
 	publish_date = models.DateTimeField(u'创建日期', default=datetime.now)
@@ -93,3 +101,25 @@ class Order(models.Model):
 	def __unicode__(self):
 		return u'{0}: {1}'.format(self.serial, self.product.name)
 
+class OrderProcess(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+	lawyer = models.ForeignKey('accounts.Lawyer', on_delete=models.SET_NULL, null=True)
+
+	class Meta:
+		unique_together = (("order", "lawyer"), )
+
+class OrderDoc(models.Model):
+	order = models.ForeignKey(Order, on_delete=models.CASCADE)
+	title = models.CharField(u'文档标题', max_length=255, blank=True)
+	doc = models.FileField(upload_to='order/doc/', max_length=255)
+
+	def __unicode__(self):
+		return self.title if self.title else os.path.basename(unicode(self.doc))
+
+class OrderProcessContract(models.Model):
+	orderprocess = models.ForeignKey(OrderProcess, on_delete=models.CASCADE)
+	contract = models.ForeignKey('smartcontract.SmartContract', on_delete=models.SET_NULL, null=True)
+
+	def __unicode__(self):
+		return self.contract.name
+		

@@ -90,9 +90,17 @@
 {% endblock %}
 {% block main_col %}
 <div class="panel panel-border animated fadeInDown animation-delay-8" style="border-left-color: #eee;">
+{% if is_lawyer %}
+<form action="{% url 'products:process_new_order' %}" method="post">
+    {% csrf_token %} {{ "order_process"|transacserial }}
+    <label for="txtSerial_process_new_order">加入订单：</label>
+    <input id="txtSerial_process_new_order" name="serial" type="text" placeholder="订单号" required />
+    <input type="submit" />
+</form>
+{% endif %}
 {% for order in orders %}
     <div class="panel-body">
-        <h4 href="#" class="section-title no-margin-top"> {{ order.product }} <span class="label label-danger">new!</span><span class="pull-right">order id: xs32413433</span></h4>
+        <h4 href="#" class="section-title no-margin-top"> {{ order.product }} <span class="label label-danger">new!</span><span class="pull-right">订单号: {{ order.serial }}</span></h4>
         <div class="clearfix"></div>
 
         <div class="row context  animated fadeInDown animation-delay-8">

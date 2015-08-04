@@ -1,9 +1,8 @@
 .sublime-workspace
 *.pyc
+*.out
 org/deployment.py
 tmp/
-deployment/*
+deployment/
 templates/mod/*test.html
-*/migrations/
 build/
-

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from org.tools import *
-from products.models import Product,Comment,Order,EnumOrderState
+from products.models import Product,Comment,Order,EnumOrderState,OrderProcess,OrderDoc
 from accounts.models import Lawyer,Client,Activity
 from django.views import generic
 
@@ -36,9 +36,9 @@ def new_order_view(request, pk_product):
 				order = Order.objects.create( 
 					client=client,
 					product=product,
-					lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
+					# lawyer=Lawyer.objects.get(pk=request.POST['lawyer_id']),
 					state=EnumOrderState.UNPAID,
-					text=request.POST['text']
+					# text=request.POST['text']
 				)
 				order.save()
 		except Product.DoesNotExist:
@@ -53,7 +53,7 @@ def new_order_view(request, pk_product):
 			# TODO 必要时调用 handle_illegal_access 参考org/tools.py中的文档
 			return response_jquery({ 'success': False })
 		else: 
-			messages.success(request, u'订单提交成功')
+			messages.success(request, u'订单提交成功 订单号{0}'.format(order.serial))
 			rec.success(u'{0} 订单提交成功 {1}'.format(request.user.username, order.serial))
 			return response_jquery({ 'success': True })
 	else: raise Http404
@@ -61,9 +61,9 @@ def new_order_view(request, pk_product):
 @login_required
 def order_detail_view(request, pk_order):
 	# TODO 按照上面new_order_view修改
-	rec=recorded(request, 'products:order_detail')
 	order = get_object_or_404(Order, pk=pk_order)
 	if request.method=='POST':
+		rec=recorded(request, 'products:order_detail')
 		try:
 			if request.user.client==order.client:
 				order.text=request.POST['text']
@@ -74,7 +74,10 @@ def order_detail_view(request, pk_order):
 			messages.success(request, u'备注修改成功')
 			rec.success(u'{0} 订单备注修改成功 {1}'.format(request.user.username, order.serial))
 		return redirect('accounts:order_detail', pk_order=pk_order)
-	else: return response(request, 'accounts/order_detail.html', order=order)
+	else: return response(request, 'accounts/order_detail.html', order=order, 
+		EN_ORDERPROCESS=True, # 启用Order-Lawyer间的1:n联系OrderProcess
+		orderdocuploadform = OrderDocUploadForm()
+		)
 
 @login_required
 def order_delete_view(request, pk_order):
@@ -102,7 +105,7 @@ def order_delete_view(request, pk_order):
 def order_pay_view(request, pk_order):
 	rec=recorded(request, 'products:order_pay')
 	order = get_object_or_404(Order, pk=pk_order)
-	if request.method=='POST':	
+	if request.method=='POST':
 		try:
 			if request.user.client==order.client:
 				a=order.client.minus_balance(order.product.price)
@@ -113,7 +116,7 @@ def order_pay_view(request, pk_order):
 					return response_jquery({'r':'success'})
 				else:
 					messages.error(request, u'账户余额不足')
-					rec.success(u'{0} 订单付款余额不足 {1}'.format(request.user.username, order.serial))
+					rec.error(u'{0} 订单付款余额不足 {1}'.format(request.user.username, order.serial))
 					return response_jquery({'r':'balance_false'})
 		except:
 			messages.error(request, u'订单取消失败')
@@ -137,3 +140,83 @@ def order_complete_view(request, pk_order):
 			rec.success(u'{0} 订单完成成功 {1}'.format(request.user.username, serial_d))
 			return response_jquery({'r':'success'})
 	else: raise Http404
+
+@login_required
+def process_new_order_view(request):
+	rec=recorded(request, 'products:order_process')
+	if request.method=='POST':
+		try:
+			serial = request.POST['serial']
+			order = Order.objects.get(serial=serial)
+			lawyer = get_role(request.user)
+			assert type(lawyer) is Lawyer
+			with transaction.atomic():
+				order_process = OrderProcess.objects.create(
+					order=order,
+					lawyer=lawyer
+				)
+				order_process.save()
+		except:
+			messages.error(request, u'加入订单失败')
+			rec.error(u'{0} 加入订单失败 {1}'.format(request.user.username, serial))
+		else:
+			messages.success(request, u'加入订单成功')
+			rec.success(u'{0} 加入订单成功 {1}'.format(request.user.username, serial))			
+		return redirect('accounts:order_list')
+	else: raise Http404
+
+class OrderDocUploadForm(forms.ModelForm):
+	class Meta:
+		model = OrderDoc
+		fields = ['title', 'doc']
+
+@login_required
+def upload_order_doc(request, pk_order):
+	if request.method=='POST':
+		try:
+			with transaction.atomic():
+				order_doc = OrderDocUploadForm(request.POST, request.FILES).save(commit=False)
+				order_doc.order = get_object_or_404(Order, pk=pk_order)
+				order_doc.save()
+		except: messages.error(request, u'上传失败')
+		else: messages.success(request, u'上传成功')
+		return redirect('products:order_detail', pk_order=pk_order)
+	else: raise Http404
+
+@login_required
+def upload_order_doc(request, pk_order):
+	if request.method=='POST':
+		try:
+			with transaction.atomic():
+				order_doc = OrderDocUploadForm(request.POST, request.FILES).save(commit=False)
+				order_doc.order = get_object_or_404(Order, pk=pk_order)
+				order_doc.save()
+		except: messages.error(request, u'上传失败')
+		else: messages.success(request, u'上传成功')
+		return redirect('products:order_detail', pk_order=pk_order)
+	else: raise Http404
+
+@login_required
+def delete_order_doc(request, pk_orderdoc):
+	if request.method=='POST':
+		try:
+			with transaction.atomic():
+				order_doc = get_object_or_404(OrderDoc, pk=pk_orderdoc)
+				pk_order = order_doc.order.id
+				order_doc.delete()
+		except:
+			messages.error(request, u'删除失败')
+			return redirect('accounts:order_list')
+		else:
+			messages.success(request, u'删除成功')
+			return redirect('products:order_detail', pk_order=pk_order)
+	else: raise Http404
+
+def query_order_contract_templates(request, pk_order):
+	from smartcontract.models import SmartContract
+	key = request.GET['q'].strip() if 'q' in request.GET else ''
+	return response(request, 'products/order_contract_search_result.mod.html',
+		order_contracts=SmartContract.objects.filter(name__contains=key))
+
+def list_orderprocess_contract_templates(request, pk_orderprocess):
+	pass
