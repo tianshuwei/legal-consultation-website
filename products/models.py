@@ -73,9 +73,14 @@ class Order(models.Model):
 
 	@transaction.atomic
 	def finish(self):
+		if self.state==EnumOrderState.UNPAID:
+			self.state=EnumOrderState.FINISHED
+			self.save()
+			return 1
 		if self.state==EnumOrderState.IN_BUSINESS:
 			self.state=EnumOrderState.FINISHED
 			self.save()
+			return 2
 		else: raise CustomException(u"状态转换异常")
 
 	@transaction.atomic

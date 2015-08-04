@@ -118,3 +118,22 @@ def order_pay_view(request, pk_order):
 		except:
 			messages.error(request, u'订单取消失败')
 			return response_jquery({'r':'false'})
+
+@login_required
+def order_complete_view(request, pk_order):
+	rec=recorded(request, 'products:order_complete')
+	order = get_object_or_404(Order, pk=pk_order)
+	if request.method=='POST':
+		try:
+			if request.user.client==order.client: 
+				serial_d=order.serial
+				a=order.finish()
+			else: raise Exception			
+		except: 
+			messages.error(request, u'完成订单失败')	
+			return response_jquery({'r':'false'})
+		else: 
+			messages.success(request, u'完成订单成功')
+			rec.success(u'{0} 订单完成成功 {1}'.format(request.user.username, serial_d))
+			return response_jquery({'r':'success'})
+	else: raise Http404

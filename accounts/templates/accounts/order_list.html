@@ -31,9 +31,41 @@
     );
   }
 
-  function pay(_url)
+  // function pay(_url)
+  // {
+  //    var r=$fetch("#frmPay");
+  //   $.post(
+  //       _url,
+  //       r,
+  //       function(data,status){
+  //           if(status=="success")
+  //           {
+  //               if(data.r=="success")
+  //               {
+  //                   showModal("提示", "订单付款成功", ["*确定"],
+  //                   function(r){window.location.reload();});
+  //               }
+  //               else
+  //               {
+  //                   if(data.r=="balance_false")
+  //                   {
+  //                       showModal("提示", "账户余额不足", ["*确定"],
+  //                       function(r){window.location.reload();});
+  //                   }
+  //                   else
+  //                   {
+  //                       showModal("提示", "订单付款失败", ["*确定"],
+  //                       function(r){window.location.reload();});
+  //                   }
+  //               }
+  //           }
+  //       }
+  //   );
+  // }
+
+    function complete(_url)
   {
-     var r=$fetch("#frmPay");
+     var r=$fetch("#frmComplete");
     $.post(
         _url,
         r,
@@ -42,21 +74,13 @@
             {
                 if(data.r=="success")
                 {
-                    showModal("提示", "订单付款成功", ["*确定"],
+                    showModal("提示", "订单完成成功", ["*确定"],
                     function(r){window.location.reload();});
                 }
                 else
                 {
-                    if(data.r=="balance_false")
-                    {
-                        showModal("提示", "账户余额不足", ["*确定"],
-                        function(r){window.location.reload();});
-                    }
-                    else
-                    {
-                        showModal("提示", "订单付款失败", ["*确定"],
-                        function(r){window.location.reload();});
-                    }
+                    showModal("提示", "订单完成失败", ["*确定"],
+                    function(r){window.location.reload();});
                 }
             }
         }
@@ -85,9 +109,13 @@
             <button class="btn btn-ar btn-sm btn-royal"><i class="fa fa-star"></i>remark</button>
             <button class="btn btn-ar btn-sm btn-default"><i class="fa fa-comment"></i>complain</button>
         {% elif order.is_unpaid %}
-            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 " onclick="pay('{% url "products:order_pay" order.id %}')"><i class="fa fa-dollar"></i>pay now!</button>
-             <form id="frmPay">
+            <!-- <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 " onclick="pay('{% url "products:order_pay" order.id %}')"><i class="fa fa-dollar"></i>pay now!</button> -->
+            <button class="btn btn-ar btn-sm btn-danger col-md-offset-8 " onclick="complete('{% url "products:order_pay" order.id %}')"><i class="fa fa-check"></i>compelte</button>
+            <!-- <form id="frmPay">
                 {% csrf_token %} {{ "order_pay"|transacserial }}
+            </form> -->
+            <form id="frmComplete">
+                {% csrf_token %} {{ "order_complete"|transacserial }}
             </form>
             <form id="frmDelete">
                 {% csrf_token %} {{ "order_delete"|transacserial }}
