@@ -64,13 +64,21 @@
 		});
 	}
 	function add_contract (pk_contract) {
-		$dbg(pk_contract);
 		$.post("{% url 'products:order_add_contract' order.id %}",
 		{csrfmiddlewaretoken:$.cookie("csrftoken"), pk_contract:pk_contract},
 		function (r, status) {
 			if(status=="success"){
 				if(r.ok)refresh_contract_templates_list();
-				alert(r.ok); //TODO
+				alert(r.ok); //TODO 改成showModal
+			}
+		});
+	}
+	function del_contract (url_pk_OPcontract) {
+		$.post(url_pk_OPcontract,{csrfmiddlewaretoken:$.cookie("csrftoken")},
+		function (r, status) {
+			if(status=="success"){
+				if(r.ok)location.reload();
+				alert(r.ok); //TODO 改成showModal
 			}
 		});
 	}

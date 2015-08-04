@@ -200,12 +200,14 @@ def delete_order_doc(request, pk_orderdoc):
 			return redirect('products:order_detail', pk_order=pk_order)
 	else: raise Http404
 
+@login_required
 def query_order_contract_templates(request, pk_order):
 	# from smartcontract.models import SmartContract
 	key = request.GET['q'].strip() if 'q' in request.GET else ''
 	return response(request, 'products/order_contract_search_result.mod.html',
 		order_contracts=SmartContract.objects.filter(name__contains=key))
 
+@login_required
 def add_order_contract_template(request, pk_order):
 	if request.method=='POST':
 		try:
@@ -229,6 +231,7 @@ def add_order_contract_template(request, pk_order):
 			# messages.success(request, u'添加成功')
 		# return redirect('products:order_detail', pk_order=pk_order)
 
+@login_required
 def list_orderprocess_contract_templates(request, pk_order):
 	order = get_object_or_404(Order, pk=pk_order)
 	u = get_role(request.user)
@@ -245,3 +248,13 @@ def list_orderprocess_contract_templates(request, pk_order):
 				  SELECT * FROM products_orderprocesscontract
 				    INNER JOIN products_orderprocess ON orderprocess_id=products_orderprocess.id
 				  WHERE contract_id=smartcontract_smartcontract.id AND order_id=%s);""", [pk_order]))
+
+@login_required
+def remove_order_contract_template(request, pk_OPcontract):
+	if request.method=='POST':
+		try:
+			order_contract = get_object_or_404(OrderProcessContract, pk=pk_OPcontract)
+			order_contract.delete()
+		except: return response_jquery({"ok":False})
+		else: return response_jquery({"ok":True})
+	else: raise Http404
