@@ -2,7 +2,7 @@
 <dt>{{contract}}
 	{% if is_client %} {# type(contract) is SmartContract #}
 	{% if not contract.filledin %}<span style="color:red;">[未填写]</span>{% endif %}
-	<button>填写</button>
+	<button onclick="window.open('{% url 'products:order_contract_form' order.id %}?pk_contract={{contract.id}}','_blank')">填写</button>
 	{% endif %}
 	{% if is_lawyer %} {# type(contract) is OrderProcessContract #}
 	<button onclick="del_contract('{% url 'products:order_del_contract' contract.id %}')">移除</button>

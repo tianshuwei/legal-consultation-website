@@ -239,9 +239,11 @@ def list_orderprocess_contract_templates(request, pk_order):
 		lawyer = u
 		order_process = OrderProcess.objects.filter(lawyer=lawyer).get(order=order)
 		return response(request, 'products/orderprocess_contract_list.mod.html',
+			order = order,
 			order_contracts=order_process.orderprocesscontract_set.all())
 	elif type(u) is Client:
 		return response(request, 'products/orderprocess_contract_list.mod.html',
+			order = order,
 			order_contracts=SmartContract.objects.raw(
 			"""SELECT DISTINCT "id", "name", False AS "filledin" FROM smartcontract_smartcontract
 				WHERE EXISTS(
@@ -258,3 +260,13 @@ def remove_order_contract_template(request, pk_OPcontract):
 		except: return response_jquery({"ok":False})
 		else: return response_jquery({"ok":True})
 	else: raise Http404
+
+@login_required
+def order_contract_form(request, pk_order):
+	from smartcontract.views import steps_spliter
+	if 'pk_contract' not in request.GET: raise Http404
+	contract = get_object_or_404(SmartContract, pk=request.GET['pk_contract'])
+	order = get_object_or_404(Order, pk=pk_order)
+	return response(request, 'products/order_contract_form.html',
+		contract=contract, order=order,
+		steps=steps_spliter(filter(bool,(i.strip() for i in contract.config.replace('\r','').split('\n')))))
