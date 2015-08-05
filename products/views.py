@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import json
 from org.tools import *
 from products.models import Product,Comment,Order,EnumOrderState,OrderProcess,OrderDoc,OrderProcessContract,OrderContract
 from accounts.models import Lawyer,Client,Activity
@@ -279,28 +280,33 @@ def order_contract_form(request, pk_order):
 		contract = get_object_or_404(SmartContract, pk=request.GET['pk_contract'])
 	else: raise Http404
 	if request.method=='POST':
-		import json
 		from smartcontract.models import SmartContractInstance
 		content = json.dumps({k:request.POST[k] for k in request.POST if k.startswith('var_')})
 		try:
 			with transaction.atomic():
-				instance = SmartContractInstance.objects.create(
-					contract = contract,
-					user = request.user,
-					data = content
-				)
-				instance.save()
-				order_contract = OrderContract.objects.create(
-					order = order,
-					contract = contract,
-					instance = instance
-				)
-				order_contract.save()
-		except: traceback.print_exc()
-		else: print 1
-		raise Http404
+				order_contract, created = OrderContract.objects.get_or_create(order=order, contract=contract)
+				if created:
+					instance = SmartContractInstance.objects.create(contract=contract, user=request.user, data=content)
+					instance.save()
+					order_contract.instance = instance
+					order_contract.save()
+				else:
+					instance = order_contract.instance
+					instance.data = content
+					instance.save()
+		except: return response_jquery({"ok":False})
+		else: return response_jquery({"ok":True})
 	else:
 		from smartcontract.views import steps_spliter
+		vars_initializer=[]
+		try:
+			order_contract = OrderContract.objects.get(order=order, contract=contract)
+			instance = order_contract.instance
+			content = json.loads(instance.data)
+			for k in content:
+				vars_initializer.append([k, content[k]])
+		except: pass
 		return response(request, 'products/order_contract_form.html',
 			contract=contract, order=order,
-			steps=steps_spliter(filter(bool,(i.strip() for i in contract.config.replace('\r','').split('\n')))))
+			steps=steps_spliter(filter(bool,(i.strip() for i in contract.config.replace('\r','').split('\n')))),
+			vars_initializer=vars_initializer)

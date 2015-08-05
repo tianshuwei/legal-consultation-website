@@ -1,10 +1,15 @@
 {% extends 'smartcontract/base.html' %}
 {% load tagtools %}{% load staticfiles %}
+{% block title %}填写合同 订单号 {{order.serial}}{% endblock %}
 {% block headextra %}
 {{ block.super }}
 <script type="text/javascript">
+  var vars_initializer=[{% for v in vars_initializer %}['{{ v.0 }}', '{{ v.1 }}'], {% endfor %}];
   $(function () {
-    page_title("org.docxrenderer test");
+    page_title("填写合同");
+    for (var i = vars_initializer.length - 1; i >= 0; i--) {
+      $('#'+vars_initializer[i][0]).val(vars_initializer[i][1]);
+    };
   });
 </script>
 {% endblock %}

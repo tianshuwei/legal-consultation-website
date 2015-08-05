@@ -129,5 +129,8 @@ class OrderContract(models.Model):
 	contract = models.ForeignKey('smartcontract.SmartContract', on_delete=models.SET_NULL, null=True)
 	instance = models.ForeignKey('smartcontract.SmartContractInstance', on_delete=models.SET_NULL, null=True)
 
+	class Meta:
+		unique_together = (("order", "contract"), )
+
 	def __unicode__(self):
 		return self.contract.name
