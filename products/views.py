@@ -62,7 +62,6 @@ def new_order_view(request, pk_product):
 
 @login_required
 def order_detail_view(request, pk_order):
-	# TODO 按照上面new_order_view修改
 	order = get_object_or_404(Order, pk=pk_order)
 	if request.method=='POST':
 		rec=recorded(request, 'products:order_detail')
@@ -76,9 +75,10 @@ def order_detail_view(request, pk_order):
 			messages.success(request, u'备注修改成功')
 			rec.success(u'{0} 订单备注修改成功 {1}'.format(request.user.username, order.serial))
 		return redirect('accounts:order_detail', pk_order=pk_order)
-	else: return response(request, 'accounts/order_detail.html', order=order, 
-		EN_ORDERPROCESS=True, # 启用Order-Lawyer间的1:n联系OrderProcess
-		orderdocuploadform = OrderDocUploadForm()
+	else:
+		return response(request, 'accounts/order_detail.html', order=order, 
+			EN_ORDERPROCESS=True, # 启用Order-Lawyer间的1:n联系OrderProcess
+			orderdocuploadform = OrderDocUploadForm()
 		)
 
 @login_required
@@ -310,3 +310,41 @@ def order_contract_form(request, pk_order):
 			contract=contract, order=order,
 			steps=steps_spliter(filter(bool,(i.strip() for i in contract.config.replace('\r','').split('\n')))),
 			vars_initializer=vars_initializer)
+
+def mk_disposition(filename):
+	from urllib import quote
+	return '\x20'.join([ # according to RFC 6266
+		'attachment;',
+		'filename="%s";' % quote(filename),
+		"filename*=%(charset)s'%(lang)s'%(value)s" % {
+			'charset': 'utf-8',
+			'lang': '',
+			'value': quote(filename)
+		}, 
+	])
+
+@login_required
+def download_contract_form(request, pk_order):
+	from org.docxrenderer import DocxTemplate
+	order = get_object_or_404(Order, pk=pk_order)
+	if 'pk_contract' in request.GET:
+		contract = get_object_or_404(SmartContract, pk=request.GET['pk_contract'])
+	else: raise Http404
+	try:
+		order_contract = OrderContract.objects.get(order=order, contract=contract)
+		instance = order_contract.instance
+		content = json.loads(instance.data)
+		template = DocxTemplate(contract.template)
+		r = template.get_vars()
+		for var in r: 
+			q_var = 'var_'+var
+			if q_var in content:
+				r[var] = content[q_var]
+		doc = template.render(**r)
+		r = HttpResponse(content_type='application/octet-stream')
+		# import os
+		# print quote(unicode(os.path.basename(contract.template.path)))
+		r['Content-Disposition'] = mk_disposition("contract.docx")
+		doc.save(r)
+		return r
+	except: raise Http404

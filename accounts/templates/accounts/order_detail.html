@@ -1,63 +1,94 @@
-{% extends 'base.html' %}
-{% block title %}订单{% endblock %}
-{% block main %}
-<h1>订单</h1>
-<div>订单号 {{ order.serial }}</div>
-<div>客户 <a href="{% url 'accounts:profile' order.client.user.id %}">{{ order.client.user.username }}</a></div>
-{% if EN_ORDERPROCESS %}
-{% for order_process in order.orderprocess_set.all %}
-<div>律师 <a href="{% url 'accounts:profile' order_process.lawyer.user.id %}">{{ order_process.lawyer.user.username }}</a></div>
-{% endfor %}
-{% else %}
-<div>律师 <a href="{% url 'accounts:profile' order.lawyer.user.id %}">{{ order.lawyer.user.username }}</a></div>
-{% endif %}
-<div>产品 <a href="{% url 'products:detail' order.product.id %}">{{ order.product.name }}</a></div>
-<div>日期 {{ order.publish_date }}</div>
-<div>状态 {{ order.state }}</div>
-<div>备注 
-	<div>
-		<form method="post">
-			{% csrf_token %}
-			<textarea name="text">{{ order.text }}</textarea>
-			<input type="submit" value="修改备注" />
-		</form>
-	</div>
 
-	<a href="{% url 'products:order_delete' order.id %}">取消订单</a>
-</div>
+{% extends 'accounts/base_usercenter.html' %}
+{% load staticfiles %}
+{% block headextra %}
+{% load tagtools %}
+<script type="text/javascript">
+  $(function () {
+    select_nav("Orders");
+  });
 
+  function delete_order(_url)
+  {
+    var r=$fetch("#frmDelete");
+    $.post(
+        _url,
+        r,
+        function(data,status){
+            if(status=="success")
+            {
+                if(data.r=="success")
+                {
+                    showModal("提示", "订单成功删除", ["*确定"],
+                    function(r){window.location.reload();});
+                }
+                else
+                {
+                    showModal("提示", "订单删除失败", ["*确定"],
+                    function(r){window.location.reload();});
+                }
+            }
+        }
+    );
+  }
 
-<h2>文档列表</h2>
-<dl>
-	{% for order_doc in order.orderdoc_set.all %}
-	<dt>{{order_doc}}
-		<button>预览</button>
-		<button>下载</button>
-		{% if is_client %}
-		<form action="{% url 'products:order_del_uploaded' order_doc.id %}" method="post">
-		{% csrf_token %}
-		<input type="submit" value="删除" />
-		</form>
-		{% endif %}
-	</dt>
-	{% endfor %}
-</dl>
-{% if is_client %}
-<form action="{% url 'products:order_upload' order.id %}" enctype="multipart/form-data" method="post">
-	<strong>上传文档</strong>{% csrf_token %}
-	<div>
-		<label for="id_title">文档标题</label>
-		{{ orderdocuploadform.title }}
-	</div>
-	<div>
-		<label for="id_doc">文档上传</label>
-		{{ orderdocuploadform.doc }}
-	</div>
-	<input type="submit" value="上传" />
-</form>
-{% endif %}
+  // function pay(_url)
+  // {
+  //    var r=$fetch("#frmPay");
+  //   $.post(
+  //       _url,
+  //       r,
+  //       function(data,status){
+  //           if(status=="success")
+  //           {
+  //               if(data.r=="success")
+  //               {
+  //                   showModal("提示", "订单付款成功", ["*确定"],
+  //                   function(r){window.location.reload();});
+  //               }
+  //               else
+  //               {
+  //                   if(data.r=="balance_false")
+  //                   {
+  //                       showModal("提示", "账户余额不足", ["*确定"],
+  //                       function(r){window.location.reload();});
+  //                   }
+  //                   else
+  //                   {
+  //                       showModal("提示", "订单付款失败", ["*确定"],
+  //                       function(r){window.location.reload();});
+  //                   }
+  //               }
+  //           }
+  //       }
+  //   );
+  // }
 
-<h2>合同模板</h2>
+    function complete(_url)
+  {
+     var r=$fetch("#frmComplete");
+    $.post(
+        _url,
+        r,
+        function(data,status){
+            if(status=="success")
+            {
+                if(data.r=="success")
+                {
+                    showModal("提示", "订单完成成功", ["*确定"],
+                    function(r){window.location.reload();});
+                }
+                else
+                {
+                    showModal("提示", "订单完成失败", ["*确定"],
+                    function(r){window.location.reload();});
+                }
+            }
+        }
+    );
+  }
+</script>
+
 <script type="text/javascript">
 	function refresh_contract_templates_list(){
 		$.get("{% url 'products:order_list_contracts' order.id %}", function (data, status) {
@@ -94,29 +125,95 @@
 		refresh_contract_templates_list();
 	});
 </script>
-{% if is_lawyer %}
-<hr/>
-<div id="smartcontractsearch">
-	<input type="text" placeholder="搜索已有合同模板" />
-	<button>搜索</button>
-	<div class="resultlist"></div>
-</div>
-<hr/>
+{% endblock %}
+{% block main_col %}
+<div class="panel panel-border animated fadeInDown animation-delay-8" style="border-left-color: #eee;">
+<h1>订单 <span class="label label-primary">{% if order.is_finished %}已关闭{% else %}处理中{% endif %}</span></h1> 
+<div>订单号 {{ order.serial }}</div>
+<div>客户 <a href="{% url 'accounts:profile' order.client.user.id %}">{{ order.client.user.username }}</a></div>
+{% if EN_ORDERPROCESS %}
+{% else %}
+<div>律师 <a href="{% url 'accounts:profile' order.lawyer.user.id %}">{{ order.lawyer.user.username }}</a></div>
 {% endif %}
-<dl id="orderprocess_contract_list"></dl>
+<div>产品 <a href="{% url 'products:detail' order.product.id %}">{{ order.product.name }}</a></div>
+<div>日期 {{ order.publish_date }}</div>
 
-<h2>合同实例</h2>
-<dl>
-	{% for order_doc in order.orderdoc_set.all %}
-	<dt>合同实例
-		<button>预览</button>
-		<button>下载</button>
+	<a href="{% url 'products:order_delete' order.id %}">取消订单</a>
+</div>
+<hr>
+<h3>文档列表</h3>
+<div class="row"><div class="col-md-6">
+	<ul class="list-group">
+    {% for order_doc in order.orderdoc_set.all %}
+	<li class="list-group-item">
+		<form action="{% url 'products:order_del_uploaded' order_doc.id %}" method="post" class="form-inline">
 		{% if is_client %}
-		<button>删除</button>
+		<div class="form-group">
+        {% csrf_token %}
+			  <button type="submit" class="btn btn-ar btn-warning" style="margin-right:20px">删除</button>
+		</div>
 		{% endif %}
-	</dt>
-	{% endfor %}
-</dl>
+		<div class="form-group">
+		    <a href="{{ order_doc.doc.url }}">{{order_doc}}</a>
+		</div>
+		</form>
 
+    </li>
+	{% endfor %}
+</ul>
+</div></div>
+
+
+{% if is_client %}
+<form class="form-inline" action="{% url 'products:order_upload' order.id %}" enctype="multipart/form-data" method="post">
+  <div class="form-group">
+    <label>上传新文档</label>
+    {% csrf_token %}
+  </div>
+  <div class="form-group">
+    <label class="sr-only" for="id_title">文档标题</label>
+    <input class="form-control" id="id_title" maxlength="255" name="title" type="text" placeholder="文档标题">
+  </div>
+  <div class="form-group">
+    <label class="sr-only" for="exampleInputPassword2">文档上传</label>
+    {{ orderdocuploadform.doc }}
+  </div>
+  <button type="submit" class="btn btn-ar btn-primary">上传</button>
+</form>
+{% endif %}
+
+<hr class="dotted">
+<h3> 法律文档</h3>
+<div class="row">
+	<div class="col-md-6">
+		<dl id="orderprocess_contract_list"></dl>
+	</div>
+	{% if is_lawyer %}
+	<div id="smartcontractsearch" class="col-md-6">
+  	<input type="text" placeholder="搜索已有合同模板" />
+  	<button>搜索</button>
+  	<div class="resultlist"></div>
+  </div>
+  {% endif %}
+</div>
+
+<hr>
+<!-- {% comment %} -->
+<!--<h2>合同实例</h2>-->
+<!--<dl>-->
+<!--	{% for order_doc in order.ordercontract_set.all %}-->
+<!--	<dt>合同实例-->
+<!--		<button>预览</button>-->
+<!--		<button>下载</button>-->
+<!--		{% if is_client %}-->
+<!--		<button>删除</button>-->
+<!--		{% endif %}-->
+<!--	</dt>-->
+<!--	{% endfor %}-->
+<!--</dl>-->
+<!-- {% endcomment %} -->
+</div>
+
+<!-- TODO paginator here -->
 {% endblock %}
 

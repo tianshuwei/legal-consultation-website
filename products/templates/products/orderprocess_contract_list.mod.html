@@ -1,11 +1,20 @@
-{% for contract in order_contracts %}
-<dt>{{contract}}
-	{% if is_client %} {# type(contract) is SmartContract #}
-	{% if not contract.filledin %}<span style="color:red;">[未填写]</span>{% endif %}
-	<button onclick="window.open('{% url 'products:order_contract_form' order.id %}?pk_contract={{contract.id}}','_blank')">填写</button>
-	{% endif %}
-	{% if is_lawyer %} {# type(contract) is OrderProcessContract #}
-	<button onclick="del_contract('{% url 'products:order_del_contract' contract.id %}')">移除</button>
-	{% endif %}
-</dt>
-{% endfor %}
+<ul class="list-group">
+    {% for contract in order_contracts %}
+	<li class="list-group-item">
+		{% if is_client %} {# type(contract) is SmartContract #}
+	    <button class="btn 	{% if not contract.filledin %}btn-error{% else %}btn-primary{% endif %} btn-ar"onclick="window.open('{% url 'products:order_contract_form' order.id %}?pk_contract={{contract.id}}','_blank')">
+	    	{% if not contract.filledin %}去填写{% else %}重填{% endif %}
+	    </button>
+	    <a href="{% if contract.filledin %}
+	    	{% url 'products:order_download' order.id %}?pk_contract={{contract.id}}
+	    {% else %}#{% endif %}">{{contract}}</a>
+	    {% endif %}
+	    {% if is_lawyer %} {# type(contract) is OrderProcessContract #}
+		<button class="btn btn-ar btn-warning" onclick="del_contract('{% url 'products:order_del_contract' contract.id %}')">移除</button>
+		<a href="{% if contract.filledin %}
+			{% url 'products:order_download' order.id %}?pk_contract={{contract.contract.id}}
+		{% else %}#{% endif %}">{{contract}}</a>
+		{% endif %}
+    </li>
+	{% endfor %}
+</ul>

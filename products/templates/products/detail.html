@@ -14,7 +14,7 @@ Product detail -- {{ product.name }}
             <li><a href="#">￥{{ product.price }}</a></li>
             {% if user.is_authenticated %}
 			{% if is_client %}
-            <button type="button" class="btn btn-danger" onclick="new_order()">buy now!</button>
+            <button type="button" class="btn btn-danger" onclick="new_order()">立即订购</button>
             <script type="text/javascript">
 			function new_order()
 			{
@@ -43,7 +43,7 @@ Product detail -- {{ product.name }}
                 ); */
 				showModal(
 					"确认订购",
-                    "{% csrf_token %} "+ '{{ "product_new_order"|transacserial }}',
+                    "{% csrf_token %} "+ '{{ "product_new_order"|transacserial }}确认订购？',
                     ["取消","$确定"],
                     function (r) {
                         if(typeof r=="object"){ 
@@ -51,8 +51,11 @@ Product detail -- {{ product.name }}
                                 "{% url 'products:new_order' product.id %}",
                                 r,
                                 function(data,status){
-                                    alert(data.success);
-                                    window.location.reload();
+                                    if(data.success)
+                                        showModal("恭喜","订购成功",["确定"],function (r) { window.location.reload();});
+                                    else
+                                        showModal("抱歉","出了一些问题，请重试",["确定"],function (r) {});
+                                   
                                 }
                             );
                         }

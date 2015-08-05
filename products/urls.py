@@ -18,5 +18,6 @@ urlpatterns = patterns('',
 	url(r'^order\.(?P<pk_OPcontract>\d+)/del_OPcontract/$', views.remove_order_contract_template, name='order_del_contract'),
 	url(r'^order\.(?P<pk_orderdoc>\d+)/del_uploaded/$', views.delete_order_doc, name='order_del_uploaded'),
 	url(r'^order\.(?P<pk_order>\d+)/contract_form/$', views.order_contract_form, name='order_contract_form'),
+	url(r'^order\.(?P<pk_order>\d+)/download/$', views.download_contract_form, name='order_download'),
 	url(r'^orders/process/$', views.process_new_order_view, name='process_new_order'),
 )
