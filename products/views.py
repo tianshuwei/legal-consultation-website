@@ -331,10 +331,14 @@ def download_contract_form(request, pk_order):
 		contract = get_object_or_404(SmartContract, pk=request.GET['pk_contract'])
 	else: raise Http404
 	try:
+		import os
 		order_contract = OrderContract.objects.get(order=order, contract=contract)
 		instance = order_contract.instance
 		content = json.loads(instance.data)
-		template = DocxTemplate(contract.template)
+		# print contract.template.path
+		# print os.path.abspath(contract.template.url)
+		print os.path.exists(contract.template.path)
+		template = DocxTemplate(contract.template.path)
 		r = template.get_vars()
 		for var in r: 
 			q_var = 'var_'+var
@@ -347,4 +351,6 @@ def download_contract_form(request, pk_order):
 		r['Content-Disposition'] = mk_disposition("contract.docx")
 		doc.save(r)
 		return r
-	except: raise Http404
+	except:
+		traceback.print_exc()
+		raise Http404

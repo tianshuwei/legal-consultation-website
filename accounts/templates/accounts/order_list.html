@@ -100,7 +100,8 @@
 {% endif %}
 {% for order in orders %}
     <div class="panel-body">
-        <h4 href="#" class="section-title no-margin-top"> {{ order.product }} <span class="label label-danger">new!</span><span class="pull-right"><a href="{% url 'products:order_detail' order.id %}">订单号: {{ order.serial }}</a></span></h4>
+        <h4 href="#" class="section-title no-margin-top"> {{ order.product }}</h4>
+        <h5><span class="pull-right"><a href="{% url 'products:order_detail' order.id %}">订单号: {{ order.serial }}</a></span></h5>
         <div class="clearfix"></div>
 
         <div class="row context  animated fadeInDown animation-delay-8">

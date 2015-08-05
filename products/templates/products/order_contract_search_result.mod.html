@@ -1,5 +1,11 @@
-{% for contract in order_contracts %}
-<span>{{ contract.name }} 
-	<button onclick='add_contract("{{ contract.id }}")'>添加</button>
-</span>
-{% endfor %} 
+<ul class="list-group">
+    {% for contract in order_contracts %}
+	<li class="list-group-item">
+	    <button class="btn 	btn-primary btn-ar" onclick='add_contract("{{ contract.id }}")'>添加</button>{{ contract.name }}
+    </li>
+     {%empty %}  
+     <li class="list-group-item">
+	    暂无符合要求的结果，您可以<a href="admin/smartcontract/smartcontract/add/">点击此处</a>添加新项     
+    </li>
+	{% endfor %}
+</ul>

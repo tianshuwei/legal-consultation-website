@@ -115,7 +115,7 @@
 		});
 	}
 	$(function () {
-		$("#smartcontractsearch button").click(function () {
+		$("#smartcontractsearch input").bind('input propertychange', function () {
 			var key=$("#smartcontractsearch input").val();
 			$.get("{% url 'products:order_query_contracts' order.id %}?q="+encodeURIComponent(key),
 				function (data, status) {
@@ -190,8 +190,7 @@
 	</div>
 	{% if is_lawyer %}
 	<div id="smartcontractsearch" class="col-md-6">
-  	<input type="text" placeholder="搜索已有合同模板" />
-  	<button>搜索</button>
+  	<input type="text" class="form-control" placeholder="搜索已有合同模板" />
   	<div class="resultlist"></div>
   </div>
   {% endif %}
